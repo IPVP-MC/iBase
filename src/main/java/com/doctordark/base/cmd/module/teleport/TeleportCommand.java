@@ -46,6 +46,11 @@ public class TeleportCommand extends BaseCommand {
             }
         }
 
+        if (teleportee.getName().equalsIgnoreCase(teleportTo.getName())) {
+            sender.sendMessage(ChatColor.RED + "The teleportee and teleported are the same player!");
+            return true;
+        }
+
         teleportee.teleport(teleportTo, PlayerTeleportEvent.TeleportCause.COMMAND);
 
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Teleporting " + teleportee.getDisplayName() + ChatColor.YELLOW + " to " +
