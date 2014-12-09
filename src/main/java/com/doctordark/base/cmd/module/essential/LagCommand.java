@@ -1,16 +1,12 @@
 package com.doctordark.base.cmd.module.essential;
 
 import com.doctordark.base.cmd.BaseCommand;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -53,10 +49,5 @@ public class LagCommand extends BaseCommand {
         decimalFormat.setGroupingUsed(false);
         BigDecimal bigDecimal = new BigDecimal(value.toString());
         return decimalFormat.format(bigDecimal);
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        return Collections.emptyList();
     }
 }

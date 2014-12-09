@@ -53,9 +53,4 @@ public class MoreCommand extends BaseCommand {
         stack.setAmount(maxAmount);
         return true;
     }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        return (args.length == 1) ? null : Collections.<String>emptyList();
-    }
 }

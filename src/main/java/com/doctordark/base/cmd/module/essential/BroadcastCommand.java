@@ -6,8 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -38,10 +36,5 @@ public class BroadcastCommand extends BaseCommand {
         Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('`',
                 String.format(Locale.ENGLISH, FORMAT, message.toString())));
         return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        return Collections.emptyList();
     }
 }

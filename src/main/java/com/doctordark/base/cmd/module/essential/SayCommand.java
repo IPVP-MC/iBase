@@ -7,9 +7,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Command used to a say messaging to the server.
  */
@@ -36,10 +33,5 @@ public class SayCommand extends BaseCommand {
         String name = BaseUtil.getDisplayName(sender);
         Bukkit.getServer().broadcastMessage(ChatColor.LIGHT_PURPLE + "[" + name + ChatColor.LIGHT_PURPLE + "] " + message.toString());
         return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        return Collections.emptyList();
     }
 }

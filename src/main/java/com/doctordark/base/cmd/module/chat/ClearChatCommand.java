@@ -7,8 +7,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Command used for clearing the server chat.
@@ -30,10 +28,5 @@ public class ClearChatCommand extends BaseCommand {
         }
 
         return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        return Collections.emptyList();
     }
 }
