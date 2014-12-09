@@ -42,7 +42,7 @@ public class HealCommand extends BaseCommand {
 
         target.setHealth(20);
 
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Healed player " + target.getName() + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Healed player " + target.getDisplayName() + ChatColor.YELLOW + ".");
         return true;
     }
 

@@ -66,16 +66,16 @@ public class WorldCommand extends BaseCommand {
         Location newLocation = new Location(world, x, y, z, yaw, pitch);
         player.teleport(newLocation, PlayerTeleportEvent.TeleportCause.COMMAND);
 
-        sender.sendMessage(ChatColor.GRAY + "Switched world to '" + world.getName() + "'.");
+        sender.sendMessage(ChatColor.AQUA + "Switched world to '" + world.getName() + "'.");
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         List<String> results = new ArrayList<String>();
-        Collection<World> worlds = Bukkit.getServer().getWorlds();
-
         results.add("list");
+
+        Collection<World> worlds = Bukkit.getServer().getWorlds();
 
         for (World world : worlds) {
             results.add(world.getName());

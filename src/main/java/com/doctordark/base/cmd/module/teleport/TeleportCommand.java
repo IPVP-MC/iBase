@@ -48,7 +48,8 @@ public class TeleportCommand extends BaseCommand {
 
         teleportee.teleport(teleportTo, PlayerTeleportEvent.TeleportCause.COMMAND);
 
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Teleporting " + teleportee.getName() + " to " + teleportTo.getName() + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Teleporting " + teleportee.getDisplayName() + ChatColor.YELLOW + " to " +
+                ChatColor.YELLOW + teleportTo.getDisplayName() + ChatColor.YELLOW + ".");
         return true;
     }
 

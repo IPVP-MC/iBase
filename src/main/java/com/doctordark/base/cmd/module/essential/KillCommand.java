@@ -60,7 +60,7 @@ public class KillCommand extends BaseCommand {
             return true;
         }
 
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Slain player " + target.getDisplayName() + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Slain player " + target.getDisplayName() + ChatColor.YELLOW + ".");
         return true;
     }
 
