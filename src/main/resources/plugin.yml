@@ -1,0 +1,75 @@
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
+author: DoctorDark
+main: com.doctordark.base.BasePlugin
+commands:
+  biome:
+  amivis:
+    aliases: ["amivanish", "amivanished", "?invis", "?v", "?vis", "invis?", "vis?", "v?"]
+  broadcast:
+    aliases: [bc]
+    description: Broadcast a server message.
+  clearchat:
+    aliases: [cc]
+    description: Clear the chat history.
+  clearinv:
+    aliases: [ci, clear, cpinv]
+    description: Clears a player inventory.
+  fly:
+    description: Toggle flight for a player.
+  gamemode:
+    aliases: [gm]
+    description: Update a players gamemode.
+  feed:
+    description: Feed a player.
+  heal:
+    description: Heal a player.
+  id:
+    description: Check the id of an item.
+  ignore:
+    description: Ignore a player from messaging you
+  invsee:
+    aliases: [inventory, inventorysee, inv]
+    description: View a players inventory.
+  item:
+    aliases: [i]
+    description: Spawn an item.
+  kill:
+    aliases: [suicide, slay]
+    description: Kill a player.
+  lag:
+    description: Check the server lag.
+  message:
+    aliases: [m, msg, tell, whisper, w]
+    description: Messsage an online player.
+  mutechat:
+    aliases: [mc, rc, restrictchat, disablechat, togglechat]
+    description: Restricts the use of global chat.
+  reply:
+    aliases: [r]
+    description: Reply to a player message.
+  seen:
+  slowchat:
+    description: Sets a delay between chat messages.
+  speed:
+    description: Set your move speed.
+  staffchat: 
+    aliases: [sc, ac]
+    description: Speak in staff chat mode only.
+  togglepm: 
+    description: Disable private messages.
+  top:
+    description: Teleport to highest spot of world
+  visible:
+    aliases: [v, vis, vanish, invis]
+    description: Hide yourself from other players.
+  teleport:
+  whois:
+  speed:
+  uptime:
+  more:
+  position:
+  say:
+  skull:
+  world:
