@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -76,14 +77,18 @@ public class GamemodeCommand extends BaseCommand {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        List<String> list = new ArrayList<String>();
+        List<String> results = new ArrayList<String>();
 
         if (args.length == 1) {
-            for (GameMode mode : GameMode.values()) {
-                list.add(mode.name());
+            GameMode[] modes = GameMode.values();
+
+            for (GameMode mode : modes) {
+                results.add(mode.name());
             }
+        } else if (args.length == 2) {
+            return null;
         }
 
-        return getCompletions(list, args);
+        return getCompletions(results, args);
     }
 }
