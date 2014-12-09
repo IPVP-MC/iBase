@@ -30,7 +30,7 @@ public class GamemodeCommand extends BaseCommand {
             return true;
         }
 
-        GameMode mode = GameMode.valueOf(args[0]);
+        GameMode mode = getGamemodeByName(args[0]);
 
         if (mode == null) {
             sender.sendMessage(ChatColor.RED + "Gamemode '" + args[0] + "' not found!");
@@ -49,6 +49,11 @@ public class GamemodeCommand extends BaseCommand {
             target = Bukkit.getServer().getPlayer(args[1]);
         }
 
+        if ((target == null) || (sender instanceof Player && !((Player)sender).canSee(target))) {
+            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found!");
+            return true;
+        }
+
         if (target.getGameMode() == mode) {
             sender.sendMessage(ChatColor.RED + "Gamemode of " + target.getName() + " is already " + mode.name() + "!");
             return true;
@@ -61,10 +66,10 @@ public class GamemodeCommand extends BaseCommand {
         return true;
     }
 
-    private GameMode byName(String id) {
+    private GameMode getGamemodeByName(String id) {
         try {
             return GameMode.valueOf(id);
-        } catch (Exception ex) {
+        } catch (IllegalArgumentException ex) {
             return null;
         }
     }
