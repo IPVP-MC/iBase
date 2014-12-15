@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 /**
- * Listens for events when a player respawns.
+ * Listens for events when a player re-spawns.
  */
 public class RespawnListener implements Listener {
 

@@ -1,9 +1,11 @@
 package com.doctordark.base.cmd.module.essential;
 
 import com.doctordark.base.cmd.BaseCommand;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -24,8 +26,7 @@ public class LagCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        double tps = 19 + (new Random().nextInt(1)) ;
-        //double tps = Math.min(((CraftServer) Bukkit.getServer()).getServer().recentTps[0], 20);
+        double tps = 20; //Math.min(((CraftServer) Bukkit.getServer()).getServer().recentTps[0], 20);
         double lag = (double) Math.round((1.0D - tps / MAXIMUM_TPS) * 100.0D);
 
         ChatColor color;

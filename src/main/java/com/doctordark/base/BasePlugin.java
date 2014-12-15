@@ -6,6 +6,7 @@ import com.doctordark.base.cmd.module.ChatModule;
 import com.doctordark.base.cmd.module.EssentialModule;
 import com.doctordark.base.cmd.module.InventoryModule;
 import com.doctordark.base.cmd.module.TeleportModule;
+import com.doctordark.base.cmd.module.chat.messaging.MessageHandler;
 import com.doctordark.base.listener.module.*;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,18 +14,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class BasePlugin extends JavaPlugin {
 
     private CommandManager commandManager;
+    private MessageHandler messageHandler;
 
     @Override
     public void onEnable() {
         super.onEnable();
         this.registerManagers();
-
         this.registerCommands();
         this.registerListeners();
     }
 
     private void registerManagers() {
         commandManager = new SimpleCommandManager(this);
+        messageHandler = new MessageHandler();
     }
 
     private void registerCommands() {
@@ -36,6 +38,7 @@ public class BasePlugin extends JavaPlugin {
 
     private void registerListeners() {
         PluginManager manager = getServer().getPluginManager();
+        manager.registerEvents(messageHandler, this);
         manager.registerEvents(new ChatListener(), this);
         manager.registerEvents(new NameVerifyListener(), this);
         manager.registerEvents(new PingListener(), this);
@@ -45,5 +48,9 @@ public class BasePlugin extends JavaPlugin {
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public MessageHandler getMessageHandler() {
+        return messageHandler;
     }
 }

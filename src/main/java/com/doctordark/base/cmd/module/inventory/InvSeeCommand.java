@@ -33,12 +33,12 @@ public class InvSeeCommand extends BaseCommand {
             return true;
         }
 
+        Player player = (Player) sender;
+
         if (args.length < 1) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
             return true;
         }
-
-        Player player = (Player)sender;
 
         Player target = Bukkit.getServer().getPlayer(args[0]);
 

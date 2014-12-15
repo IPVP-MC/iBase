@@ -3,6 +3,7 @@ package com.doctordark.base.cmd.module.inventory;
 import com.doctordark.base.cmd.BaseCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -42,15 +43,20 @@ public class ClearInvCommand extends BaseCommand {
             target = Bukkit.getServer().getPlayer(args[0]);
         }
 
-        if ((target == null) || (sender instanceof Player && !((Player)sender).canSee(target))) {
+        if ((target == null) || (!canSee(sender, target))) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found!");
             return true;
         }
 
         PlayerInventory targetInventory = target.getInventory();
 
-        targetInventory.setContents(new ItemStack[targetInventory.getContents().length]);
-        targetInventory.setArmorContents(new ItemStack[targetInventory.getArmorContents().length]);
+        targetInventory.clear();
+        targetInventory.setArmorContents(new ItemStack[]{
+                new ItemStack(Material.AIR, 1),
+                new ItemStack(Material.AIR, 1),
+                new ItemStack(Material.AIR, 1),
+                new ItemStack(Material.AIR, 1)
+        });
 
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Cleared inventory of player " + target.getDisplayName() + ChatColor.YELLOW + ".");
         return true;

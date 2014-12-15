@@ -35,12 +35,19 @@ public class HealCommand extends BaseCommand {
             target = Bukkit.getServer().getPlayer(args[0]);
         }
 
-        if ((target == null) || (sender instanceof Player && !((Player)sender).canSee(target))) {
+        if ((target == null) || (!canSee(sender, target))) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found!");
             return true;
         }
 
-        target.setHealth(20);
+        double maxHealth = target.getMaxHealth();
+
+        if (target.getHealth() == maxHealth) {
+            sender.sendMessage(ChatColor.RED + target.getName() + " already has full health!");
+            return true;
+        }
+
+        target.setHealth(maxHealth);
 
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Healed player " + target.getDisplayName() + ChatColor.YELLOW + ".");
         return true;

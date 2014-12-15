@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Module used for inventory based commands.
  */
-public class InventoryModule extends BaseCommandModule {
+public class InventoryModule implements BaseCommandModule {
 
     private Set<BaseCommand> commands;
 
@@ -28,6 +28,16 @@ public class InventoryModule extends BaseCommandModule {
     @Override
     public Set<BaseCommand> getCommands() {
         return commands;
+    }
+
+    @Override
+    public void unregisterCommand(BaseCommand command) {
+        commands.remove(command);
+    }
+
+    @Override
+    public void unregisterCommands() {
+        commands.clear();
     }
 
     @Override

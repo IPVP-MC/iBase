@@ -1,5 +1,6 @@
 package com.doctordark.base.cmd;
 
+import com.doctordark.base.BasePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -52,6 +53,15 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
         }
 
         return results;
+    }
+
+    /**
+     * Gets the base plugin instance.
+     *
+     * @return the base plugin instance
+     */
+    public BasePlugin getBasePlugin() {
+        return BasePlugin.getPlugin(BasePlugin.class);
     }
 
     /**
@@ -178,13 +188,12 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @param target the target to check for
      * @return true if sender is not player or the sending player can see target
      */
-    private boolean canSee(CommandSender sender, Player target) {
-        return !(sender instanceof Player) || ((Player) sender).canSee(target);
+    public boolean canSee(CommandSender sender, Player target) {
+        return (!(sender instanceof Player && !((Player) sender).canSee(target)));
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        sender.sendMessage("hey");
         return true;
     }
 

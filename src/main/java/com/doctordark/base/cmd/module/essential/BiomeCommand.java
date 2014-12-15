@@ -37,7 +37,7 @@ public class BiomeCommand extends BaseCommand {
             target = Bukkit.getServer().getPlayer(args[0]);
         }
 
-        if ((target == null) || (sender instanceof Player && !((Player)sender).canSee(target))) {
+        if ((target == null) || (!canSee(sender, target))) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found!");
             return true;
         }

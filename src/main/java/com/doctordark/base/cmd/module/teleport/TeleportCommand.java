@@ -40,7 +40,7 @@ public class TeleportCommand extends BaseCommand {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (!player.canSee(teleportee) || !player.canSee(teleportTo)) {
+            if (!canSee(player, teleportee) || !canSee(teleportTo, player)) {
                 sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found!");
                 return true;
             }
@@ -51,10 +51,9 @@ public class TeleportCommand extends BaseCommand {
             return true;
         }
 
-        teleportee.teleport(teleportTo, PlayerTeleportEvent.TeleportCause.COMMAND);
-
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Teleporting " + teleportee.getDisplayName() + ChatColor.YELLOW + " to " +
                 ChatColor.YELLOW + teleportTo.getDisplayName() + ChatColor.YELLOW + ".");
+        teleportee.teleport(teleportTo, PlayerTeleportEvent.TeleportCause.COMMAND);
         return true;
     }
 

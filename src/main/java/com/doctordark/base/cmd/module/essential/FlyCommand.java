@@ -35,20 +35,19 @@ public class FlyCommand extends BaseCommand {
             target = Bukkit.getServer().getPlayer(args[0]);
         }
 
-        if ((target == null) || (sender instanceof Player && !((Player)sender).canSee(target))) {
+        if ((target == null) || (!canSee(sender, target))) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found!");
             return true;
         }
 
-        boolean flight = target.getAllowFlight();
+        boolean newFlight = !target.getAllowFlight();
+        target.setAllowFlight(newFlight);
 
-        if (flight) {
-            target.setFlying(false);
+        if (newFlight) {
+            target.setFlying(true);
         }
 
-        target.setAllowFlight(flight);
-
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Flight mode of " + target.getDisplayName() + " set to " + ChatColor.YELLOW + flight + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Flight mode of " + target.getDisplayName() + ChatColor.YELLOW + " set to " + newFlight + ".");
         return true;
     }
 

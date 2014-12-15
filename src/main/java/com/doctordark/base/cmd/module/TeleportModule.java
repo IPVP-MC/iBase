@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * Module used for teleport based commands.
  */
-public class TeleportModule extends BaseCommandModule {
+public class TeleportModule implements BaseCommandModule {
 
     private Set<BaseCommand> commands;
 
@@ -26,6 +26,16 @@ public class TeleportModule extends BaseCommandModule {
     @Override
     public Set<BaseCommand> getCommands() {
         return commands;
+    }
+
+    @Override
+    public void unregisterCommand(BaseCommand command) {
+        commands.remove(command);
+    }
+
+    @Override
+    public void unregisterCommands() {
+        commands.clear();
     }
 
     @Override

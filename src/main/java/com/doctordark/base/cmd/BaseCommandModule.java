@@ -5,7 +5,7 @@ import java.util.Set;
 /**
  * Represents a command module / package.
  */
-public abstract class BaseCommandModule {
+public interface BaseCommandModule {
 
     /**
      * Gets all the commands in this module.
@@ -13,6 +13,18 @@ public abstract class BaseCommandModule {
      * @return set of commands in module
      */
     public abstract Set<BaseCommand> getCommands();
+
+    /**
+     * Un-registers a command from the module.
+     *
+     * @param command the command to unregister
+     */
+    public abstract void unregisterCommand(BaseCommand command);
+
+    /**
+     * Un-registers all the commands in the module.
+     */
+    public abstract void unregisterCommands();
 
     /**
      * Checks if this module is enabled.

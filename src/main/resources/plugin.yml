@@ -4,9 +4,10 @@ description: ${project.description}
 author: DoctorDark
 main: com.doctordark.base.BasePlugin
 commands:
-  biome:
   amivis:
     aliases: ["amivanish", "amivanished", "?invis", "?v", "?vis", "invis?", "vis?", "v?"]
+  biome:
+    description: Check the biome a player is in.
   broadcast:
     aliases: [bc]
     description: Broadcast a server message.

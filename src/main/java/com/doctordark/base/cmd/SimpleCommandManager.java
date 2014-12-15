@@ -26,7 +26,7 @@ public class SimpleCommandManager implements CommandManager {
         commandMap = new HashMap<String, BaseCommand>();
 
         // Load all the modules first.
-        Bukkit.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
+        Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
             @Override
             public void run() {
             for (BaseCommand command : commandMap.values()) {
@@ -34,20 +34,21 @@ public class SimpleCommandManager implements CommandManager {
                 PluginCommand pluginCommand = plugin.getCommand(cmdName);
 
                 if (pluginCommand == null) {
-                    console.sendMessage(ChatColor.RED + "Failed to register command " + cmdName +
-                            " as it is not added in the plugin.yml!");
+                    console.sendMessage(ChatColor.YELLOW + "Failed to register command '" + cmdName + "'.");
+                    console.sendMessage(ChatColor.YELLOW + "Reason: Undefined in plugin.yml.");
                     continue;
                 }
 
-                pluginCommand.setExecutor(command);
+                pluginCommand.setAliases(Arrays.asList(command.getAliases()));
                 pluginCommand.setDescription(command.getDescription());
+                pluginCommand.setExecutor(command);
+                pluginCommand.setTabCompleter(command);
                 pluginCommand.setUsage(command.getUsage());
                 pluginCommand.setPermission(command.getPermission());
                 pluginCommand.setPermissionMessage(PERMISSION_MESSAGE);
-                pluginCommand.setAliases(Arrays.asList(command.getAliases()));
             }
             }
-        }, 1L);
+        });
     }
 
     @Override

@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class FeedCommand extends BaseCommand {
 
+    private static final int MAX_HUNGER = 20;
+
     public FeedCommand() {
         super("feed", "Feeds a player.", "base.command.feed");
         this.setAliases(new String[]{});
@@ -35,12 +37,17 @@ public class FeedCommand extends BaseCommand {
             target = Bukkit.getServer().getPlayer(args[0]);
         }
 
-        if ((target == null) || (sender instanceof Player && !((Player)sender).canSee(target))) {
+        if ((target == null) || (!canSee(sender, target))) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found!");
             return true;
         }
 
-        target.setFoodLevel(20);
+        if (target.getFoodLevel() == MAX_HUNGER) {
+            sender.sendMessage(ChatColor.RED + target.getName() + " already has full hunger!");
+            return true;
+        }
+
+        target.setFoodLevel(MAX_HUNGER);
         
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Fed player " + target.getDisplayName() + ChatColor.YELLOW + ".");
         return true;

@@ -1,6 +1,7 @@
 package com.doctordark.base.listener.module;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -16,9 +17,10 @@ public class NameVerifyListener implements Listener {
 
     @EventHandler
     public void onLogin(PlayerLoginEvent event) {
-        if (!namePattern.matcher(event.getPlayer().getName()).matches()) {
-            Bukkit.getLogger().info("Name verification: " + event.getPlayer().getName() + " was kicked " +
-                    "for having an invalid name (to disable, turn off the name-verification component in CommandBook)");
+        Player player = event.getPlayer();
+        if (!namePattern.matcher(player.getName()).matches()) {
+            Bukkit.getLogger().info("Name verification: " + player.getName() + " was kicked " +
+                    "for having an invalid name (to disable, turn off the name-verification feature in the config)");
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Invalid player name detected!");
         }
     }

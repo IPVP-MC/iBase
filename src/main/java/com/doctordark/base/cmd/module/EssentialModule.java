@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Module used for essential based commands.
  */
-public class EssentialModule extends BaseCommandModule {
+public class EssentialModule implements BaseCommandModule {
 
     private Set<BaseCommand> commands;
 
@@ -33,6 +33,16 @@ public class EssentialModule extends BaseCommandModule {
     @Override
     public Set<BaseCommand> getCommands() {
         return commands;
+    }
+
+    @Override
+    public void unregisterCommand(BaseCommand command) {
+        commands.remove(command);
+    }
+
+    @Override
+    public void unregisterCommands() {
+        commands.clear();
     }
 
     @Override
