@@ -52,6 +52,11 @@ public class KillCommand extends BaseCommand {
             return true;
         }
 
+        if (target.isDead()) {
+            sender.sendMessage(ChatColor.RED + target.getName() + " is already dead!");
+            return true;
+        }
+
         target.setLastDamageCause(event);
         target.setHealth(0);
 
