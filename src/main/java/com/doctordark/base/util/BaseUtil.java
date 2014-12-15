@@ -32,6 +32,7 @@ public class BaseUtil {
 
         Location foundLoc = null;
 
+        // Check for bedrock in nether // overworld too.
         for (int i = 256; i > 0; i--) {
             cloned.setY(i);
             Block below = cloned.getBlock().getRelative(BlockFace.DOWN);

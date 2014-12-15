@@ -9,9 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * Command used to set a players game-mode.
@@ -68,9 +66,15 @@ public class GamemodeCommand extends BaseCommand {
     }
 
     private GameMode getGamemodeByName(String id) {
-        try {
-            return GameMode.valueOf(id);
-        } catch (IllegalArgumentException ex) {
+        if (id.equalsIgnoreCase("gmc") || id.contains("creat") || id.equalsIgnoreCase("1") || id.equalsIgnoreCase("c")) {
+            return GameMode.CREATIVE;
+        } else if (id.equalsIgnoreCase("gms") || id.contains("survi") || id.equalsIgnoreCase("0") || id.equalsIgnoreCase("s")) {
+            return GameMode.SURVIVAL;
+        } else if (id.equalsIgnoreCase("gma") || id.contains("advent") || id.equalsIgnoreCase("2") || id.equalsIgnoreCase("a")) {
+            return GameMode.ADVENTURE;
+        } else if (id.equalsIgnoreCase("gmt") || id.contains("toggle") || id.contains("cycle") || id.equalsIgnoreCase("t")) {
+            return null;
+        } else {
             return null;
         }
     }
