@@ -44,33 +44,42 @@ commands:
   message:
     aliases: [m, msg, tell, whisper, w]
     description: Messsage an online player.
+  more:
+    description: Give yourself more of an item.
   mutechat:
     aliases: [mc, rc, restrictchat, disablechat, togglechat]
     description: Restricts the use of global chat.
+  position:
+    description: Checks the position of a player.
   reply:
     aliases: [r]
     description: Reply to a player message.
+  say:
+    description: Tell a story to the server.
   seen:
+    description: Checks when a player was last seen.
+  skull:
+    description: Spawn the skull of a player.
   slowchat:
     description: Sets a delay between chat messages.
   speed:
-    description: Set your move speed.
+    description: Set your walk or fly speed.
   staffchat: 
     aliases: [sc, ac]
     description: Speak in staff chat mode only.
+  teleport:
+    aliases: [tp]
+    description: Teleport to a player or location.
   togglepm: 
     description: Disable private messages.
   top:
     description: Teleport to highest spot of world
+  uptime:
+    description: Check how long a server has been up for.
   visible:
     aliases: [v, vis, vanish, invis]
     description: Hide yourself from other players.
-  teleport:
   whois:
-  speed:
-  uptime:
-  more:
-  position:
-  say:
-  skull:
+    description: Check information about a player.
   world:
+    description: Change your current world.
