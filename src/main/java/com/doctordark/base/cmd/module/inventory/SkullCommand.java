@@ -36,7 +36,6 @@ public class SkullCommand extends BaseCommand {
         }
 
         Player player = (Player)sender;
-
         String ownerName = (args.length > 0) ? args[0] : sender.getName();
 
         ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
