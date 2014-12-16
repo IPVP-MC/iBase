@@ -1,6 +1,7 @@
 package com.doctordark.base.cmd.module.chat;
 
 import com.doctordark.base.cmd.BaseCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -17,6 +18,7 @@ public class StaffChatCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        sender.sendMessage(ChatColor.RED + "This command is currently not implemented!");
         return true;
     }
 }

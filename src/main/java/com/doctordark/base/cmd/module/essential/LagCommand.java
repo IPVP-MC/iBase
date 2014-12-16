@@ -1,15 +1,12 @@
 package com.doctordark.base.cmd.module.essential;
 
 import com.doctordark.base.cmd.BaseCommand;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Random;
 
 /**
  * Command used to check the server lag.
@@ -43,6 +40,12 @@ public class LagCommand extends BaseCommand {
         return true;
     }
 
+    /**
+     * Formats a double into a nice string.
+     *
+     * @param value the double to format
+     * @return the formatted string
+     */
     private String format(Double value) {
         DecimalFormat decimalFormat = new DecimalFormat();
         decimalFormat.setMaximumFractionDigits(2);

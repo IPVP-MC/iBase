@@ -1,6 +1,8 @@
 package com.doctordark.base.cmd.module.chat;
 
 import com.doctordark.base.cmd.BaseCommand;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -17,6 +19,9 @@ public class SlowChatCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        boolean newEnabled = !getBasePlugin().getChatManager().isSlowedChat();
+        Bukkit.broadcastMessage(ChatColor.YELLOW + "Chat is " + (newEnabled ? "now" : "no longer") + " slowed!");
+        getBasePlugin().getChatManager().setSlowedChat(newEnabled);
         return true;
     }
 }
