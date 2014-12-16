@@ -37,15 +37,21 @@ public class BaseUtil {
             cloned.setY(i);
             Block below = cloned.getBlock().getRelative(BlockFace.DOWN);
 
-            if (below != null && !below.isEmpty() && cloned.getY() > y) {
-                cloned.setX(Math.round(cloned.getBlockX() - 0.25) + 0.25);
-                cloned.setY(Math.round(cloned.getBlockY() - 0.25) + 0.25);
-                cloned.setZ(Math.round(cloned.getBlockZ() - 0.25) + 0.25);
-
-                return cloned;
+            if (below != null && !below.isEmpty()) {
+                foundLoc = cloned;
+                break;
             }
         }
 
-        return null;
+        //Bukkit.broadcastMessage("CY:" + cloned.getY() + ", LY:" + location.getY());
+
+        if (foundLoc == null || (cloned.getY() - location.getY()) < 2) {
+            return null;
+        } else {
+            cloned.setX(Math.round(cloned.getBlockX() - 0.25) + 0.25);
+            cloned.setY(Math.round(cloned.getBlockY() - 0.25) + 0.25);
+            cloned.setZ(Math.round(cloned.getBlockZ() - 0.25) + 0.25);
+            return cloned;
+        }
     }
 }

@@ -26,7 +26,7 @@ public class ChatModule implements BaseCommandModule {
         commands.add(new DisableChatCommand());
         commands.add(new SlowChatCommand());
         commands.add(new StaffChatCommand());
-
+        // Private messaging related:
         commands.add(new IgnoreCommand());
         commands.add(new MessageCommand());
         commands.add(new ReplyCommand());

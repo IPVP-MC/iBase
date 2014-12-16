@@ -16,12 +16,24 @@ public class MessageHandler implements Listener {
 
     private Map<UUID, UUID> lastRepliedTo = new HashMap<UUID, UUID>();
 
+    /**
+     * Gets the last replied recipient for a player.
+     *
+     * @param sender the player to get for
+     * @return the recipient last replied to
+     */
     public Player getLastRepliedTo(Player sender) {
         UUID uuid = sender.getUniqueId();
         UUID last = lastRepliedTo.containsKey(uuid) ? lastRepliedTo.get(uuid) : null;
         return Bukkit.getServer().getPlayer(last);
     }
 
+    /**
+     * Sets the last replied recipient for a player.
+     *
+     * @param sender the player to set for
+     * @param recipient the recipient last replied to
+     */
     public void setLastRepliedTo(Player sender, Player recipient) {
         lastRepliedTo.put(sender.getUniqueId(), recipient.getUniqueId());
     }
