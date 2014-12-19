@@ -6,6 +6,7 @@ main: com.doctordark.base.BasePlugin
 commands:
   amivis:
     aliases: ["amivanish", "amivanished", "?invis", "?v", "?vis", "invis?", "vis?", "v?"]
+    description: Command used to check if visible.
   biome:
     description: Check the biome a player is in.
   broadcast:
@@ -70,6 +71,9 @@ commands:
   teleport:
     aliases: [tp]
     description: Teleport to a player or location.
+  teleporthere:
+    aliases: [tphere]
+    description: Teleport a player to self.
   togglepm: 
     description: Disable private messages.
   top:

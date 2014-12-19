@@ -58,7 +58,7 @@ public class ClearInvCommand extends BaseCommand {
                 new ItemStack(Material.AIR, 1)
         });
 
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Cleared inventory of player " + target.getDisplayName() + ChatColor.YELLOW + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Cleared inventory of player " + target.getName() + ".");
         return true;
     }
 

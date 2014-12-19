@@ -3,6 +3,7 @@ package com.doctordark.base.cmd.module;
 import com.doctordark.base.cmd.BaseCommand;
 import com.doctordark.base.cmd.BaseCommandModule;
 import com.doctordark.base.cmd.module.teleport.TeleportCommand;
+import com.doctordark.base.cmd.module.teleport.TeleportHereCommand;
 import com.doctordark.base.cmd.module.teleport.TopCommand;
 import com.doctordark.base.cmd.module.teleport.WorldCommand;
 
@@ -19,6 +20,7 @@ public class TeleportModule implements BaseCommandModule {
     public TeleportModule() {
         commands = new HashSet<BaseCommand>();
         commands.add(new TeleportCommand());
+        commands.add(new TeleportHereCommand());
         commands.add(new TopCommand());
         commands.add(new WorldCommand());
     }

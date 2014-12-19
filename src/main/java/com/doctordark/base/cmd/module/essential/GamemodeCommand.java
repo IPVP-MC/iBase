@@ -60,8 +60,7 @@ public class GamemodeCommand extends BaseCommand {
 
         target.setGameMode(mode);
 
-        Command.broadcastCommandMessage(sender, ChatColor.GOLD + "Set gamemode of " + target.getDisplayName() + ChatColor.GOLD + " to " +
-                ChatColor.WHITE + mode.name() + ChatColor.GOLD + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.GOLD + "Set gamemode of " + target.getName() + ChatColor.GOLD + " to " + ChatColor.WHITE + mode.name() + ChatColor.GOLD + ".");
         return true;
     }
 

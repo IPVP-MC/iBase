@@ -34,7 +34,7 @@ public class BasePlugin extends JavaPlugin {
 
     private void registerCommands() {
         getCommandManager().registerAll(new ChatModule());
-        getCommandManager().registerAll(new EssentialModule());
+        getCommandManager().registerAll(new EssentialModule(this));
         getCommandManager().registerAll(new InventoryModule());
         getCommandManager().registerAll(new TeleportModule());
     }
@@ -43,6 +43,7 @@ public class BasePlugin extends JavaPlugin {
         PluginManager manager = getServer().getPluginManager();
         manager.registerEvents(messageHandler, this);
         manager.registerEvents(new ChatListener(), this);
+        manager.registerEvents(new ColouredSignListener(), this);
         manager.registerEvents(new NameVerifyListener(), this);
         manager.registerEvents(new PingListener(), this);
         manager.registerEvents(new RespawnListener(), this);

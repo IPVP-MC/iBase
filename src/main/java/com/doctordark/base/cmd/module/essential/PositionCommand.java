@@ -39,7 +39,6 @@ public class PositionCommand extends BaseCommand {
         }
 
         Location pos = target.getLocation();
-
         sender.sendMessage(ChatColor.YELLOW + "Player: " + target.getName());
         sender.sendMessage(ChatColor.YELLOW + "World: " + target.getWorld().getName());
         sender.sendMessage(ChatColor.YELLOW + String.format("Location: (%.3f, %.3f, %.3f)", pos.getX(), pos.getY(), pos.getZ()));

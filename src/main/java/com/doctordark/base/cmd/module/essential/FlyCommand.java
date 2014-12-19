@@ -47,7 +47,7 @@ public class FlyCommand extends BaseCommand {
             target.setFlying(true);
         }
 
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Flight mode of " + target.getDisplayName() + ChatColor.YELLOW + " set to " + newFlight + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Flight mode of " + target.getName() + " set to " + newFlight + ".");
         return true;
     }
 

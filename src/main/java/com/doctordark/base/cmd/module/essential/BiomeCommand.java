@@ -45,7 +45,7 @@ public class BiomeCommand extends BaseCommand {
         Location location = target.getLocation();
         Biome biome = location.getWorld().getBiome(location.getBlockX(), location.getBlockZ());
 
-        sender.sendMessage(ChatColor.YELLOW + target.getDisplayName() + ChatColor.YELLOW + " is in the " + biome.name() + " biome!");
+        sender.sendMessage(ChatColor.YELLOW + target.getName() + " is in the " + biome.name() + " biome!");
         return true;
     }
 

@@ -9,6 +9,7 @@ import com.doctordark.base.cmd.module.chat.StaffChatCommand;
 import com.doctordark.base.cmd.module.chat.messaging.IgnoreCommand;
 import com.doctordark.base.cmd.module.chat.messaging.MessageCommand;
 import com.doctordark.base.cmd.module.chat.messaging.ReplyCommand;
+import com.doctordark.base.cmd.module.chat.messaging.TogglepmCommand;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,6 +31,7 @@ public class ChatModule implements BaseCommandModule {
         commands.add(new IgnoreCommand());
         commands.add(new MessageCommand());
         commands.add(new ReplyCommand());
+        commands.add(new TogglepmCommand());
     }
 
     @Override

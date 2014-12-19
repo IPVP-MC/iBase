@@ -49,7 +49,7 @@ public class FeedCommand extends BaseCommand {
 
         target.setFoodLevel(MAX_HUNGER);
         
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Fed player " + target.getDisplayName() + ChatColor.YELLOW + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Fed player " + target.getName() + ".");
         return true;
     }
 

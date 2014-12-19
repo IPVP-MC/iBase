@@ -17,8 +17,7 @@ import java.util.Set;
  */
 public class SimpleCommandManager implements CommandManager {
 
-    private static final String PERMISSION_MESSAGE = "No permission for this command!";
-
+    private static final String PERMISSION_MESSAGE = ChatColor.RED + "You do not have permission for this command!";
     private final Map<String, BaseCommand> commandMap;
 
     public SimpleCommandManager(final BasePlugin plugin) {

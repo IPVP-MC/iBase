@@ -35,7 +35,7 @@ public class LagCommand extends BaseCommand {
             color = ChatColor.RED;
         }
 
-        sender.sendMessage(color + "Server TPS is currently at " + format(tps) + ".");
+        sender.sendMessage(color + "Server tps is currently at " + format(tps) + ".");
         sender.sendMessage(color + "Server lag is currently at " + format(lag) + "%");
         return true;
     }

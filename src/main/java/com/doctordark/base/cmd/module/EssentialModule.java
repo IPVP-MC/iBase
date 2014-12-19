@@ -3,6 +3,7 @@ package com.doctordark.base.cmd.module;
 import com.doctordark.base.cmd.BaseCommand;
 import com.doctordark.base.cmd.BaseCommandModule;
 import com.doctordark.base.cmd.module.essential.*;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,10 +15,10 @@ public class EssentialModule implements BaseCommandModule {
 
     private Set<BaseCommand> commands;
 
-    public EssentialModule() {
+    public EssentialModule(JavaPlugin plugin) {
         commands = new HashSet<BaseCommand>();
         commands.add(new BiomeCommand());
-        commands.add(new BroadcastCommand());
+        commands.add(new BroadcastCommand(plugin));
         commands.add(new FeedCommand());
         commands.add(new FlyCommand());
         commands.add(new GamemodeCommand());
