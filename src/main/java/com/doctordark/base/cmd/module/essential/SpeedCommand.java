@@ -102,6 +102,7 @@ public class SpeedCommand extends BaseCommand {
             }
         }
 
+        sender.sendMessage(ChatColor.RED + "This command is currently not implemented!");
         return true;
     }
 

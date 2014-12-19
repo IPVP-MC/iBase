@@ -30,9 +30,16 @@ public class SayCommand extends BaseCommand {
             message.append(" ").append(args[i]);
         }
 
+        String broadcast = message.toString();
+
+        if (broadcast.length() < 6) {
+            sender.sendMessage(ChatColor.RED + "Messages must be at least 6 characters!");
+            return true;
+        }
+
         String name = BaseUtil.getDisplayName(sender);
         String prefix = ChatColor.LIGHT_PURPLE + "[" + name + ChatColor.LIGHT_PURPLE + "]";
-        Bukkit.getServer().broadcastMessage(prefix + " " + message.toString());
+        Bukkit.getServer().broadcastMessage(prefix + " " + broadcast);
         return true;
     }
 }

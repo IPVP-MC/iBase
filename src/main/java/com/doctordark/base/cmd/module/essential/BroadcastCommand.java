@@ -39,8 +39,14 @@ public class BroadcastCommand extends BaseCommand {
             message.append(" ").append(args[i]);
         }
 
-        Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&',
-                String.format(Locale.ENGLISH, format, message.toString())));
+        String broadcast = message.toString();
+
+        if (broadcast.length() < 6) {
+            sender.sendMessage(ChatColor.RED + "Broadcasts must be at least 6 characters!");
+            return true;
+        }
+
+        Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', String.format(Locale.ENGLISH, format, broadcast)));
         return true;
     }
 }
