@@ -29,6 +29,7 @@ public class EssentialModule implements BaseCommandModule {
         commands.add(new SayCommand());
         commands.add(new SpeedCommand());
         commands.add(new UptimeCommand());
+        commands.add(new VanishCommand());
     }
 
     @Override

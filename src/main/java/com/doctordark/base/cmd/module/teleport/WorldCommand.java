@@ -23,7 +23,7 @@ public class WorldCommand extends BaseCommand {
     public WorldCommand() {
         super("world", "Change current world.", "base.command.world");
         this.setAliases(new String[]{"changeworld", "switchworld"});
-        this.setUsage("/(command) <worldName|list>");
+        this.setUsage("/(command) <worldName>");
     }
 
     @Override
@@ -36,15 +36,6 @@ public class WorldCommand extends BaseCommand {
         if (args.length < 1) {
             sender.sendMessage(ChatColor.RED + getUsage());
             return true;
-        }
-
-        if (args[0].equalsIgnoreCase("list")) {
-            Collection<World> worlds = Bukkit.getServer().getWorlds();
-            List<String> worldList = new ArrayList<String>();
-
-            for (World world : worlds) {
-
-            }
         }
 
         World world = Bukkit.getServer().getWorld(args[0]);
@@ -73,8 +64,6 @@ public class WorldCommand extends BaseCommand {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         List<String> results = new ArrayList<String>();
-        results.add("list");
-
         Collection<World> worlds = Bukkit.getServer().getWorlds();
 
         for (World world : worlds) {

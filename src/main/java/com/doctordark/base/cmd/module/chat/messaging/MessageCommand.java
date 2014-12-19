@@ -1,6 +1,5 @@
 package com.doctordark.base.cmd.module.chat.messaging;
 
-import com.doctordark.base.BasePlugin;
 import com.doctordark.base.cmd.BaseCommand;
 import com.doctordark.base.cmd.module.chat.messaging.event.PlayerMessageEvent;
 import com.doctordark.base.cmd.module.chat.messaging.event.PlayerPreMessageEvent;

@@ -19,9 +19,9 @@ public class DisableChatCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        boolean newEnabled = !getBasePlugin().getChatManager().isEnabledChat();
+        boolean newEnabled = !getBasePlugin().getServerManager().isChatEnabled();
         Bukkit.broadcastMessage(ChatColor.YELLOW + "Chat is " + (newEnabled ? "now" : "no longer") + " enabled!");
-        getBasePlugin().getChatManager().setEnabledChat(newEnabled);
+        getBasePlugin().getServerManager().setChatEnabled(newEnabled);
         return true;
     }
 }

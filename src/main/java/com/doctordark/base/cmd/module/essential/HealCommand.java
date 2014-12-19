@@ -23,7 +23,7 @@ public class HealCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Player target;
+        Player target = null;
         if (args.length < 1) {
             if (sender instanceof Player) {
                 target = (Player)sender;
@@ -31,6 +31,13 @@ public class HealCommand extends BaseCommand {
                 sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
                 return true;
             }
+        } else if (args[0].equalsIgnoreCase("all")) {
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                player.setHealth(player.getMaxHealth());
+            }
+
+            Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Healed all online players.");
+            return true;
         } else {
             target = Bukkit.getServer().getPlayer(args[0]);
         }

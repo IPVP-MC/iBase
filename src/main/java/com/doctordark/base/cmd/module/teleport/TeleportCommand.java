@@ -86,7 +86,7 @@ public class TeleportCommand extends BaseCommand {
             targetALocation.setZ(z);
 
             if (targetA.teleport(targetALocation, PlayerTeleportEvent.TeleportCause.COMMAND)) {
-                Command.broadcastCommandMessage(sender, String.format(ChatColor.YELLOW + "Teleported %s to %.2f, %.2f, %.2f", targetA.getName(), x, y, z));
+                Command.broadcastCommandMessage(sender, String.format(ChatColor.YELLOW + "Teleported %s to %.2f, %.2f, %.2f.", targetA.getName(), x, y, z));
             } else {
                 sender.sendMessage(ChatColor.RED + "Failed to teleport you!");
             }

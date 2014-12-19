@@ -1,6 +1,5 @@
 package com.doctordark.base.cmd.module.chat.messaging.event;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

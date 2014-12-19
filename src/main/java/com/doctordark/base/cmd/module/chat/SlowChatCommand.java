@@ -19,9 +19,9 @@ public class SlowChatCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        boolean newEnabled = !getBasePlugin().getChatManager().isSlowedChat();
+        boolean newEnabled = !getBasePlugin().getServerManager().isChatSlowed();
         Bukkit.broadcastMessage(ChatColor.YELLOW + "Chat is " + (newEnabled ? "now" : "no longer") + " slowed!");
-        getBasePlugin().getChatManager().setSlowedChat(newEnabled);
+        getBasePlugin().getServerManager().setChatSlowed(newEnabled);
         return true;
     }
 }

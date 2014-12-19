@@ -45,8 +45,8 @@ public class ReplyCommand extends BaseCommand {
         }
 
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < args.length; i++) {
-            builder.append(args[i]).append(" ");
+        for (String argument : args) {
+            builder.append(argument).append(" ");
         }
 
         recipients.add(target);

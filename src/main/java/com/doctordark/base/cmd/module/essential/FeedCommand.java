@@ -25,7 +25,7 @@ public class FeedCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        Player target;
+        Player target = null;
         if (args.length < 1) {
             if (sender instanceof Player) {
                 target = (Player)sender;
@@ -33,6 +33,13 @@ public class FeedCommand extends BaseCommand {
                 sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
                 return true;
             }
+        } else if (args[0].equalsIgnoreCase("all")) {
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                player.setFoodLevel(MAX_HUNGER);
+            }
+
+            Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Fed all online players.");
+            return true;
         } else {
             target = Bukkit.getServer().getPlayer(args[0]);
         }

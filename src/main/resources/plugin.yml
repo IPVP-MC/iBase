@@ -80,7 +80,7 @@ commands:
     description: Teleport to highest spot of world
   uptime:
     description: Check how long a server has been up for.
-  visible:
+  vanish:
     aliases: [v, vis, vanish, invis]
     description: Hide yourself from other players.
   whois:

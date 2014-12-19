@@ -6,17 +6,26 @@ import com.doctordark.base.cmd.module.ChatModule;
 import com.doctordark.base.cmd.module.EssentialModule;
 import com.doctordark.base.cmd.module.InventoryModule;
 import com.doctordark.base.cmd.module.TeleportModule;
-import com.doctordark.base.cmd.module.chat.ChatManager;
 import com.doctordark.base.cmd.module.chat.messaging.MessageHandler;
-import com.doctordark.base.listener.module.*;
+import com.doctordark.base.listener.module.ChatListener;
+import com.doctordark.base.listener.module.ColouredSignListener;
+import com.doctordark.base.listener.module.NameVerifyListener;
+import com.doctordark.base.listener.module.PingListener;
+import com.doctordark.base.listener.module.RespawnListener;
+import com.doctordark.base.listener.module.VanishListener;
+import com.doctordark.base.manager.FlatFileServerManager;
+import com.doctordark.base.manager.FlatFileUserManager;
+import com.doctordark.base.manager.ServerManager;
+import com.doctordark.base.manager.UserManager;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BasePlugin extends JavaPlugin {
 
-    private ChatManager chatManager;
     private CommandManager commandManager;
     private MessageHandler messageHandler;
+    private ServerManager serverManager;
+    private UserManager userManager;
 
     @Override
     public void onEnable() {
@@ -27,9 +36,10 @@ public class BasePlugin extends JavaPlugin {
     }
 
     private void registerManagers() {
-        chatManager = new ChatManager();
         commandManager = new SimpleCommandManager(this);
         messageHandler = new MessageHandler();
+        serverManager = new FlatFileServerManager();
+        userManager = new FlatFileUserManager();
     }
 
     private void registerCommands() {
@@ -42,16 +52,12 @@ public class BasePlugin extends JavaPlugin {
     private void registerListeners() {
         PluginManager manager = getServer().getPluginManager();
         manager.registerEvents(messageHandler, this);
-        manager.registerEvents(new ChatListener(), this);
+        manager.registerEvents(new ChatListener(this), this);
         manager.registerEvents(new ColouredSignListener(), this);
         manager.registerEvents(new NameVerifyListener(), this);
         manager.registerEvents(new PingListener(), this);
         manager.registerEvents(new RespawnListener(), this);
-        manager.registerEvents(new VanishListener(), this);
-    }
-
-    public ChatManager getChatManager() {
-        return chatManager;
+        manager.registerEvents(new VanishListener(this), this);
     }
 
     public CommandManager getCommandManager() {
@@ -60,5 +66,13 @@ public class BasePlugin extends JavaPlugin {
 
     public MessageHandler getMessageHandler() {
         return messageHandler;
+    }
+
+    public ServerManager getServerManager() {
+        return serverManager;
+    }
+
+    public UserManager getUserManager() {
+        return userManager;
     }
 }

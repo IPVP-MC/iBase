@@ -1,7 +1,6 @@
 package com.doctordark.base.util;
 
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -23,13 +22,6 @@ public class BaseUtil {
 
         Location cloned = location.clone();
         World world = cloned.getWorld();
-        int maxHeight = world.getMaxHeight();
-        int x = cloned.getBlockX();
-        int y = cloned.getBlockY();
-        int z = cloned.getBlockZ();
-        float yaw = cloned.getYaw();
-        float pitch = cloned.getPitch();
-
         Location foundLoc = null;
 
         // Check for bedrock in nether // overworld too.
@@ -42,8 +34,6 @@ public class BaseUtil {
                 break;
             }
         }
-
-        //Bukkit.broadcastMessage("CY:" + cloned.getY() + ", LY:" + location.getY());
 
         if (foundLoc == null || (cloned.getY() - location.getY()) < 2) {
             return null;

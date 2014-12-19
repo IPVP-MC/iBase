@@ -1,4 +1,4 @@
-package com.doctordark.base.cmd.module.chat;
+package com.doctordark.base.cmd.module.essential;
 
 import com.doctordark.base.cmd.BaseCommand;
 import org.bukkit.Bukkit;
@@ -11,14 +11,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Command used for chatting to staff members.
- */
-public class StaffChatCommand extends BaseCommand {
+public class VanishCommand extends BaseCommand {
 
-    public StaffChatCommand() {
-        super("staffchat", "Enters staff chat mode.", "base.command.staffchat");
-        this.setAliases(new String[]{"sc"});
+    public VanishCommand() {
+        super("vanish", "Hide from other players.", "base.command.vanish");
+        this.setAliases(new String[]{});
         this.setUsage("/(command) [playerName]");
     }
 
@@ -43,9 +40,9 @@ public class StaffChatCommand extends BaseCommand {
 
         UUID uuid = target.getUniqueId();
 
-        boolean staffChat = (args.length >= 2) ? Boolean.parseBoolean(args[1]) : !getBasePlugin().getUserManager().isInStaffChat(uuid);
-        getBasePlugin().getUserManager().setInStaffChat(uuid, staffChat);
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Staff chat mode of " + target.getName() + " set to " + staffChat + ".");
+        boolean vanished = (args.length >= 2) ? Boolean.parseBoolean(args[1]) : !getBasePlugin().getUserManager().isVanished(uuid);
+        getBasePlugin().getUserManager().setVanished(uuid, vanished);
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Vanish mode of " + target.getName() + " set to " + vanished + ".");
         return true;
     }
 

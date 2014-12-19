@@ -1,18 +1,13 @@
 package com.doctordark.base.cmd.module.chat.messaging;
 
 import com.doctordark.base.cmd.BaseCommand;
-import com.doctordark.base.cmd.module.chat.messaging.event.PlayerMessageEvent;
-import com.doctordark.base.cmd.module.chat.messaging.event.PlayerPreMessageEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class IgnoreCommand extends BaseCommand {
 
