@@ -49,8 +49,8 @@ public class WorldCommand extends BaseCommand {
 
         Location currentLocation = player.getLocation();
         double x = currentLocation.getX();
-        double y = currentLocation.getX();
-        double z = currentLocation.getX();
+        double y = currentLocation.getY();
+        double z = currentLocation.getZ();
         float yaw = currentLocation.getYaw();
         float pitch = currentLocation.getPitch();
 

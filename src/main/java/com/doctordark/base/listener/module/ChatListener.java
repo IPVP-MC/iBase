@@ -29,7 +29,7 @@ public class ChatListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onChatModifier(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
+        /**Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         boolean chatEnabled = plugin.getServerManager().isChatEnabled();
         boolean chatSlowed = plugin.getServerManager().isChatSlowed();
@@ -55,12 +55,12 @@ public class ChatListener implements Listener {
                     plugin.getUserManager().setLastChatTime(uuid, millis);
                 }
             }
-        }
+        }*/
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
+        /**Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
         boolean staffChat = plugin.getUserManager().isInStaffChat(uuid);
 
@@ -75,6 +75,6 @@ public class ChatListener implements Listener {
                     recipients.add(other);
                 }
             }
-        }
+        }*/
     }
 }

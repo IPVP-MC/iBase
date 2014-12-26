@@ -28,7 +28,7 @@ public class FlyCommand extends BaseCommand {
             if (sender instanceof Player) {
                 target = (Player)sender;
             } else {
-                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
                 return true;
             }
         } else {

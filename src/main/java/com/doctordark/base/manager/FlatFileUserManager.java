@@ -1,8 +1,11 @@
 package com.doctordark.base.manager;
 
+import com.doctordark.base.BasePlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,9 +15,15 @@ import java.util.UUID;
 
 public class FlatFileUserManager implements UserManager {
 
-    private final Map<String, Long> lastSpeakTime = new HashMap<String, Long>();
-    private final Set<String> vanished = new HashSet<String>();
-    private final Set<String> staffChat = new HashSet<String>();
+    private Map<String, Long> lastSpeakTime = new HashMap<String, Long>();
+    private Set<String> vanished = new HashSet<String>();
+    private Set<String> staffChat = new HashSet<String>();
+    private final BasePlugin plugin;
+
+    public FlatFileUserManager(BasePlugin plugin) {
+        this.plugin = plugin;
+        this.loadData();
+    }
 
     @Override
     public boolean isInStaffChat(UUID uuid) {
@@ -76,5 +85,32 @@ public class FlatFileUserManager implements UserManager {
     @Override
     public void setLastChatTime(UUID uuid, long millis) {
         lastSpeakTime.put(uuid.toString(), millis);
+    }
+
+    @Override
+    public void loadData() {
+        FileConfiguration config = plugin.getConfig();
+
+        try {
+            this.vanished = new HashSet<String>(config.getStringList("userdata.vanished"));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        try {
+            this.staffChat = new HashSet<String>(config.getStringList("userdata.staffchat"));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        this.lastSpeakTime = new HashMap<String, Long>();
+    }
+
+    @Override
+    public void saveData() {
+        FileConfiguration config = plugin.getConfig();
+        config.set("userdata.vanished", new ArrayList<String>(vanished));
+        config.set("userdata.staffchat", new ArrayList<String>(staffChat));
+        plugin.saveConfig();
     }
 }

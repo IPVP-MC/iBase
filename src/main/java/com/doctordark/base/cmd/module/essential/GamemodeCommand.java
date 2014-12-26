@@ -25,7 +25,7 @@ public class GamemodeCommand extends BaseCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
         }
 
@@ -41,7 +41,7 @@ public class GamemodeCommand extends BaseCommand {
             if (sender instanceof Player) {
                 target = (Player) sender;
             } else {
-                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
                 return true;
             }
         } else {

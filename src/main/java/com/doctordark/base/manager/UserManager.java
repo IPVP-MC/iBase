@@ -59,4 +59,14 @@ public interface UserManager {
      * @param millis the last chat time to set
      */
     public void setLastChatTime(UUID uuid, long millis);
+
+    /**
+     * Loads the data from file.
+     */
+    public void loadData();
+
+    /**
+     * Saves the data to file.
+     */
+    public void saveData();
 }

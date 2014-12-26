@@ -1,2 +1,9 @@
 broadcast:
   format: '&d[ParaHCF] &7%s'
+chat:
+  enabled: true
+  slowed: true
+  slowed-delay: 15
+userdata:
+  vanished: []
+  staffchat: []

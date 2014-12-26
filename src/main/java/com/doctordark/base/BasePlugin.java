@@ -35,11 +35,18 @@ public class BasePlugin extends JavaPlugin {
         this.registerListeners();
     }
 
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        getServerManager().saveData();
+        getUserManager().saveData();
+    }
+
     private void registerManagers() {
         commandManager = new SimpleCommandManager(this);
         messageHandler = new MessageHandler();
-        serverManager = new FlatFileServerManager();
-        userManager = new FlatFileUserManager();
+        serverManager = new FlatFileServerManager(this);
+        userManager = new FlatFileUserManager(this);
     }
 
     private void registerCommands() {

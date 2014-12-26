@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.defaults.VanillaCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -30,7 +31,7 @@ public class TeleportCommand extends BaseCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length < 1 || args.length > 4) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
         }
 
@@ -107,12 +108,12 @@ public class TeleportCommand extends BaseCommand {
             boolean exact = input.contains(".");
             if (relative) input = input.substring(1);
 
-            double testResult = getDouble(sender, input);
+            double testResult = VanillaCommand.getDouble(sender, input);
             if (testResult == MIN_COORD_MINUS_ONE) {
                 return MIN_COORD_MINUS_ONE;
             }
-            result += testResult;
 
+            result += testResult;
             if (!exact && !relative) result += 0.5f;
         }
         if (min != 0 || max != 0) {
@@ -123,27 +124,6 @@ public class TeleportCommand extends BaseCommand {
             if (result > max) {
                 result = MIN_COORD_MINUS_ONE;
             }
-        }
-
-        return result;
-    }
-
-    public static double getDouble(CommandSender sender, String input) {
-        try {
-            return Double.parseDouble(input);
-        } catch (NumberFormatException ex) {
-            return MIN_COORD_MINUS_ONE;
-        }
-    }
-
-    public static double getDouble(CommandSender sender, String input, double min, double max) {
-        double result = getDouble(sender, input);
-
-        // TODO: This should throw an exception instead.
-        if (result < min) {
-            result = min;
-        } else if (result > max) {
-            result = max;
         }
 
         return result;

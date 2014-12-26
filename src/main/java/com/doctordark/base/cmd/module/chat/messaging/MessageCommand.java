@@ -19,7 +19,7 @@ public class MessageCommand extends BaseCommand {
     public MessageCommand() {
         super("message", "Sends a message to a recipient(s).", "base.command.message");
         this.setAliases(new String[]{"msg", "m", "whisper", "w", "tell"});
-        this.setUsage("/(command) <playerName> <message>");
+        this.setUsage("/(command) <playerName> [text...]");
     }
 
     @Override
@@ -32,7 +32,7 @@ public class MessageCommand extends BaseCommand {
         Player player = (Player) sender;
 
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
         }
 

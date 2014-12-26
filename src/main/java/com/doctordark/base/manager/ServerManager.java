@@ -45,4 +45,14 @@ public interface ServerManager {
      * @param delay the delay to set
      */
     public void setSlowChatDelay(int delay);
+
+    /**
+     * Loads the data from file.
+     */
+    public void loadData();
+
+    /**
+     * Saves the data to file.
+     */
+    public void saveData();
 }

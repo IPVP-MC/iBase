@@ -110,6 +110,18 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
     }
 
     /**
+     * Gets the usage for this base command for a
+     * given command label.
+     *
+     * @param label the label of command
+     * @return the usage of command
+     */
+    public String getUsage(String label) {
+        String usage = getUsage();
+        return usage.replace(getName(), label);
+    }
+
+    /**
      * Sets the usage for this base command.
      *
      * @param usage the usage messaging to set
