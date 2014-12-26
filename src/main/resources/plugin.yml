@@ -52,6 +52,9 @@ commands:
     description: Restricts the use of global chat.
   position:
     description: Checks the position of a player.
+  repair:
+    aliases: [fix]
+    description: Allows the repairing of tools.
   reply:
     aliases: [r]
     description: Reply to a player message.

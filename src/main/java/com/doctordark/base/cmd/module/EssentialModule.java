@@ -26,6 +26,7 @@ public class EssentialModule implements BaseCommandModule {
         commands.add(new KillCommand());
         commands.add(new LagCommand());
         commands.add(new PositionCommand());
+        commands.add(new RepairCommand());
         commands.add(new SayCommand());
         commands.add(new SpeedCommand());
         commands.add(new UptimeCommand());
