@@ -49,23 +49,22 @@ public class MessageCommand extends BaseCommand {
             builder.append(args[i]).append(" ");
         }
 
+        String message = builder.toString();
         recipients.add(target);
 
-        PlayerPreMessageEvent preMessageEvent = new PlayerPreMessageEvent(player, recipients, false);
+        PlayerPreMessageEvent preMessageEvent = new PlayerPreMessageEvent(player, recipients, message, false);
         Bukkit.getServer().getPluginManager().callEvent(preMessageEvent);
 
         if (preMessageEvent.isCancelled()) {
             return true;
         }
 
-        String message = builder.toString();
-
         for (CommandSender recipient : recipients) {
             sender.sendMessage(ChatColor.GRAY + "<" + sender.getName() + " -> " + recipient.getName() + "> " + message);
             recipient.sendMessage(ChatColor.GRAY + "<" + sender.getName() + " -> " + recipient.getName() + "> " + message);
         }
 
-        PlayerMessageEvent event = new PlayerMessageEvent(player, recipients, false);
+        PlayerMessageEvent event = new PlayerMessageEvent(player, recipients, message, false);
         Bukkit.getServer().getPluginManager().callEvent(event);
         return true;
     }

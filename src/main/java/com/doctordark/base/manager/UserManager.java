@@ -1,5 +1,7 @@
 package com.doctordark.base.manager;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface UserManager {
@@ -59,6 +61,21 @@ public interface UserManager {
      * @param millis the last chat time to set
      */
     public void setLastChatTime(UUID uuid, long millis);
+
+    /**
+     * Gets the map of message spies.
+     *
+     * @return the message spy map
+     */
+    public Map<String, List<String>> getMessageSpyMap();
+
+    /**
+     * Gets the message spying list of a player.
+     *
+     * @param uuid the uuid of player to check for
+     * @return the list of players spying on
+     */
+    public List<String> getMessageSpyList(UUID uuid);
 
     /**
      * Loads the data from file.

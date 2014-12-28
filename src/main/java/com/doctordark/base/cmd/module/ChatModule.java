@@ -8,6 +8,7 @@ import com.doctordark.base.cmd.module.chat.SlowChatCommand;
 import com.doctordark.base.cmd.module.chat.StaffChatCommand;
 import com.doctordark.base.cmd.module.chat.messaging.IgnoreCommand;
 import com.doctordark.base.cmd.module.chat.messaging.MessageCommand;
+import com.doctordark.base.cmd.module.chat.messaging.MessageSpyCommand;
 import com.doctordark.base.cmd.module.chat.messaging.ReplyCommand;
 import com.doctordark.base.cmd.module.chat.messaging.TogglepmCommand;
 
@@ -30,6 +31,7 @@ public class ChatModule implements BaseCommandModule {
         // Private messaging related:
         commands.add(new IgnoreCommand());
         commands.add(new MessageCommand());
+        commands.add(new MessageSpyCommand());
         commands.add(new ReplyCommand());
         commands.add(new TogglepmCommand());
     }

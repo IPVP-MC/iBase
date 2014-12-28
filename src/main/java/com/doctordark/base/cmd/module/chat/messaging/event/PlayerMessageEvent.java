@@ -15,11 +15,13 @@ public class PlayerMessageEvent extends Event {
 
     private final Player sender;
     private final Set<Player> recipients;
+    private final String message;
     private final boolean isReply;
 
-    public PlayerMessageEvent(Player sender, Set<Player> recipients, boolean isReply) {
+    public PlayerMessageEvent(Player sender, Set<Player> recipients, String message, boolean isReply) {
         this.sender = sender;
         this.recipients = recipients;
+        this.message = message;
         this.isReply = isReply;
     }
 
@@ -33,6 +35,10 @@ public class PlayerMessageEvent extends Event {
 
     public Set<Player> getRecipients() {
         return recipients;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public boolean isReply() {

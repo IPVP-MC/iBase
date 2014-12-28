@@ -92,6 +92,6 @@ public class GamemodeCommand extends BaseCommand {
             return null;
         }
 
-        return getCompletions(results, args);
+        return getCompletions(args, results);
     }
 }

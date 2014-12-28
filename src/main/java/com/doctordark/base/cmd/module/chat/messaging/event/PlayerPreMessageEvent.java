@@ -16,12 +16,14 @@ public class PlayerPreMessageEvent extends Event implements Cancellable {
     private static HandlerList handlers = new HandlerList();
     private final Player sender;
     private final Set<Player> recipients;
+    private final String message;
     private final boolean isReply;
     private boolean cancelled = false;
 
-    public PlayerPreMessageEvent(Player sender, Set<Player> recipients, boolean isReply) {
+    public PlayerPreMessageEvent(Player sender, Set<Player> recipients, String message, boolean isReply) {
         this.sender = sender;
         this.recipients = recipients;
+        this.message = message;
         this.isReply = isReply;
     }
 
@@ -35,6 +37,10 @@ public class PlayerPreMessageEvent extends Event implements Cancellable {
 
     public Set<Player> getRecipients() {
         return recipients;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public boolean isReply() {

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -18,6 +19,7 @@ public class FlatFileUserManager implements UserManager {
     private Map<String, Long> lastSpeakTime = new HashMap<String, Long>();
     private Set<String> vanished = new HashSet<String>();
     private Set<String> staffChat = new HashSet<String>();
+    private Map<String, List<String>> messageSpyMap = new HashMap<String, List<String>>();
     private final BasePlugin plugin;
 
     public FlatFileUserManager(BasePlugin plugin) {
@@ -85,6 +87,22 @@ public class FlatFileUserManager implements UserManager {
     @Override
     public void setLastChatTime(UUID uuid, long millis) {
         lastSpeakTime.put(uuid.toString(), millis);
+    }
+
+    @Override
+    public Map<String, List<String>> getMessageSpyMap() {
+        return messageSpyMap;
+    }
+
+    @Override
+    public List<String> getMessageSpyList(UUID uuid) {
+        String id = uuid.toString();
+
+        if (!messageSpyMap.containsKey(id)) {
+            messageSpyMap.put(id, new ArrayList<String>());
+        }
+
+        return messageSpyMap.get(id);
     }
 
     @Override

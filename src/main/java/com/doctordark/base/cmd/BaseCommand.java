@@ -38,11 +38,11 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
     /**
      * Gets completions based on the characters of argument.
      *
-     * @param input the current completion list
      * @param args the array of arguments for command
+     * @param input the current completion list
      * @return the completions based on given arguments
      */
-    public List<String> getCompletions(List<String> input, String[] args) {
+    public List<String> getCompletions(String[] args, List<String> input) {
         List<String> results = new ArrayList<String>();
         String argument = args[(args.length - 1)];
 

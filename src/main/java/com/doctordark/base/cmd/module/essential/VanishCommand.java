@@ -42,6 +42,7 @@ public class VanishCommand extends BaseCommand {
 
         boolean vanished = (args.length >= 2) ? Boolean.parseBoolean(args[1]) : !getBasePlugin().getUserManager().isVanished(uuid);
         getBasePlugin().getUserManager().setVanished(uuid, vanished);
+
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Vanish mode of " + target.getName() + " set to " + vanished + ".");
         return true;
     }

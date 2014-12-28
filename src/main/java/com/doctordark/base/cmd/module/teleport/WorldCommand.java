@@ -70,6 +70,6 @@ public class WorldCommand extends BaseCommand {
             results.add(world.getName());
         }
 
-        return (args.length == 1) ? getCompletions(results, args) : Collections.<String>emptyList();
+        return (args.length == 1) ? getCompletions(args, results) : Collections.<String>emptyList();
     }
 }

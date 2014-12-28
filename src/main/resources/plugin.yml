@@ -45,6 +45,9 @@ commands:
   message:
     aliases: [m, msg, tell, whisper, w]
     description: Messsage an online player.
+  messagespy:
+    aliases: [ms]
+    description: Command used to spy on pm's of players.
   more:
     description: Give yourself more of an item.
   mutechat:

@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +36,10 @@ public class FeedCommand extends BaseCommand {
             }
         } else if (args[0].equalsIgnoreCase("all")) {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                if (player.hasPotionEffect(PotionEffectType.HUNGER)) {
+                    player.removePotionEffect(PotionEffectType.HUNGER);
+                }
+
                 player.setFoodLevel(MAX_HUNGER);
             }
 
@@ -54,8 +59,12 @@ public class FeedCommand extends BaseCommand {
             return true;
         }
 
+        if (target.hasPotionEffect(PotionEffectType.HUNGER)) {
+            target.removePotionEffect(PotionEffectType.HUNGER);
+        }
+
         target.setFoodLevel(MAX_HUNGER);
-        
+
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Fed player " + target.getName() + ".");
         return true;
     }

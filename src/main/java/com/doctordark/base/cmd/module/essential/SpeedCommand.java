@@ -118,6 +118,6 @@ public class SpeedCommand extends BaseCommand {
             return null;
         }
 
-        return getCompletions(results, args);
+        return getCompletions(args, results);
     }
 }

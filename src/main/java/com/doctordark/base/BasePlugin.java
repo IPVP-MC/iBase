@@ -7,6 +7,7 @@ import com.doctordark.base.cmd.module.EssentialModule;
 import com.doctordark.base.cmd.module.InventoryModule;
 import com.doctordark.base.cmd.module.TeleportModule;
 import com.doctordark.base.cmd.module.chat.messaging.MessageHandler;
+import com.doctordark.base.cmd.module.chat.messaging.MessageSpyListener;
 import com.doctordark.base.listener.module.ChatListener;
 import com.doctordark.base.listener.module.ColouredSignListener;
 import com.doctordark.base.listener.module.NameVerifyListener;
@@ -62,6 +63,7 @@ public class BasePlugin extends JavaPlugin {
         manager.registerEvents(new ChatListener(this), this);
         manager.registerEvents(new ColouredSignListener(), this);
         manager.registerEvents(new NameVerifyListener(), this);
+        manager.registerEvents(new MessageSpyListener(this), this);
         manager.registerEvents(new PingListener(), this);
         manager.registerEvents(new RespawnListener(), this);
         manager.registerEvents(new VanishListener(this), this);
