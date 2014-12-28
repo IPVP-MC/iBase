@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -62,14 +63,8 @@ public class MessageSpyCommand extends BaseCommand {
             }
 
             if (args[1].equalsIgnoreCase("all")) {
-                for (Player target : Bukkit.getServer().getOnlinePlayers()) {
-                    if (target.getName().equals(sender.getName())) continue;
-                    if (currentSpies.contains(target.getName())) continue;
-
-                    currentSpies.add(target.getName());
-                }
-
-                sender.sendMessage(ChatColor.GREEN + "You are now spying on the chat of all online players.");
+                currentSpies.add("all");
+                sender.sendMessage(ChatColor.GREEN + "You are now spying on the chat of all players.");
                 return true;
             }
 
@@ -95,9 +90,15 @@ public class MessageSpyCommand extends BaseCommand {
             return true;
         }
 
-        if (args[1].equalsIgnoreCase("del") || args[1].equalsIgnoreCase("delete") || args[1].equalsIgnoreCase("remove")) {
+        if (args[0].equalsIgnoreCase("del") || args[0].equalsIgnoreCase("delete") || args[0].equalsIgnoreCase("remove")) {
             if (args.length < 2) {
                 sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + args[0].toLowerCase() + " <playerName>");
+                return true;
+            }
+
+            if (args[1].equalsIgnoreCase("all")) {
+                currentSpies.remove("all");
+                sender.sendMessage(ChatColor.RED + "No longer spying on the chat of all players!");
                 return true;
             }
 
@@ -138,7 +139,7 @@ public class MessageSpyCommand extends BaseCommand {
             results.add("clear");
             return getCompletions(args, results);
         } else if ((args.length == 2) && (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("del"))) {
-            return null;
+            return getCompletions(args, Arrays.asList("all"));
         } else {
             return Collections.emptyList();
         }

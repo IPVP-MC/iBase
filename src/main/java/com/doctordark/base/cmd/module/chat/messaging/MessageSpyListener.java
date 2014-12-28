@@ -41,7 +41,7 @@ public class MessageSpyListener implements Listener {
                 if (recipient.getName().equals(target.getName())) continue;
 
                 List<String> spyingOn = messageSpyMap.get(id);
-                if (spyingOn.contains(sender.getName()) || spyingOn.contains(recipient.getName())) {
+                if (spyingOn.contains("all") || spyingOn.contains(sender.getName()) || spyingOn.contains(recipient.getName())) {
                     target.sendMessage(String.format(Locale.ENGLISH, format, sender.getName(), recipient.getName(), message));
                 }
             }
