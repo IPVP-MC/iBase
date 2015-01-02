@@ -13,12 +13,13 @@ import java.text.DecimalFormat;
  */
 public class LagCommand extends BaseCommand {
 
-    private static final double MAXIMUM_TPS = 20.0D;
+    private final double MAXIMUM_TPS;
 
     public LagCommand() {
         super("lag", "Checks the lag of the server.", "base.command.lag");
         this.setAliases(new String[]{});
         this.setUsage("/(command)");
+        this.MAXIMUM_TPS = 20.0D;
     }
 
     @Override
@@ -26,17 +27,24 @@ public class LagCommand extends BaseCommand {
         double tps = 20; //Math.min(((CraftServer) Bukkit.getServer()).getServer().recentTps[0], 20);
         double lag = (double) Math.round((1.0D - tps / MAXIMUM_TPS) * 100.0D);
 
-        ChatColor color;
+        ChatColor colour;
         if (tps >= 18.0) {
-            color = ChatColor.GREEN;
+            colour = ChatColor.GREEN;
         } else if (tps >= 15.0) {
-            color = ChatColor.YELLOW;
+            colour = ChatColor.YELLOW;
         } else {
-            color = ChatColor.RED;
+            colour = ChatColor.RED;
         }
 
-        sender.sendMessage(color + "Server tps is currently at " + format(tps) + ".");
-        sender.sendMessage(color + "Server lag is currently at " + format(lag) + "%");
+        sender.sendMessage(colour + "Server tps is currently at " + format(tps) + ".");
+        sender.sendMessage(colour + "Server lag is currently at " + format(lag) + "%");
+
+        if (sender.hasPermission(getPermission() + ".memory")) {
+            sender.sendMessage(colour + "Max Memory: " + (Runtime.getRuntime().maxMemory() / 1024 / 1024));
+            sender.sendMessage(colour + "Total Memory: " + (Runtime.getRuntime().totalMemory() / 1024 / 1024));
+            sender.sendMessage(colour + "Free Memory: " + (Runtime.getRuntime().freeMemory() / 1024 / 1024));
+        }
+
         return true;
     }
 
