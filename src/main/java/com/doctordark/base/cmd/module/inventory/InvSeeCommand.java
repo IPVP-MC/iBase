@@ -6,7 +6,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,10 +18,22 @@ import java.util.List;
  */
 public class InvSeeCommand extends BaseCommand {
 
+    private InventoryType[] types = new InventoryType[]{
+            InventoryType.BREWING,
+            InventoryType.CHEST,
+            InventoryType.CRAFTING,
+            InventoryType.DISPENSER,
+            InventoryType.ENCHANTING,
+            InventoryType.FURNACE,
+            InventoryType.HOPPER,
+            InventoryType.PLAYER,
+            InventoryType.WORKBENCH
+    };
+
     public InvSeeCommand() {
         super("invsee", "View the inventory of a player.", "base.command.invsee");
         this.setAliases(new String[]{"inventorysee", "inventory", "inv"});
-        this.setUsage("/(command) <playerName>");
+        this.setUsage("/(command) <inventoryType|playerName>");
     }
 
     @Override
@@ -40,19 +55,49 @@ public class InvSeeCommand extends BaseCommand {
             return true;
         }
 
-        Player target = Bukkit.getServer().getPlayer(args[0]);
+        Inventory inventory = null;
 
-        if (target == null || !player.canSee(target)) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found!");
-            return true;
+        for (InventoryType type : types) {
+            if (type.name().equalsIgnoreCase(args[0])) {
+                inventory = Bukkit.createInventory(player, type);
+            }
         }
 
-        player.openInventory(target.getInventory());
+        if (inventory == null) {
+            Player target = Bukkit.getServer().getPlayer(args[0]);
+
+            if (target == null || !player.canSee(target)) {
+                sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found!");
+                return true;
+            }
+
+            inventory = target.getInventory();
+        }
+
+        player.openInventory(inventory);
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        return (args.length == 1) ? null : Collections.<String>emptyList();
+        if (args.length == 1) {
+            List<String> results = new ArrayList<String>();
+
+            for (InventoryType type : types) {
+                results.add(type.name());
+            }
+
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                if (sender instanceof Player && !((Player) sender).canSee(player)) {
+                    continue;
+                }
+
+                results.add(player.getName());
+            }
+
+            return getCompletions(args, results);
+        } else {
+            return Collections.emptyList();
+        }
     }
 }
