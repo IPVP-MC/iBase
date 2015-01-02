@@ -1,6 +1,7 @@
 package com.doctordark.base.listener.module;
 
 import com.doctordark.base.BasePlugin;
+import com.doctordark.base.util.BaseUtil;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -129,6 +131,12 @@ public class VanishListener implements Listener {
             UUID uuid = player.getUniqueId();
             boolean vanished = plugin.getUserManager().isVanished(uuid);
             if (vanished) {
+                Player attacker = BaseUtil.getFinalAttacker(event);
+
+                if (attacker != null) {
+                    attacker.sendMessage(ChatColor.RED + "That player is vanished!");
+                }
+
                 event.setCancelled(true);
             }
         }

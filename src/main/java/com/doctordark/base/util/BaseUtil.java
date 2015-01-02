@@ -7,6 +7,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+
+import javax.swing.text.html.parser.Entity;
 
 /**
  * Utility class for the Base plugin.
@@ -15,6 +20,31 @@ public class BaseUtil {
 
     public static String getDisplayName(CommandSender sender) {
         return (sender instanceof Player) ? ((Player) sender).getDisplayName() : sender.getName();
+    }
+
+    /**
+     * Gets the final attacker from the damage event including
+     * projectiles usage and everything else.
+     *
+     * @param originalEvent the original damage event
+     * @return the final attacker from event
+     */
+    public static Player getFinalAttacker(EntityDamageEvent originalEvent) {
+        if (!(originalEvent instanceof EntityDamageByEntityEvent)) {
+            return null;
+        }
+
+        EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) originalEvent;
+        if (event.getDamager() instanceof Player) {
+            return (Player) event.getDamager();
+        } else if (event.getDamager() instanceof Projectile) {
+            Projectile projectile = (Projectile) event.getDamager();
+            if (projectile.getShooter() instanceof Player) {
+                return (Player) projectile.getShooter();
+            }
+        }
+
+        return null;
     }
 
     public static Location getHighestBlock(Location location) {
