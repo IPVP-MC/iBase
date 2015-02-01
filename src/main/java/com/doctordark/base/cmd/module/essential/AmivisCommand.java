@@ -1,29 +1,28 @@
 package com.doctordark.base.cmd.module.essential;
 
+import com.doctordark.base.BasePlugin;
 import com.doctordark.base.cmd.BaseCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * Command used for flight toggling of players.
+ * Command used to check if a player is visible.
  */
-public class RepairCommand extends BaseCommand {
+public class AmivisCommand extends BaseCommand {
 
-    public RepairCommand() {
-        super("repair", "Allows repairing of damaged tools for a player.", "base.command.repair");
+    private final BasePlugin plugin;
+
+    public AmivisCommand(BasePlugin plugin) {
+        super("amivis", "Check if a player is visible.", "base.command.amivis");
         this.setAliases(new String[]{});
-        this.setUsage("/(command) <playerName> [all]");
+        this.setUsage("/(command) <playerName> [targetName]");
+        this.plugin = plugin;
     }
 
     @Override
@@ -45,23 +44,9 @@ public class RepairCommand extends BaseCommand {
             return true;
         }
 
-        List<ItemStack> toRepair = new ArrayList<ItemStack>();
+        boolean vanished = plugin.getUserManager().isVanished(target.getUniqueId());
 
-        if (args.length >= 2 && args[1].equalsIgnoreCase("all")) {
-            PlayerInventory targetInventory = target.getInventory();
-            toRepair.addAll(Arrays.asList(targetInventory.getContents()));
-            toRepair.addAll(Arrays.asList(targetInventory.getArmorContents()));
-        } else {
-            toRepair.add(target.getItemInHand());
-        }
-
-        for (ItemStack stack : toRepair) {
-            if (stack != null && stack.getType() != Material.AIR) {
-                stack.setDurability((short) 0);
-            }
-        }
-
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Repaired " + (toRepair.size() > 1 ? "inventory" : "held item") + " of " + target.getName() + ".");
+        sender.sendMessage(ChatColor.YELLOW + target.getName() + " is " + (vanished ? "in vanish" : "not in vanish") + ".");
         return true;
     }
 

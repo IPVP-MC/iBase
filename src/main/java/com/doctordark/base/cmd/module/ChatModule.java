@@ -1,11 +1,9 @@
 package com.doctordark.base.cmd.module;
 
+import com.doctordark.base.BasePlugin;
 import com.doctordark.base.cmd.BaseCommand;
 import com.doctordark.base.cmd.BaseCommandModule;
-import com.doctordark.base.cmd.module.chat.ClearChatCommand;
-import com.doctordark.base.cmd.module.chat.DisableChatCommand;
-import com.doctordark.base.cmd.module.chat.SlowChatCommand;
-import com.doctordark.base.cmd.module.chat.StaffChatCommand;
+import com.doctordark.base.cmd.module.chat.*;
 import com.doctordark.base.cmd.module.chat.messaging.IgnoreCommand;
 import com.doctordark.base.cmd.module.chat.messaging.MessageCommand;
 import com.doctordark.base.cmd.module.chat.messaging.MessageSpyCommand;
@@ -20,19 +18,21 @@ import java.util.Set;
  */
 public class ChatModule implements BaseCommandModule {
 
-    private Set<BaseCommand> commands;
+    private final Set<BaseCommand> commands;
 
-    public ChatModule() {
+    public ChatModule(BasePlugin plugin) {
         commands = new HashSet<BaseCommand>();
+        commands.add(new AnnouncementsCommand(plugin));
         commands.add(new ClearChatCommand());
-        commands.add(new DisableChatCommand());
-        commands.add(new SlowChatCommand());
-        commands.add(new StaffChatCommand());
+        commands.add(new DisableChatCommand(plugin));
+        commands.add(new SlowChatCommand(plugin));
+        commands.add(new StaffChatCommand(plugin));
+
         // Private messaging related:
-        commands.add(new IgnoreCommand());
+        commands.add(new IgnoreCommand(plugin));
         commands.add(new MessageCommand());
-        commands.add(new MessageSpyCommand());
-        commands.add(new ReplyCommand());
+        commands.add(new MessageSpyCommand(plugin));
+        commands.add(new ReplyCommand(plugin));
         commands.add(new TogglepmCommand());
     }
 

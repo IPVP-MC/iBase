@@ -19,7 +19,7 @@ public class ClearChatCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Collection<? extends Player> players = Bukkit.getServer().getOnlinePlayers();
         String[] messages = new String[101];
 

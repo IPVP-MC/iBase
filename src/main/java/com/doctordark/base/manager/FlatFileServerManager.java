@@ -1,19 +1,43 @@
 package com.doctordark.base.manager;
 
 import com.doctordark.base.BasePlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FlatFileServerManager implements ServerManager {
 
+    private final List<String> announcements = new ArrayList<String>();
+    private int announcementDelay;
     private boolean chatEnabled;
     private boolean chatSlowed;
     private int chatSlowedDelay;
+    private int maxPlayers;
 
+    private final FileConfiguration config;
     private final BasePlugin plugin;
 
     public FlatFileServerManager(BasePlugin plugin) {
         this.plugin = plugin;
-        this.loadData();
+        this.config = plugin.getConfig();
+        this.reloadServerData();
+    }
+
+    @Override
+    public int getAnnouncementDelay() {
+        return announcementDelay;
+    }
+
+    @Override
+    public void setAnnouncementDelay(int delay) {
+        this.announcementDelay = delay;
+    }
+
+    @Override
+    public List<String> getAnnouncements() {
+        return announcements;
     }
 
     @Override
@@ -47,21 +71,38 @@ public class FlatFileServerManager implements ServerManager {
     }
 
     @Override
-    public void loadData() {
-        FileConfiguration config = plugin.getConfig();
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    @Override
+    public void setMaxPlayers(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
+    }
+
+    @Override
+    public void reloadServerData() {
+        this.announcements.clear();
+
         if (config.getConfigurationSection("chat") != null) {
             this.chatEnabled = config.getBoolean("chat.enabled", true);
             this.chatSlowed = config.getBoolean("chat.slowed", true);
             this.chatSlowedDelay = config.getInt("chat.slowed-delay", 15);
         }
+
+        this.announcements.addAll(config.getStringList("announcements.list"));
+        this.announcementDelay = config.getInt("announcements.delay", 60 * 5);
+        this.maxPlayers = config.getInt("max-players", Bukkit.getMaxPlayers());
     }
 
     @Override
-    public void saveData() {
-        FileConfiguration config = plugin.getConfig();
-        config.set("chat.enabled", chatEnabled);
-        config.set("chat.slowed", chatSlowed);
-        config.set("chat.slowed-delay", chatSlowedDelay);
+    public void saveServerData() {
+        config.set("chat.enabled", isChatEnabled());
+        config.set("chat.slowed", isChatSlowed());
+        config.set("chat.slowed-delay", getSlowChatDelay());
+        config.set("announcements.list", getAnnouncements());
+        config.set("announcements.delay", getAnnouncementDelay());
+        config.set("max-players", getMaxPlayers());
         plugin.saveConfig();
     }
 }

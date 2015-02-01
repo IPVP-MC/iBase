@@ -21,9 +21,9 @@ public class TeleportHereCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command is only executable by players!");
+            sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
             return true;
         }
 
@@ -33,12 +33,13 @@ public class TeleportHereCommand extends BaseCommand {
         }
 
         Player player = (Player) sender;
+
         player.performCommand("tp " + args[0] + " " + sender.getName());
         return true;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         return (args.length == 1) ? null : Collections.<String>emptyList();
     }
 }

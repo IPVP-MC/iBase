@@ -1,6 +1,5 @@
 package com.doctordark.base.cmd;
 
-import com.doctordark.base.BasePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -9,7 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents a base command for the plugin.
@@ -53,15 +54,6 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
         }
 
         return results;
-    }
-
-    /**
-     * Gets the base plugin instance.
-     *
-     * @return the base plugin instance
-     */
-    public BasePlugin getBasePlugin() {
-        return BasePlugin.getPlugin(BasePlugin.class);
     }
 
     /**
@@ -157,7 +149,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @return true if player was null
      */
     public boolean validateNullPlayer(CommandSender sender, String id) {
-        sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + id + ChatColor.GOLD + "' not found!");
+        sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + id + ChatColor.GOLD + "' not found.");
         return true;
     }
 
@@ -174,26 +166,6 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
     }
 
     /**
-     * Gets a set of online players that is visible to the sender
-     * of the command that match the given id,
-     *
-     * @param sender the sender to match for
-     * @param id the id of the search term
-     * @return the set of players whose name matches the id
-     */
-    public Set<Player> findPlayers(CommandSender sender, String id) {
-        Set<Player> result = new HashSet<Player>();
-        List<Player> players = Bukkit.getServer().matchPlayer(id);
-        for (Player player : players) {
-            if (canSee(sender, player)) {
-                result.add(player);
-            }
-        }
-
-        return result;
-    }
-
-    /**
      * Checks if a CommandSender can see an online player.
      *
      * @param sender the sender of command
@@ -201,12 +173,12 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @return true if sender is not player or the sending player can see target
      */
     public boolean canSee(CommandSender sender, Player target) {
-        return (!(sender instanceof Player && !((Player) sender).canSee(target)));
+        return target == null || (!(sender instanceof Player && !((Player) sender).canSee(target)));
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        return true;
+        return false;
     }
 
     @Override

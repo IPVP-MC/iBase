@@ -18,18 +18,18 @@ public class TogglepmCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command is only executable for players!");
+            sender.sendMessage(ChatColor.RED + "This command is only executable for players.");
             return true;
         }
 
-        sender.sendMessage(ChatColor.RED + "This command is currently not implemented!");
+        sender.sendMessage(ChatColor.RED + "This command is currently not implemented.");
         return true;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         return Collections.emptyList();
     }
 }

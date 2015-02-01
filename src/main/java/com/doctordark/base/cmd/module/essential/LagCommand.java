@@ -23,7 +23,7 @@ public class LagCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         double tps = 20; //Math.min(((CraftServer) Bukkit.getServer()).getServer().recentTps[0], 20);
         double lag = (double) Math.round((1.0D - tps / MAXIMUM_TPS) * 100.0D);
 

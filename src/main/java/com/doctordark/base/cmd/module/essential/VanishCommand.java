@@ -1,5 +1,6 @@
 package com.doctordark.base.cmd.module.essential;
 
+import com.doctordark.base.BasePlugin;
 import com.doctordark.base.cmd.BaseCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,14 +14,17 @@ import java.util.UUID;
 
 public class VanishCommand extends BaseCommand {
 
-    public VanishCommand() {
+    private final BasePlugin plugin;
+
+    public VanishCommand(BasePlugin plugin) {
         super("vanish", "Hide from other players.", "base.command.vanish");
         this.setAliases(new String[]{});
         this.setUsage("/(command) [playerName]");
+        this.plugin = plugin;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player target;
         if (args.length < 1) {
             if (sender instanceof Player) {
@@ -34,21 +38,21 @@ public class VanishCommand extends BaseCommand {
         }
 
         if (target == null || (sender instanceof Player && !((Player) sender).canSee(target))) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found!");
+            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
             return true;
         }
 
         UUID uuid = target.getUniqueId();
 
-        boolean vanished = (args.length >= 2) ? Boolean.parseBoolean(args[1]) : !getBasePlugin().getUserManager().isVanished(uuid);
-        getBasePlugin().getUserManager().setVanished(uuid, vanished);
+        boolean vanished = (args.length >= 2) ? Boolean.parseBoolean(args[1]) : !plugin.getUserManager().isVanished(uuid);
+        plugin.getUserManager().setVanished(uuid, vanished);
 
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Vanish mode of " + target.getName() + " set to " + vanished + ".");
         return true;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         return (args.length == 1) ? null : Collections.<String>emptyList();
     }
 }

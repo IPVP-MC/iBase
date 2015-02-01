@@ -1,0 +1,6 @@
+Config to change features of vanish:
+allow toggling of preventing block break, chatting, etc.
+Config boolean for invalid names,
+                   coloured signs,
+                   respawn fire tick fix,
+                   /say format

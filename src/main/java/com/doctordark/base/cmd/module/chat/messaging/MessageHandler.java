@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.HashMap;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 public class MessageHandler implements Listener {
 
-    private Map<UUID, UUID> lastRepliedTo = new HashMap<UUID, UUID>();
+    private final Map<UUID, UUID> lastRepliedTo = new HashMap<UUID, UUID>();
 
     /**
      * Gets the last replied recipient for a player.
@@ -24,8 +25,12 @@ public class MessageHandler implements Listener {
      */
     public Player getLastRepliedTo(Player sender) {
         UUID uuid = sender.getUniqueId();
-        UUID last = lastRepliedTo.containsKey(uuid) ? lastRepliedTo.get(uuid) : null;
-        return Bukkit.getServer().getPlayer(last);
+        if (lastRepliedTo.containsKey(uuid)) {
+            UUID last = lastRepliedTo.get(uuid);
+            return Bukkit.getServer().getPlayer(last);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -38,7 +43,7 @@ public class MessageHandler implements Listener {
         lastRepliedTo.put(sender.getUniqueId(), recipient.getUniqueId());
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerMessage(PlayerMessageEvent event) {
         Player player = event.getSender();
         Set<Player> recipients = event.getRecipients();

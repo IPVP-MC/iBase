@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class InventoryModule implements BaseCommandModule {
 
-    private Set<BaseCommand> commands;
+    private final Set<BaseCommand> commands;
 
     public InventoryModule() {
         commands = new HashSet<BaseCommand>();

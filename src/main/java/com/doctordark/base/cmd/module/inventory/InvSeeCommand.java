@@ -18,10 +18,9 @@ import java.util.List;
  */
 public class InvSeeCommand extends BaseCommand {
 
-    private InventoryType[] types = new InventoryType[]{
+    private final InventoryType[] types = new InventoryType[]{
             InventoryType.BREWING,
             InventoryType.CHEST,
-            InventoryType.CRAFTING,
             InventoryType.DISPENSER,
             InventoryType.ENCHANTING,
             InventoryType.FURNACE,
@@ -42,9 +41,9 @@ public class InvSeeCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command is only executable for players!");
+            sender.sendMessage(ChatColor.RED + "This command is only executable for players.");
             return true;
         }
 
@@ -67,7 +66,7 @@ public class InvSeeCommand extends BaseCommand {
             Player target = Bukkit.getServer().getPlayer(args[0]);
 
             if (target == null || !player.canSee(target)) {
-                sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found!");
+                sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
                 return true;
             }
 
@@ -79,7 +78,7 @@ public class InvSeeCommand extends BaseCommand {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
             List<String> results = new ArrayList<String>();
 

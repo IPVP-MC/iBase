@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public class PlayerMessageEvent extends Event {
 
-    private static HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
     private final Player sender;
     private final Set<Player> recipients;

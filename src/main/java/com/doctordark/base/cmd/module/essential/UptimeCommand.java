@@ -20,7 +20,7 @@ public class UptimeCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         long begin = ManagementFactory.getRuntimeMXBean().getStartTime();
         long after = System.currentTimeMillis();
 

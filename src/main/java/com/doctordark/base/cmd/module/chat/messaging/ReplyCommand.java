@@ -1,5 +1,6 @@
 package com.doctordark.base.cmd.module.chat.messaging;
 
+import com.doctordark.base.BasePlugin;
 import com.doctordark.base.cmd.BaseCommand;
 import com.doctordark.base.cmd.module.chat.messaging.event.PlayerMessageEvent;
 import com.doctordark.base.cmd.module.chat.messaging.event.PlayerPreMessageEvent;
@@ -16,31 +17,39 @@ import java.util.Set;
 
 public class ReplyCommand extends BaseCommand {
 
-    public ReplyCommand() {
+    private final BasePlugin plugin;
+
+    public ReplyCommand(BasePlugin plugin) {
         super("reply", "Replies to the last conversing player.", "base.command.reply");
         this.setAliases(new String[]{"r", "respond"});
         this.setUsage("/(command) <message>");
+        this.plugin = plugin;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command is only executable for players!");
+            sender.sendMessage(ChatColor.RED + "This command is only executable for players.");
             return true;
         }
 
         Player player = (Player) sender;
+        Player target = plugin.getMessageHandler().getLastRepliedTo(player);
 
         if (args.length < 1) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
+
+            if ((target != null) && (canSee(sender, target))) {
+                sender.sendMessage(ChatColor.RED + "You are in a conversation with " + target.getName() + ".");
+            }
+
             return true;
         }
 
         Set<Player> recipients = new HashSet<Player>();
-        Player target = getBasePlugin().getMessageHandler().getLastRepliedTo(player);
 
         if ((target == null) || (!canSee(sender, target))) {
-            sender.sendMessage(ChatColor.GOLD + "There is no player to reply to!");
+            sender.sendMessage(ChatColor.GOLD + "There is no player to reply to.");
             return true;
         }
 
@@ -70,7 +79,7 @@ public class ReplyCommand extends BaseCommand {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         return (args.length == 1) ? null : Collections.<String>emptyList();
     }
 }

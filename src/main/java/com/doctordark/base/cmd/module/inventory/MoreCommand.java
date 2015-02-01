@@ -1,6 +1,7 @@
 package com.doctordark.base.cmd.module.inventory;
 
 import com.doctordark.base.cmd.BaseCommand;
+import com.doctordark.base.util.BaseUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -25,9 +26,9 @@ public class MoreCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command is only executable for players!");
+            sender.sendMessage(ChatColor.RED + "This command is only executable for players.");
             return true;
         }
 
@@ -35,19 +36,30 @@ public class MoreCommand extends BaseCommand {
         ItemStack stack = player.getItemInHand();
 
         if (stack == null || stack.getType() == Material.AIR) {
-            sender.sendMessage(ChatColor.RED + "You are not holding any item!");
+            sender.sendMessage(ChatColor.RED + "You are not holding any item.");
             return true;
         }
 
-        int maxAmount = stack.getMaxStackSize();
-        int curAmount = stack.getAmount();
+        Integer amount;
 
-        if (curAmount >= maxAmount) {
-            sender.sendMessage(ChatColor.RED + "You already have the maximum amount: " + maxAmount + ".");
-            return true;
+        if (args.length > 0) {
+            amount = BaseUtil.getInteger(args[0]);
+
+            if (amount == null) {
+                sender.sendMessage(ChatColor.RED + "'" + args[0] + "' is not a number.");
+                return true;
+            }
+        } else {
+            int curAmount = stack.getAmount();
+            amount = stack.getMaxStackSize();
+
+            if (curAmount >= amount) {
+                sender.sendMessage(ChatColor.RED + "You already have the maximum amount: " + amount + ".");
+                return true;
+            }
         }
 
-        stack.setAmount(maxAmount);
+        stack.setAmount(amount);
         return true;
     }
 }

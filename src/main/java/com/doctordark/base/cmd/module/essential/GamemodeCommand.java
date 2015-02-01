@@ -23,16 +23,16 @@ public class GamemodeCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
         }
 
-        GameMode mode = getGamemodeByName(args[0]);
+        GameMode mode = getGameModeByName(args[0]);
 
         if (mode == null) {
-            sender.sendMessage(ChatColor.RED + "Gamemode '" + args[0] + "' not found!");
+            sender.sendMessage(ChatColor.RED + "Gamemode '" + args[0] + "' not found.");
             return true;
         }
 
@@ -49,12 +49,12 @@ public class GamemodeCommand extends BaseCommand {
         }
 
         if ((target == null) || (!canSee(sender, target))) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found!");
+            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
             return true;
         }
 
         if (target.getGameMode() == mode) {
-            sender.sendMessage(ChatColor.RED + "Gamemode of " + target.getName() + " is already " + mode.name() + "!");
+            sender.sendMessage(ChatColor.RED + "Gamemode of " + target.getName() + " is already " + mode.name() + ".");
             return true;
         }
 
@@ -64,7 +64,28 @@ public class GamemodeCommand extends BaseCommand {
         return true;
     }
 
-    private GameMode getGamemodeByName(String id) {
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        List<String> results = new ArrayList<String>();
+
+        if (args.length == 1) {
+            GameMode[] modes = GameMode.values();
+
+            for (GameMode mode : modes) {
+                results.add(mode.name());
+            }
+        }
+
+        return getCompletions(args, results);
+    }
+
+    /**
+     * Gets a game-mode by a given name.
+     *
+     * @param id the id to search
+     * @return the game-mode from name
+     */
+    private GameMode getGameModeByName(String id) {
         if (id.equalsIgnoreCase("gmc") || id.contains("creat") || id.equalsIgnoreCase("1") || id.equalsIgnoreCase("c")) {
             return GameMode.CREATIVE;
         } else if (id.equalsIgnoreCase("gms") || id.contains("survi") || id.equalsIgnoreCase("0") || id.equalsIgnoreCase("s")) {
@@ -76,22 +97,5 @@ public class GamemodeCommand extends BaseCommand {
         } else {
             return null;
         }
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        List<String> results = new ArrayList<String>();
-
-        if (args.length == 1) {
-            GameMode[] modes = GameMode.values();
-
-            for (GameMode mode : modes) {
-                results.add(mode.name());
-            }
-        } else if (args.length == 2) {
-            return null;
-        }
-
-        return getCompletions(args, results);
     }
 }

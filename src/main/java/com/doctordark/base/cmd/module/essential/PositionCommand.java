@@ -8,6 +8,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Command used to check a players position.
  */
@@ -20,7 +23,7 @@ public class PositionCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player target;
         if (args.length < 1) {
             if (sender instanceof Player) {
@@ -34,7 +37,7 @@ public class PositionCommand extends BaseCommand {
         }
 
         if ((target == null) || (!canSee(sender, target))) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found!");
+            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
             return true;
         }
 
@@ -45,5 +48,10 @@ public class PositionCommand extends BaseCommand {
         sender.sendMessage(ChatColor.YELLOW + "Depth: " + (int) Math.floor(pos.getY()));
         //sender.sendMessage(ChatColor.YELLOW + String.format("Direction: %s", getCardinalDirection(player)));
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        return (args.length == 1) ? null : Collections.<String>emptyList();
     }
 }

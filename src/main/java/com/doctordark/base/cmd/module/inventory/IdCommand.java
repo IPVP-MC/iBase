@@ -17,8 +17,8 @@ public class IdCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        sender.sendMessage(ChatColor.RED + "This command is currently not implemented!");
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        sender.sendMessage(ChatColor.RED + "This command is currently not implemented.");
         return true;
     }
 }

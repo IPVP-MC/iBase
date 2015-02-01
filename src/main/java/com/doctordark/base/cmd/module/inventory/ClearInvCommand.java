@@ -30,7 +30,7 @@ public class ClearInvCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player target;
         if (args.length < 1) {
             if (sender instanceof Player) {
@@ -44,7 +44,7 @@ public class ClearInvCommand extends BaseCommand {
         }
 
         if ((target == null) || (!canSee(sender, target))) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found!");
+            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
             return true;
         }
 
@@ -63,7 +63,7 @@ public class ClearInvCommand extends BaseCommand {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         return (args.length == 1) ? null : Collections.<String>emptyList();
     }
 }

@@ -26,9 +26,9 @@ public class TopCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command is only executable for players!");
+            sender.sendMessage(ChatColor.RED + "This command is only executable for players.");
             return true;
         }
 
@@ -38,12 +38,12 @@ public class TopCommand extends BaseCommand {
         Location highestLocation = BaseUtil.getHighestBlock(location);
 
         if (highestLocation == null) {
-            sender.sendMessage(ChatColor.RED + "No highest location found!");
+            sender.sendMessage(ChatColor.RED + "No highest location found.");
             return true;
         }
 
         player.teleport(highestLocation, PlayerTeleportEvent.TeleportCause.COMMAND);
-        sender.sendMessage(ChatColor.GOLD + "Teleported to highest location!");
+        sender.sendMessage(ChatColor.GOLD + "Teleported to highest location.");
         return true;
     }
 }

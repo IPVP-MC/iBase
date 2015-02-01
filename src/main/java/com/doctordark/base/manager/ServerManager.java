@@ -1,34 +1,57 @@
 package com.doctordark.base.manager;
 
+import java.util.List;
+
 public interface ServerManager {
+
+    /**
+     * Gets the delay of announcement broadcasting.
+     *
+     * @return the announcement broadcast delay
+     */
+    int getAnnouncementDelay();
+
+    /**
+     * Sets the delay of announcement broadcasting.
+     *
+     * @param delay the announcement broadcast delay to set
+     */
+    void setAnnouncementDelay(int delay);
+
+    /**
+     * Gets a list of announcements for the server.
+     *
+     * @return list of automatic announcements
+     */
+    List<String> getAnnouncements();
 
     /**
      * Checks if global chat is enabled.
      *
      * @return true if global chat is enabled
      */
-    public boolean isChatEnabled();
+    boolean isChatEnabled();
 
     /**
      * Sets if global chat is enabled.
      *
      * @param enabled if chat should be enabled
      */
-    public void setChatEnabled(boolean enabled);
+    void setChatEnabled(boolean enabled);
 
     /**
      * Checks if global chat is in slow mode.
      *
      * @return true if global chat is slowed
      */
-    public boolean isChatSlowed();
+    boolean isChatSlowed();
 
     /**
      * Sets if global chat is in slow mode.
      *
      * @param slowed if chat should be slowed
      */
-    public void setChatSlowed(boolean slowed);
+    void setChatSlowed(boolean slowed);
 
     /**
      * Gets the delay before players can speak
@@ -36,7 +59,7 @@ public interface ServerManager {
      *
      * @return the slow chat delay time
      */
-    public int getSlowChatDelay();
+    int getSlowChatDelay();
 
     /**
      * Sets the delay before players can speak
@@ -44,15 +67,19 @@ public interface ServerManager {
      *
      * @param delay the delay to set
      */
-    public void setSlowChatDelay(int delay);
+    void setSlowChatDelay(int delay);
+
+    int getMaxPlayers();
+
+    void setMaxPlayers(int maxPlayers);
 
     /**
      * Loads the data from file.
      */
-    public void loadData();
+    void reloadServerData();
 
     /**
      * Saves the data to file.
      */
-    public void saveData();
+    void saveServerData();
 }

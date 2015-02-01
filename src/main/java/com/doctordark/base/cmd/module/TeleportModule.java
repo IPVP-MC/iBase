@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class TeleportModule implements BaseCommandModule {
 
-    private Set<BaseCommand> commands;
+    private final Set<BaseCommand> commands;
 
     public TeleportModule() {
         commands = new HashSet<BaseCommand>();

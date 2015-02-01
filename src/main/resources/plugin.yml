@@ -7,6 +7,11 @@ commands:
   amivis:
     aliases: ["amivanish", "amivanished", "?invis", "?v", "?vis", "invis?", "vis?", "v?"]
     description: Command used to check if visible.
+  announcements:
+    description: Management of auto-announcements.
+  basereload:
+    aliases: [breload]
+    description: Reload the configuration of 'Base' plugin.
   biome:
     description: Check the biome a player is in.
   broadcast:
@@ -18,13 +23,17 @@ commands:
   clearinv:
     aliases: [ci, clear, cpinv]
     description: Clears a player inventory.
+  enchant:
+    description: Enchant an item.
   fly:
     description: Toggle flight for a player.
+  feed:
+    description: Feed a player.
   gamemode:
     aliases: [gm]
     description: Update a players gamemode.
-  feed:
-    description: Feed a player.
+  give:
+    description: Give an item to a player.
   heal:
     description: Heal a player.
   id:
@@ -37,6 +46,8 @@ commands:
   item:
     aliases: [i]
     description: Spawn an item.
+  iphistory:
+    description: Check the history an IP address or player.
   kill:
     aliases: [suicide, slay]
     description: Kill a player.
@@ -53,6 +64,9 @@ commands:
   mutechat:
     aliases: [mc, rc, restrictchat, disablechat, togglechat]
     description: Restricts the use of global chat.
+  ping:
+    aliases: [p]
+    description: Checks the ping of a player.
   position:
     description: Checks the position of a player.
   repair:
@@ -65,6 +79,8 @@ commands:
     description: Tell a story to the server.
   seen:
     description: Checks when a player was last seen.
+  setmaxplayers:
+    description: Set the maximum player count.
   skull:
     description: Spawn the skull of a player.
   slowchat:
@@ -74,6 +90,7 @@ commands:
   staffchat: 
     aliases: [sc, ac]
     description: Speak in staff chat mode only.
+  statistic:
   teleport:
     aliases: [tp]
     description: Teleport to a player or location.

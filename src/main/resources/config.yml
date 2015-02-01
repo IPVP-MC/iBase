@@ -1,9 +1,13 @@
-broadcast:
-  format: '&d[ParaHCF] &7%s'
 chat:
-  enabled: true
-  slowed: true
+  enabled: false
+  slowed: false
   slowed-delay: 15
 userdata:
   vanished: []
   staffchat: []
+  last-speak: {}
+  message-spy: {}
+  ip-history: {}
+announcements:
+  list: []
+  delay: 300

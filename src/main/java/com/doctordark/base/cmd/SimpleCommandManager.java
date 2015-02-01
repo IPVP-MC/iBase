@@ -16,7 +16,7 @@ import java.util.Set;
  */
 public class SimpleCommandManager implements CommandManager {
 
-    private static final String PERMISSION_MESSAGE = ChatColor.RED + "You do not have permission for this command!";
+    private static final String PERMISSION_MESSAGE = ChatColor.RED + "You do not have permission for this command.";
     private final Map<String, BaseCommand> commandMap;
 
     public SimpleCommandManager(final BasePlugin plugin) {
@@ -32,8 +32,8 @@ public class SimpleCommandManager implements CommandManager {
                 PluginCommand pluginCommand = plugin.getCommand(cmdName);
 
                 if (pluginCommand == null) {
-                    console.sendMessage(ChatColor.YELLOW + "Failed to register command '" + cmdName + "'.");
-                    console.sendMessage(ChatColor.YELLOW + "Reason: Undefined in plugin.yml.");
+                    console.sendMessage("[" + plugin.getName() + "] " + ChatColor.YELLOW + "Failed to register command '" + cmdName + "'.");
+                    console.sendMessage("[" + plugin.getName() + "] " + ChatColor.YELLOW + "Reason: Undefined in plugin.yml.");
                     continue;
                 }
 

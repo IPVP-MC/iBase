@@ -8,21 +8,20 @@ import com.doctordark.base.cmd.module.InventoryModule;
 import com.doctordark.base.cmd.module.TeleportModule;
 import com.doctordark.base.cmd.module.chat.messaging.MessageHandler;
 import com.doctordark.base.cmd.module.chat.messaging.MessageSpyListener;
-import com.doctordark.base.listener.module.ChatListener;
-import com.doctordark.base.listener.module.ColouredSignListener;
-import com.doctordark.base.listener.module.NameVerifyListener;
-import com.doctordark.base.listener.module.PingListener;
-import com.doctordark.base.listener.module.RespawnListener;
-import com.doctordark.base.listener.module.VanishListener;
+import com.doctordark.base.listener.*;
 import com.doctordark.base.manager.FlatFileServerManager;
 import com.doctordark.base.manager.FlatFileUserManager;
 import com.doctordark.base.manager.ServerManager;
 import com.doctordark.base.manager.UserManager;
+import com.doctordark.base.task.AnnouncementHandler;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class BasePlugin extends JavaPlugin {
 
+    private BukkitRunnable announcementTask;
     private CommandManager commandManager;
     private MessageHandler messageHandler;
     private ServerManager serverManager;
@@ -34,13 +33,14 @@ public class BasePlugin extends JavaPlugin {
         this.registerManagers();
         this.registerCommands();
         this.registerListeners();
+        this.reloadSchedulers();
     }
 
     @Override
     public void onDisable() {
         super.onDisable();
-        getServerManager().saveData();
-        getUserManager().saveData();
+        getServerManager().saveServerData();
+        getUserManager().saveUserData();
     }
 
     private void registerManagers() {
@@ -51,7 +51,7 @@ public class BasePlugin extends JavaPlugin {
     }
 
     private void registerCommands() {
-        getCommandManager().registerAll(new ChatModule());
+        getCommandManager().registerAll(new ChatModule(this));
         getCommandManager().registerAll(new EssentialModule(this));
         getCommandManager().registerAll(new InventoryModule());
         getCommandManager().registerAll(new TeleportModule());
@@ -65,8 +65,20 @@ public class BasePlugin extends JavaPlugin {
         manager.registerEvents(new NameVerifyListener(), this);
         manager.registerEvents(new MessageSpyListener(this), this);
         manager.registerEvents(new PingListener(), this);
+        manager.registerEvents(new PlayerLimitListener(this), this);
         manager.registerEvents(new RespawnListener(), this);
         manager.registerEvents(new VanishListener(this), this);
+    }
+
+    public void reloadSchedulers() {
+        BukkitScheduler scheduler = getServer().getScheduler();
+
+        if (announcementTask != null) {
+            announcementTask.cancel();
+        }
+
+        long delay = serverManager.getAnnouncementDelay() * 20L;
+        scheduler.runTaskTimer(this, (announcementTask = new AnnouncementHandler(this)), delay, delay);
     }
 
     public CommandManager getCommandManager() {

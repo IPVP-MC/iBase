@@ -1,4 +1,4 @@
-package com.doctordark.base.listener.module;
+package com.doctordark.base.listener;
 
 import org.bukkit.event.Listener;
 

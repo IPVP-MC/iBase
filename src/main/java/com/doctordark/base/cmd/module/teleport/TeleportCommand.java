@@ -29,7 +29,7 @@ public class TeleportCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1 || args.length > 4) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -49,7 +49,7 @@ public class TeleportCommand extends BaseCommand {
         }
 
         if ((targetA == null) || (!canSee(sender, targetA))) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found!");
+            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
             return true;
         }
 
@@ -57,19 +57,19 @@ public class TeleportCommand extends BaseCommand {
             Player targetB = Bukkit.getServer().getPlayer(args[args.length - 1]);
 
             if ((targetB == null) || (!canSee(sender, targetB))) {
-                sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[args.length - 1] + ChatColor.GOLD + "' not found!");
+                sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[args.length - 1] + ChatColor.GOLD + "' not found.");
                 return true;
             }
 
             if (targetA.getName().equalsIgnoreCase(targetB.getName())) {
-                sender.sendMessage(ChatColor.RED + "The teleportee and teleported are the same player!");
+                sender.sendMessage(ChatColor.RED + "The teleportee and teleported are the same player.");
                 return true;
             }
 
             if (targetA.teleport(targetB, PlayerTeleportEvent.TeleportCause.COMMAND)) {
-                Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Teleported " + targetA.getName() + " to " + targetB.getName());
+                Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Teleported " + targetA.getName() + " to " + targetB.getName() + ".");
             } else {
-                sender.sendMessage(ChatColor.RED + "Failed to teleport you to " + targetB.getName() + "!");
+                sender.sendMessage(ChatColor.RED + "Failed to teleport you to " + targetB.getName() + ".");
             }
         } else if (targetA.getWorld() != null) {
             Location targetALocation = targetA.getLocation();
@@ -78,7 +78,7 @@ public class TeleportCommand extends BaseCommand {
             double z = getCoordinate(sender, targetALocation.getZ(), args[args.length - 1]);
 
             if (x == MIN_COORD_MINUS_ONE || y == MIN_COORD_MINUS_ONE || z == MIN_COORD_MINUS_ONE) {
-                sender.sendMessage("Please provide a valid location!");
+                sender.sendMessage("Please provide a valid location.");
                 return true;
             }
 
@@ -89,7 +89,7 @@ public class TeleportCommand extends BaseCommand {
             if (targetA.teleport(targetALocation, PlayerTeleportEvent.TeleportCause.COMMAND)) {
                 Command.broadcastCommandMessage(sender, String.format(ChatColor.YELLOW + "Teleported %s to %.2f, %.2f, %.2f.", targetA.getName(), x, y, z));
             } else {
-                sender.sendMessage(ChatColor.RED + "Failed to teleport you!");
+                sender.sendMessage(ChatColor.RED + "Failed to teleport you.");
             }
         }
 
@@ -130,7 +130,7 @@ public class TeleportCommand extends BaseCommand {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         return (args.length == 1 || args.length == 2) ? null : Collections.<String>emptyList();
     }
 }

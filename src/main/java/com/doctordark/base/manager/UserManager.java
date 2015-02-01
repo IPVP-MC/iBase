@@ -2,9 +2,17 @@ package com.doctordark.base.manager;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public interface UserManager {
+
+    /**
+     * Gets a set of players that are staff-chatting.
+     *
+     * @return set of players in staff chat
+     */
+    Set<String> getStaffChatting();
 
     /**
      * Checks if a player is in staff chat.
@@ -12,7 +20,7 @@ public interface UserManager {
      * @param uuid the uuid of player to check
      * @return true if player is in staff-chat
      */
-    public boolean isInStaffChat(UUID uuid);
+    boolean isInStaffChat(UUID uuid);
 
     /**
      * Sets if a player is in staff chat mode.
@@ -20,7 +28,17 @@ public interface UserManager {
      * @param uuid the uuid of player to set for
      * @param chat if should be in staff chat
      */
-    public void setInStaffChat(UUID uuid, boolean chat);
+    void setInStaffChat(UUID uuid, boolean chat);
+
+
+
+
+    /**
+     * Gets a set of players that are vanished.
+     *
+     * @return set of players vanished
+     */
+    Set<String> getVanished();
 
     /**
      * Checks if a player is vanished.
@@ -28,7 +46,7 @@ public interface UserManager {
      * @param uuid the uuid of player to check
      * @return true if player is vanished
      */
-    public boolean isVanished(UUID uuid);
+    boolean isVanished(UUID uuid);
 
     /**
      * Sets if a player is vanished.
@@ -36,7 +54,18 @@ public interface UserManager {
      * @param uuid the uuid of player to set for
      * @param vanish if should be vanished
      */
-    public void setVanished(UUID uuid, boolean vanish);
+    void setVanished(UUID uuid, boolean vanish);
+
+
+
+
+    /**
+     * Gets a map of players that have been delayed
+     * for speaking within x seconds.
+     *
+     * @return map of speak delayed players
+     */
+    Map<String, Long> getLastSpeakMap();
 
     /**
      * Gets the remaining chat time of a player.
@@ -44,7 +73,7 @@ public interface UserManager {
      * @param uuid the uuid of player to check for
      * @return the remaining speak time for player
      */
-    public double getRemainingChatTime(UUID uuid);
+    long getRemainingChatDelayTime(UUID uuid);
 
     /**
      * Gets the last chat time of a player.
@@ -52,22 +81,24 @@ public interface UserManager {
      * @param uuid the uuid of player to check for
      * @return the last chat time in millis
      */
-    public long getLastChatTime(UUID uuid);
+    long getLastSpeakTime(UUID uuid);
 
     /**
-     * Sets the last chat time for a player.
+     * Updates the last chat time for a player.
      *
-     * @param uuid the uuid of player to set for
-     * @param millis the last chat time to set
+     * @param uuid the uuid of player to update for
      */
-    public void setLastChatTime(UUID uuid, long millis);
+    void updateLastSpeakTime(UUID uuid);
+
+
+
 
     /**
-     * Gets the map of message spies.
+     * Gets a map of message spying players.
      *
-     * @return the message spy map
+     * @return the message spying map
      */
-    public Map<String, List<String>> getMessageSpyMap();
+    Map<String, List<String>> getMessageSpyMap();
 
     /**
      * Gets the message spying list of a player.
@@ -75,15 +106,52 @@ public interface UserManager {
      * @param uuid the uuid of player to check for
      * @return the list of players spying on
      */
-    public List<String> getMessageSpyList(UUID uuid);
+    List<String> getMessageSpying(UUID uuid);
+
+
+
 
     /**
-     * Loads the data from file.
+     * Gets a map of user IP addresses.
+     *
+     * @return map of user IP addresses
      */
-    public void loadData();
+    Map<String, List<String>> getAddressMap();
 
     /**
-     * Saves the data to file.
+     * Gets a set of past IP addresses used by a player.
+     *
+     * @param uuid the uuid of player to get for
+     * @return the set of previous and current ips
      */
-    public void saveData();
+    List<String> getAddresses(UUID uuid);
+
+    /**
+     * Saves an IP address to the set of user IP addresses.
+     *
+     * @param uuid the uuid of player to save for
+     * @param address the address to save
+     */
+    void removeAddress(UUID uuid, String address);
+
+    /**
+     * Saves an IP address to the set of user IP addresses.
+     *
+     * @param uuid the uuid of player to save for
+     * @param address the address to save
+     */
+    void saveAddress(UUID uuid, String address);
+
+
+
+
+    /**
+     * Reloads the user data from storage.
+     */
+    void reloadUserData();
+
+    /**
+     * Saves the data to storage.
+     */
+    void saveUserData();
 }

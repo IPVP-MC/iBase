@@ -1,6 +1,7 @@
 package com.doctordark.base.cmd.module.teleport;
 
 import com.doctordark.base.cmd.BaseCommand;
+import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -27,9 +28,9 @@ public class WorldCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command is only executable for players!");
+            sender.sendMessage(ChatColor.RED + "This command is only executable for players.");
             return true;
         }
 
@@ -41,28 +42,37 @@ public class WorldCommand extends BaseCommand {
         World world = Bukkit.getServer().getWorld(args[0]);
 
         if (world == null) {
-            sender.sendMessage(ChatColor.RED + "World '" + args[0] + "' not found!");
+            sender.sendMessage(ChatColor.RED + "World '" + args[0] + "' not found.");
             return true;
         }
 
         Player player = (Player)sender;
+        World.Environment environment = world.getEnvironment();
 
-        Location currentLocation = player.getLocation();
-        double x = currentLocation.getX();
-        double y = currentLocation.getY();
-        double z = currentLocation.getZ();
-        float yaw = currentLocation.getYaw();
-        float pitch = currentLocation.getPitch();
+        if (player.getWorld().equals(world)) {
+            sender.sendMessage(ChatColor.RED + "You are already in that world.");
+            return true;
+        }
 
-        Location newLocation = new Location(world, x, y, z, yaw, pitch);
-        player.teleport(newLocation, PlayerTeleportEvent.TeleportCause.COMMAND);
+        Location playerLocation = player.getLocation();
+        double x = playerLocation.getX();
+        double y = playerLocation.getY();
+        double z = playerLocation.getZ();
+        float yaw = playerLocation.getYaw();
+        float pitch = playerLocation.getPitch();
+        Location location = new Location(world, x, y, z, yaw, pitch);
 
-        sender.sendMessage(ChatColor.AQUA + "Switched world to '" + world.getName() + "'.");
+        player.teleport(location, PlayerTeleportEvent.TeleportCause.COMMAND);
+
+        String worldName = world.getName();
+        String environmentName = WordUtils.capitalizeFully(world.getEnvironment().name().replace('_', ' '));
+
+        sender.sendMessage(ChatColor.AQUA + "Switched world to '" + worldName + ChatColor.YELLOW + " [" + environmentName + "]" + ChatColor.AQUA + "'.");
         return true;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         List<String> results = new ArrayList<String>();
         Collection<World> worlds = Bukkit.getServer().getWorlds();
 

@@ -28,25 +28,25 @@ public class BroadcastCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
         }
 
-        StringBuilder message = new StringBuilder(args[0]);
+        StringBuilder builder = new StringBuilder(args[0]);
         for (int i = 1; i < args.length; i++) {
-            message.append(" ").append(args[i]);
+            builder.append(" ").append(args[i]);
         }
 
-        String broadcast = message.toString();
+        String message = builder.toString();
 
-        if (broadcast.length() < 6) {
-            sender.sendMessage(ChatColor.RED + "Broadcasts must be at least 6 characters!");
+        if (message.length() < 6) {
+            sender.sendMessage(ChatColor.RED + "Broadcasts must be at least 6 characters.");
             return true;
         }
 
-        Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', String.format(Locale.ENGLISH, format, broadcast)));
+        Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', String.format(Locale.ENGLISH, format, message)));
         return true;
     }
 }

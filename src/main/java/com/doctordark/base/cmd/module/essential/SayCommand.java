@@ -19,7 +19,7 @@ public class SayCommand extends BaseCommand {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -33,7 +33,7 @@ public class SayCommand extends BaseCommand {
         String broadcast = message.toString();
 
         if (broadcast.length() < 6) {
-            sender.sendMessage(ChatColor.RED + "Messages must be at least 6 characters!");
+            sender.sendMessage(ChatColor.RED + "Messages must be at least 6 characters.");
             return true;
         }
 
