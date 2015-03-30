@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.doctordark.essentials</groupId>
     <artifactId>base</artifactId>
-    <version>2.6</version>
+    <version>2.7</version>
     <name>Base</name>
     <description>Base brings general commands to minecraft servers</description>
 
@@ -108,8 +108,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>

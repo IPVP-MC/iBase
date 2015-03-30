@@ -1,0 +1,80 @@
+package com.doctordark.base.command.module.teleport.warp;
+
+import com.doctordark.base.BasePlugin;
+import com.doctordark.base.command.CommandArgument;
+import com.doctordark.base.command.CommandArgumentHandler;
+import com.doctordark.base.warp.Warp;
+import com.google.common.collect.Lists;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+public class WarpRemoveArgument extends CommandArgument {
+
+    private final BasePlugin plugin;
+
+    public WarpRemoveArgument(BasePlugin plugin) {
+        super("del", "Deletes a new server warp");
+        this.plugin = plugin;
+    }
+
+    @Override
+    public String[] getAliases() {
+        return new String[]{"delete", "remove", "unset"};
+    }
+
+    @Override
+    public String getUsage(String label) {
+        return "/" + label + " " + getName();
+    }
+
+    @Override
+    public String getPermission() {
+        return "base.command.warp.argument." + getName();
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "Only players can delete warps.");
+            return true;
+        }
+
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + getName() + " <warpName>");
+            return true;
+        }
+
+        Warp warp = plugin.getWarpManager().getWarp(args[1]);
+
+        if (warp == null) {
+            sender.sendMessage(ChatColor.RED + "There is not a warp named " + args[1] + ".");
+            return true;
+        }
+
+        Collection<Warp> warps = plugin.getWarpManager().getWarps();
+        warps.remove(warp);
+
+        sender.sendMessage(ChatColor.GRAY + "Removed global warp named " + warp.getName() + ".");
+        return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length != 2) {
+            return Collections.emptyList();
+        }
+
+        List<String> results = Lists.newArrayList();
+        for (Warp warp : plugin.getWarpManager().getWarps()) {
+            results.add(warp.getName());
+        }
+
+        return CommandArgumentHandler.getCompletions(args, results);
+    }
+}

@@ -1,14 +1,21 @@
-name: ${project.name}
-version: ${project.version}
-description: ${project.description}
+name: Base
+version: 2.7
+description: Base brings general commands to minecraft servers
 author: DoctorDark
 main: com.doctordark.base.BasePlugin
 commands:
   amivis:
     aliases: ["amivanish", "amivanished", "?invis", "?v", "?vis", "invis?", "vis?", "v?"]
     description: Command used to check if visible.
+  autore:
+    aliases: [autorestart]
+    description: Handle server restarts safely.
+  autosave:
+    description: Handle automatic server saves.
   announcements:
     description: Management of auto-announcements.
+  back:
+    description: Teleport to last known location.
   basereload:
     aliases: [breload]
     description: Reload the configuration of 'Base' plugin.
@@ -17,14 +24,22 @@ commands:
   broadcast:
     aliases: [bc]
     description: Broadcast a server message.
+  broadcastraw:
+    aliases: [bcraw, raw, rawcast]
+    description: Broadcast a raw server message.
   clearchat:
     aliases: [cc]
     description: Clear the chat history.
   clearinv:
     aliases: [ci, clear, cpinv]
     description: Clears a player inventory.
+  craft:
+    aliases: [wbench, workbench]
+    description: Opens a workbench inventory.
   enchant:
     description: Enchant an item.
+  entities:
+    description: Check the entities in a world.
   fly:
     description: Toggle flight for a player.
   feed:
@@ -34,6 +49,11 @@ commands:
     description: Update a players gamemode.
   give:
     description: Give an item to a player.
+  globalwarp:
+    aliases: [gw]
+    description: Warps that can be used by anyone.
+  hat:
+    description: Wear something as a hat.
   heal:
     description: Heal a player.
   id:
@@ -62,19 +82,32 @@ commands:
   more:
     description: Give yourself more of an item.
   mutechat:
-    aliases: [mc, rc, restrictchat, disablechat, togglechat]
+    aliases: [mc, rc, restrictchat, disablechat]
     description: Restricts the use of global chat.
+  namehistory:
+    description: Check the name histories of a player.
+  near:
+    description: Check nearby entities to a player.
   ping:
     aliases: [p]
     description: Checks the ping of a player.
+  playertime:
+    aliases: [ptime]
+    description: Shows your player time.
   position:
     description: Checks the position of a player.
+  removeentity:
+    description: Remove entities from the server.
+  rename:
+    description: Command used to rename items.
   repair:
     aliases: [fix]
     description: Allows the repairing of tools.
   reply:
     aliases: [r]
     description: Reply to a player message.
+  rules:
+    description: Shows the server rules.
   say:
     description: Tell a story to the server.
   seen:
@@ -84,20 +117,32 @@ commands:
   skull:
     description: Spawn the skull of a player.
   slowchat:
+    aliases: [slow]
     description: Sets a delay between chat messages.
   speed:
     description: Set your walk or fly speed.
-  staffchat: 
+  staffchat:
     aliases: [sc, ac]
     description: Speak in staff chat mode only.
-  statistic:
+  sudo:
+    description: Force another player to run a command.
   teleport:
     aliases: [tp]
     description: Teleport to a player or location.
+  teleportall:
+    aliases: [tpall]
+    description: Teleport all online players somewhere.
   teleporthere:
     aliases: [tphere]
     description: Teleport a player to self.
-  togglepm: 
+  togglechat:
+    aliases: [tgc, toggleglobalchat]
+    description: Toggles global chat visibility on or off.
+  togglestaffchat:
+    aliases: [tsc, togglesc]
+    description: Toggles staff chat visibility on or off.
+  togglemessages:
+    aliases: [togglepm, toggleprivatemessages]
     description: Disable private messages.
   top:
     description: Teleport to highest spot of world

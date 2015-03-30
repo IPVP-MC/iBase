@@ -9,20 +9,20 @@ import org.bukkit.event.player.PlayerLoginEvent;
 
 import java.util.regex.Pattern;
 
-/**
- * Listener that verifies that player names are valid when they join.
- */
 public class NameVerifyListener implements Listener {
 
-    protected final static Pattern namePattern = Pattern.compile("^[a-zA-Z0-9_]{1,16}$");
+    private static final Pattern namePattern = Pattern.compile("^[a-zA-Z0-9_]{1,16}$");
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onLogin(PlayerLoginEvent event) {
-        Player player = event.getPlayer();
-        if (!namePattern.matcher(player.getName()).matches()) {
-            Bukkit.getLogger().info("Name verification: " + player.getName() + " was kicked " +
-                    "for having an invalid name (to disable, turn off the name-verification feature in the config)");
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Invalid player name detected.");
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onPlayerLogin(PlayerLoginEvent event) {
+        PlayerLoginEvent.Result result = event.getResult();
+        if (result == PlayerLoginEvent.Result.ALLOWED) {
+            Player player = event.getPlayer();
+            String playerName = player.getName();
+            if (!namePattern.matcher(playerName).matches()) {
+                Bukkit.getLogger().info("Name verification: " + playerName + " was kicked for having an invalid name (to disable, turn off the name-verification feature in the config)");
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Invalid player name detecte d.");
+            }
         }
     }
 }

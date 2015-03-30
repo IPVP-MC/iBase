@@ -1,99 +1,77 @@
 package com.doctordark.base.util;
 
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+
+import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Utility class to handle Collection creation with generics.
- */
 public final class GenericUtils {
 
-    /**
-     * Converts an object to a list safely.
-     *
-     * @param object the object to convert
-     * @param type the class type to convert to
-     * @param <E> the generic type
-     * @return the safely converted list
-     */
+    public static Field getField(Class<?> clazz, String fieldName) {
+        Class<?> tmpClass = clazz;
+        while (clazz != null) {
+            for (Field field : tmpClass.getDeclaredFields()) {
+                String candidateName = field.getName();
+                if (candidateName.equals(fieldName)) {
+                    field.setAccessible(true);
+                    return field;
+                }
+            }
+
+            tmpClass = tmpClass.getSuperclass();
+        }
+
+        return null;
+    }
+
     public static <E> List<E> castList(Object object, Class<E> type) {
-        List<E> output = new ArrayList<E>();
-
-        if (object != null && object instanceof List<?>) {
-            List<?> input = (List<?>) object;
-
+        List<E> output = Lists.newArrayList();
+        if ((object != null) && ((object instanceof List))) {
+            List<?> input = (List) object;
             for (Object value : input) {
-                if (value == null || value.getClass() == null) {
-                    continue;
-                }
-
-                if (type.isAssignableFrom(value.getClass())) {
-                    E e = type.cast(value);
-                    output.add(e);
-                } else {
-                    String simpleName = type.getSimpleName();
-                    throw new AssertionError("Cannot cast to list! Key " + value + " is not a " + simpleName);
+                if ((value != null) && (value.getClass() != null)) {
+                    if (type.isAssignableFrom(value.getClass())) {
+                        E e = type.cast(value);
+                        output.add(e);
+                    } else {
+                        String simpleName = type.getSimpleName();
+                        throw new AssertionError("Cannot cast to list! Key " + value + " is not a " + simpleName);
+                    }
                 }
             }
         }
-
         return output;
     }
 
-    /**
-     * Converts an object to a set safely.
-     *
-     * @param object the object to convert
-     * @param type the class type to convert to
-     * @param <E> the generic type
-     * @return the safely converted set
-     */
     public static <E> Set<E> castSet(Object object, Class<E> type) {
-        Set<E> output = new HashSet<E>();
-
-        if (object != null && object instanceof List<?>) {
-            List<?> input = (List<?>) object;
-
+        Set<E> output = Sets.newHashSet();
+        if ((object != null) && ((object instanceof List))) {
+            List<?> input = (List) object;
             for (Object value : input) {
-                if (value == null || value.getClass() == null) {
-                    continue;
-                }
-
-                if (type.isAssignableFrom(value.getClass())) {
-                    E e = type.cast(value);
-                    output.add(e);
-                } else {
-                    String simpleName = type.getSimpleName();
-                    throw new AssertionError("Cannot cast to list! Key " + value + " is not a " + simpleName);
+                if ((value != null) && (value.getClass() != null)) {
+                    if (type.isAssignableFrom(value.getClass())) {
+                        E e = type.cast(value);
+                        output.add(e);
+                    } else {
+                        String simpleName = type.getSimpleName();
+                        throw new AssertionError("Cannot cast to list! Key " + value + " is not a " + simpleName);
+                    }
                 }
             }
         }
-
         return output;
     }
 
-    /**
-     * Casts an object to a HashMap safely.
-     *
-     * @param object the object to cast
-     * @param keyClass the key type of map
-     * @param valueClass the value type of map
-     * @param <K> the key object
-     * @param <V> the value object
-     * @return the safely casted map
-     */
     public static <K, V> Map<K, V> castMap(Object object, Class<K> keyClass, Class<V> valueClass) {
-        Map<K, V> output = new HashMap<K, V>();
-
-        if (object != null && object instanceof Map<?, ?>) {
-            Map<?, ?> input = (Map<?, ?>) object;
+        Map<K, V> output = new HashMap();
+        if ((object != null) && ((object instanceof Map))) {
+            Map<?, ?> input = (Map) object;
             String keyClassName = keyClass.getSimpleName();
             String valueClassName = valueClass.getSimpleName();
-
             for (Object key : input.keySet().toArray()) {
                 if ((key == null) || (keyClass.isAssignableFrom(keyClass))) {
                     Object value = input.get(key);
@@ -109,7 +87,6 @@ public final class GenericUtils {
                 }
             }
         }
-
         return output;
     }
 }

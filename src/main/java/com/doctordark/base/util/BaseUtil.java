@@ -1,28 +1,23 @@
 package com.doctordark.base.util;
 
-import com.doctordark.base.BasePlugin;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
 import net.minecraft.server.v1_7_R4.MinecraftServer;
-import net.minecraft.server.v1_7_R4.PlayerConnection;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Utility class for the Base plugin.
@@ -33,9 +28,64 @@ public final class BaseUtil {
 
     }
 
+    /**
+     * Parses a string input, for example 1d1s to a duration.
+     *
+     * @param input the input to parse
+     * @return the parsed duration as long
+     */
+    public static long parse(String input) {
+        long result = 0;
+        String number = "";
+
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (Character.isDigit(c)) {
+                number += c;
+            } else if (Character.isLetter(c) && !number.isEmpty()) {
+                result += convert(Integer.parseInt(number), c);
+                number = "";
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Converts a number to a duration based on its character.
+     *
+     * @param number the number to convert
+     * @param unit   the unit it is being converted to
+     * @return the converted long value
+     */
+    private static long convert(int number, char unit) {
+        switch (unit) {
+            case 'y':
+                return TimeUnit.DAYS.toMillis(number * 365);
+            case 'd':
+                return number * 1000 * 60 * 60 * 24;
+            case 'h':
+                return number * 1000 * 60 * 60;
+            case 'm':
+                return number * 1000 * 60;
+            case 's':
+                return number * 1000;
+        }
+
+        return 0;
+    }
+
     public static long getIdleTime(Player player) {
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
         return (entityPlayer.x() <= 0L) ? 0L : MinecraftServer.ar() - entityPlayer.x();
+    }
+
+    public static Float getFloat(String string) {
+        try {
+            return Float.parseFloat(string);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
     }
 
     public static Integer getInteger(String string) {

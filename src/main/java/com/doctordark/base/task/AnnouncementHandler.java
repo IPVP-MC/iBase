@@ -18,14 +18,11 @@ public class AnnouncementHandler extends BukkitRunnable {
 
     @Override
     public void run() {
-        List<String> announcements = plugin.getServerManager().getAnnouncements();
-
-        if (announcements.isEmpty()) {
-            return;
+        List<String> announcements = this.plugin.getServerHandler().getAnnouncements();
+        if (!announcements.isEmpty()) {
+            String next = announcements.get(0);
+            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', next));
+            Collections.rotate(announcements, -1);
         }
-
-        String next = announcements.get(0);
-        Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', next));
-        Collections.rotate(announcements, -1);
     }
 }

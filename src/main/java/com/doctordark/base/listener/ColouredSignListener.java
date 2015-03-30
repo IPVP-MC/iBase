@@ -7,20 +7,21 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
 
-public class ColouredSignListener implements Listener {
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onSignCreate(SignChangeEvent event) {
-        Player player = event.getPlayer();
-        String[] lines = event.getLines();
-
-        if (player == null || !player.hasPermission("base.signs.colour")) {
-            return;
-        }
-
-        for (int i = 0; i < lines.length; i++) {
-            String line = lines[i];
-            event.setLine(i, ChatColor.translateAlternateColorCodes('&', line));
-        }
+public class ColouredSignListener
+  implements Listener
+{
+  @EventHandler(ignoreCancelled=true, priority=EventPriority.HIGH)
+  public void onSignCreate(SignChangeEvent event)
+  {
+    Player player = event.getPlayer();
+    if ((player != null) && (player.hasPermission("base.sign.colour")))
+    {
+      String[] lines = event.getLines();
+      for (int i = 0; i < lines.length; i++)
+      {
+        String line = lines[i];
+        event.setLine(i, ChatColor.translateAlternateColorCodes('&', line));
+      }
     }
+  }
 }

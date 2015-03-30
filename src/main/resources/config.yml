@@ -1,13 +1,12 @@
+announcements:
+  list: []
+  delay: 300
+broadcast:
+  format: '&e[Base] %1$s'
 chat:
   enabled: false
   slowed: false
   slowed-delay: 15
-userdata:
-  vanished: []
-  staffchat: []
-  last-speak: {}
-  message-spy: {}
-  ip-history: {}
-announcements:
-  list: []
-  delay: 300
+full-server-kick-message: '&cThe server is full. &e(%1$s/%2$s) \n\n&cDonate for &aVIP&c or above to bypass this restriction.'
+server-rules-format: '&cRules: &fhttp://google.co.uk&c.'
+max-players: 150
