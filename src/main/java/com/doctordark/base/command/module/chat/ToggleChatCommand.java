@@ -8,8 +8,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 public class ToggleChatCommand extends BaseCommand {
@@ -33,16 +31,11 @@ public class ToggleChatCommand extends BaseCommand {
         Player player = (Player) sender;
         UUID uuid = player.getUniqueId();
 
-        BaseUser baseUser = this.plugin.getUserManager().getUser(uuid);
+        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
         boolean newChatToggled = !baseUser.isToggledChat();
         baseUser.setToggledChat(newChatToggled);
 
-        sender.sendMessage(ChatColor.GREEN + "You have toggled global chat visibility on.");
+        sender.sendMessage(ChatColor.YELLOW + "You have toggled global chat visibility " + (newChatToggled ? ChatColor.RED + "off" : ChatColor.GREEN + "on") + ChatColor.YELLOW + ".");
         return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return Collections.emptyList();
     }
 }

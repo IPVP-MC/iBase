@@ -29,6 +29,7 @@ public class BaseUser implements ConfigurationSerializable {
     private UUID lastRepliedTo;
     private boolean vanished;
     private boolean inStaffChat;
+    private boolean toggledMessagingSounds;
     private boolean toggledStaffChat;
     private boolean toggledChat;
     private boolean toggledMessages;
@@ -82,6 +83,10 @@ public class BaseUser implements ConfigurationSerializable {
             this.inStaffChat = (Boolean) map.get("inStaffChat");
         }
 
+        if (map.containsKey("toggledMessagingSounds")) {
+            this.toggledMessagingSounds = (Boolean) map.get("toggledMessagingSounds");
+        }
+
         if (map.containsKey("toggledStaffChat")) {
             this.toggledStaffChat = (Boolean) map.get("toggledStaffChat");
         }
@@ -126,6 +131,7 @@ public class BaseUser implements ConfigurationSerializable {
 
         map.put("vanished", isVanished());
         map.put("inStaffChat", isInStaffChat());
+        map.put("toggledMessagingSounds", isToggledMessagingSounds());
         map.put("toggledStaffChat", isToggledStaffChat());
         map.put("toggledChat", isToggledChat());
         map.put("toggledMessages", isToggledMessages());
@@ -222,6 +228,14 @@ public class BaseUser implements ConfigurationSerializable {
 
     public void setInStaffChat(boolean inStaffChat) {
         this.inStaffChat = inStaffChat;
+    }
+
+    public boolean isToggledMessagingSounds() {
+        return toggledMessagingSounds;
+    }
+
+    public void setToggledMessagingSounds(boolean toggledMessagingSounds) {
+        this.toggledMessagingSounds = toggledMessagingSounds;
     }
 
     public boolean isToggledStaffChat() {

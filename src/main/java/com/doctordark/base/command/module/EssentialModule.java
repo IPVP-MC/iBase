@@ -3,6 +3,7 @@ package com.doctordark.base.command.module;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommandModule;
 import com.doctordark.base.command.module.chat.SayCommand;
+import com.doctordark.base.command.module.chat.SoundsCommand;
 import com.doctordark.base.command.module.essential.*;
 import com.doctordark.base.command.module.teleport.warp.WarpExecutor;
 
@@ -35,6 +36,7 @@ public class EssentialModule extends BaseCommandModule {
         commands.add(new RulesCommand(plugin));
         commands.add(new SayCommand());
         commands.add(new SetMaxPlayersCommand(plugin));
+        commands.add(new SoundsCommand(plugin));
         commands.add(new SpeedCommand());
         commands.add(new SudoCommand());
         commands.add(new UptimeCommand());

@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Locale;
 
 public class BroadcastCommand extends BaseCommand {
+
     private final BasePlugin plugin;
 
     public BroadcastCommand(BasePlugin plugin) {

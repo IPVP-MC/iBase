@@ -27,14 +27,11 @@ public class MessageCommand extends BaseCommand {
             return true;
         }
 
-        Player player = (Player) sender;
-
         if (args.length < 2) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
         }
 
-        Set<Player> recipients = Sets.newHashSet();
         Player target = Bukkit.getServer().getPlayer(args[0]);
 
         if ((target == null) || (!canSee(sender, target))) {
@@ -47,7 +44,10 @@ public class MessageCommand extends BaseCommand {
             builder.append(args[i]).append(" ");
         }
 
+        Player player = (Player) sender;
         String message = builder.toString();
+
+        Set<Player> recipients = Sets.newHashSet();
         recipients.add(target);
 
         PlayerMessageEvent playerMessageEvent = new PlayerMessageEvent(player, recipients, message, false);

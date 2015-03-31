@@ -4,6 +4,7 @@ import com.doctordark.base.BasePlugin;
 import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
@@ -14,10 +15,7 @@ import org.bukkit.plugin.SimplePluginManager;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ReflectionCommandManager implements CommandManager {
 
@@ -26,21 +24,22 @@ public class ReflectionCommandManager implements CommandManager {
 
     public ReflectionCommandManager(final BasePlugin plugin) {
         final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+        final Server server = Bukkit.getServer();
 
-        Bukkit.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+        server.getScheduler().runTaskLater(plugin, new Runnable() {
             public void run() {
-                CommandMap bukkitCommandMap = getCommandMap();
-                if (bukkitCommandMap == null) {
+                Optional<CommandMap> optionalCommandMap = getCommandMap(server);
+                if (!optionalCommandMap.isPresent()) {
                     console.sendMessage("[" + plugin.getDescription().getFullName() + "] Command map not found");
                     return;
                 }
 
-                for (BaseCommand command : ReflectionCommandManager.this.commandMap.values()) {
+                CommandMap bukkitCommandMap = optionalCommandMap.get();
+                for (BaseCommand command : commandMap.values()) {
                     String cmdName = command.getName();
-                    PluginCommand pluginCommand = getPluginCommand(cmdName, plugin);
-                    if (pluginCommand == null) {
-                        console.sendMessage("[" + plugin.getName() + "] " + ChatColor.YELLOW + "Failed to register command '" + cmdName + "'.");
-                    } else {
+                    Optional<PluginCommand> optional = getPluginCommand(cmdName, plugin);
+                    if (optional.isPresent()) {
+                        PluginCommand pluginCommand = optional.get();
                         pluginCommand.setAliases(Arrays.asList(command.getAliases()));
                         pluginCommand.setDescription(command.getDescription());
                         pluginCommand.setExecutor(command);
@@ -49,6 +48,8 @@ public class ReflectionCommandManager implements CommandManager {
                         pluginCommand.setPermission(command.getPermission());
                         pluginCommand.setPermissionMessage(ReflectionCommandManager.PERMISSION_MESSAGE);
                         bukkitCommandMap.register(plugin.getDescription().getName(), pluginCommand);
+                    } else {
+                        console.sendMessage("[" + plugin.getName() + "] " + ChatColor.YELLOW + "Failed to register command '" + cmdName + "'.");
                     }
                 }
             }
@@ -96,29 +97,43 @@ public class ReflectionCommandManager implements CommandManager {
         return commandMap.containsKey(id) ? commandMap.get(id) : null;
     }
 
-    private PluginCommand getPluginCommand(String name, Plugin plugin) {
+    /**
+     * Gets a plugin command by its name and owning plugin.
+     *
+     * @param name the name of the command
+     * @param plugin the ownership of the command
+     * @return the plugin command with given name
+     */
+    private Optional<PluginCommand> getPluginCommand(String name, Plugin plugin) {
         try {
             Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
             constructor.setAccessible(true);
-            return constructor.newInstance(name, plugin);
+            return Optional.of(constructor.newInstance(name, plugin));
         } catch (IllegalArgumentException | IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             ex.printStackTrace();
-            return null;
+            return Optional.empty();
         }
     }
 
-    private CommandMap getCommandMap() {
-        PluginManager pluginManager = Bukkit.getServer().getPluginManager();
+    /**
+     * Gets the command map of a server.
+     *
+     * @param server the server to get for
+     * @return the command map object
+     */
+    private Optional<CommandMap> getCommandMap(Server server) {
+        PluginManager pluginManager = server.getPluginManager();
         if (pluginManager instanceof SimplePluginManager) {
             try {
                 Field field = SimplePluginManager.class.getDeclaredField("commandMap");
                 field.setAccessible(true);
-                return (CommandMap) field.get(pluginManager);
+                return Optional.of((CommandMap) field.get(pluginManager));
             } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
                 ex.printStackTrace();
+                return Optional.empty();
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 }

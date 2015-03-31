@@ -44,6 +44,7 @@ public class KillCommand extends BaseCommand {
             return true;
         }
 
+        @SuppressWarnings("deprecation")
         EntityDamageEvent event = new EntityDamageEvent(target, DamageCause.SUICIDE, 10000);
         Bukkit.getPluginManager().callEvent(event);
 

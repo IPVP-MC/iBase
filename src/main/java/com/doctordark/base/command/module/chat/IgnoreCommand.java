@@ -36,8 +36,10 @@ public class IgnoreCommand extends BaseCommand {
 
             @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (!(sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
                     return true;
                 }
+
                 Player player = (Player) sender;
                 UUID uuid = player.getUniqueId();
                 BaseUser baseUser = plugin.getUserManager().getUser(uuid);
@@ -55,6 +57,7 @@ public class IgnoreCommand extends BaseCommand {
                 return Collections.emptyList();
             }
         });
+
         arguments.add(new CommandArgument("list", "Lists all ignored players.") {
             @Override public String[] getAliases() {
                 return new String[0];
@@ -66,16 +69,20 @@ public class IgnoreCommand extends BaseCommand {
 
             @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (!(sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
                     return true;
                 }
+
                 Player player = (Player) sender;
                 UUID uuid = player.getUniqueId();
                 BaseUser baseUser = plugin.getUserManager().getUser(uuid);
                 Set<String> ignoring = baseUser.getIgnoring();
+
                 if (ignoring.isEmpty()) {
                     sender.sendMessage(ChatColor.YELLOW + "You are not ignoring anyone.");
                     return true;
                 }
+
                 sender.sendMessage(ChatColor.YELLOW + "You are ignoring (" + ignoring.size() + "): [" + StringUtils.join(ignoring, ", ") + "]");
                 return true;
             }
@@ -96,30 +103,37 @@ public class IgnoreCommand extends BaseCommand {
 
             @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (!(sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
                     return true;
                 }
+
                 if (args.length < 2) {
                     sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + args[0].toLowerCase() + " <playerName>");
                     return true;
                 }
+
                 Player player = (Player) sender;
                 UUID uuid = player.getUniqueId();
                 BaseUser baseUser = plugin.getUserManager().getUser(uuid);
                 Set<String> ignoring = baseUser.getIgnoring();
 
                 Player target = Bukkit.getServer().getPlayer(args[1]);
-                if ((target == null) || (!IgnoreCommand.this.canSee(sender, target))) {
+
+                if ((target == null) || (!canSee(sender, target))) {
                     sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
                     return true;
                 }
+
                 if (sender.equals(target)) {
                     sender.sendMessage(ChatColor.RED + "You may not ignore yourself.");
                     return true;
                 }
+
                 if (target.hasPermission("base.command.ignore.exempt")) {
                     sender.sendMessage(ChatColor.RED + "You do not have permission to ignore this player.");
                     return true;
                 }
+
                 String targetName = target.getName();
                 if (ignoring.contains(targetName)) {
                     sender.sendMessage(ChatColor.RED + "You are already ignoring someone named " + targetName + ".");
@@ -127,6 +141,7 @@ public class IgnoreCommand extends BaseCommand {
                     sender.sendMessage(ChatColor.GOLD + "You are now ignoring " + targetName + ".");
                     ignoring.add(targetName);
                 }
+
                 return true;
             }
 
@@ -134,6 +149,7 @@ public class IgnoreCommand extends BaseCommand {
                 return null;
             }
         });
+
         arguments.add(new CommandArgument("del", "Un-ignores a player.") {
             @Override public String[] getAliases() {
                 return new String[]{"delete", "remove", "unset"};
@@ -145,6 +161,7 @@ public class IgnoreCommand extends BaseCommand {
 
             @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (!(sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
                     return true;
                 }
 
@@ -156,6 +173,7 @@ public class IgnoreCommand extends BaseCommand {
                 Player player = (Player) sender;
                 UUID uuid = player.getUniqueId();
                 BaseUser baseUser = plugin.getUserManager().getUser(uuid);
+
                 Set<String> ignoring = baseUser.getIgnoring();
                 if (!ignoring.contains(args[1])) {
                     sender.sendMessage(ChatColor.RED + "You are not ignoring anyone named " + args[1] + ".");
@@ -163,6 +181,7 @@ public class IgnoreCommand extends BaseCommand {
                     ignoring.remove(args[1]);
                     sender.sendMessage(ChatColor.GOLD + "You are no longer ignoring " + args[1] + ".");
                 }
+
                 return true;
             }
 
@@ -181,10 +200,12 @@ public class IgnoreCommand extends BaseCommand {
         handler = new CommandArgumentHandler(arguments);
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         return handler.onCommand(sender, command, label, args);
     }
 
+    @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         return handler.onTabComplete(sender, command, label, args);
     }

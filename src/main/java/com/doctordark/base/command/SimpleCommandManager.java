@@ -1,13 +1,13 @@
 package com.doctordark.base.command;
 
 import com.doctordark.base.BasePlugin;
+import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,7 +21,7 @@ public class SimpleCommandManager implements CommandManager {
 
     public SimpleCommandManager(final BasePlugin plugin) {
         final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-        commandMap = new HashMap<String, BaseCommand>();
+        commandMap = Maps.newHashMap();
 
         // Load all the modules first.
         Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {

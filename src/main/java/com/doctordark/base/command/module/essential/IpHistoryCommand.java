@@ -54,6 +54,7 @@ public class IpHistoryCommand extends BaseCommand {
                 return true;
             }
 
+            @SuppressWarnings("deprecation")
             OfflinePlayer target = Bukkit.getServer().getOfflinePlayer(args[1]);
 
             if ((!target.hasPlayedBefore()) && (target.getPlayer() == null)) {

@@ -67,23 +67,23 @@ public class AutoRestartHandler {
     }
 
     public void scheduleRestart(int seconds, final String reason) {
-        cancelRestart();
         final Server server = Bukkit.getServer();
+        cancelRestart();
 
         this.reason = reason;
         this.remainingSeconds = seconds;
         this.runnable = new BukkitRunnable() {
             public void run() {
                 if (remainingSeconds == 0) {
-                    if ((reason != null) && (!reason.isEmpty())) {
+                    if (reason != null && !reason.isEmpty()) {
                         for (Player player : server.getOnlinePlayers()) {
                             player.kickPlayer(ChatColor.RED + "Server restarting.. Back up momentarily!" + ChatColor.GOLD + "\n\n" + reason);
                         }
                     }
 
-                    Bukkit.getServer().shutdown();
+                    server.shutdown();
                 } else if (Ints.contains(AutoRestartHandler.ALERT_SECONDS, remainingSeconds)) {
-                    Bukkit.getServer().broadcastMessage(ChatColor.RED + "Server restarting in " + ChatColor.GOLD +
+                    server.broadcastMessage(ChatColor.RED + "Server restarting in " + ChatColor.GOLD +
                             DurationFormatUtils.formatDurationWords(remainingSeconds * 1000L, true, true) + ChatColor.RED + ((reason == null) ||
                             (reason.isEmpty()) ? "." : " [" + ChatColor.GRAY + reason + ChatColor.RED + "]."));
                 }

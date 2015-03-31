@@ -25,9 +25,4 @@ public class RulesCommand extends BaseCommand {
         sender.sendMessage(rules.toArray(new String[rules.size()]));
         return true;
     }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return Collections.emptyList();
-    }
 }

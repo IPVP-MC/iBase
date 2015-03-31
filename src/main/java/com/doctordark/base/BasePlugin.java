@@ -22,8 +22,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class BasePlugin
-        extends JavaPlugin {
+public class BasePlugin extends JavaPlugin {
+
     private AutoRestartHandler autoRestartHandler;
     private BukkitRunnable announcementTask;
     private CommandManager commandManager;
@@ -92,22 +92,22 @@ public class BasePlugin
     }
 
     public AutoRestartHandler getAutoRestartHandler() {
-        return this.autoRestartHandler;
+        return autoRestartHandler;
     }
 
     public CommandManager getCommandManager() {
-        return this.commandManager;
+        return commandManager;
     }
 
     public ServerHandler getServerHandler() {
-        return this.serverHandler;
+        return serverHandler;
     }
 
     public UserManager getUserManager() {
-        return this.userManager;
+        return userManager;
     }
 
     public WarpManager getWarpManager() {
-        return this.warpManager;
+        return warpManager;
     }
 }

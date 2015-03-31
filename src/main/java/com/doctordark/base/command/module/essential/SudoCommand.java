@@ -73,8 +73,9 @@ public class SudoCommand extends BaseCommand {
             results.add("false");
         } else if (args.length == 1) {
             results.add("ALL");
-            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-                if ((!(sender instanceof Player)) || ((Player) sender).canSee(player)) {
+            for (Player target : Bukkit.getServer().getOnlinePlayers()) {
+                if ((!(sender instanceof Player)) || ((Player) sender).canSee(target)) {
+                    results.add(target.getName());
                 }
             }
         }

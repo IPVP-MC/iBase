@@ -47,16 +47,11 @@ public class ToggleMessagesCommand extends BaseCommand {
         Player player = (Player) sender;
         UUID uuid = player.getUniqueId();
 
-        BaseUser baseUser = this.plugin.getUserManager().getUser(uuid);
+        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
         boolean newToggled = !baseUser.isToggledMessages();
         baseUser.setToggledMessages(newToggled);
 
-        sender.sendMessage(ChatColor.GREEN + "You have toggled private messages on.");
+        sender.sendMessage(ChatColor.YELLOW + "You have toggled private messages " + (newToggled ? ChatColor.RED + "off" : ChatColor.GREEN + "on") + ChatColor.YELLOW + ".");
         return true;
-    }
-
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return Collections.emptyList();
     }
 }

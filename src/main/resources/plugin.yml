@@ -119,6 +119,9 @@ commands:
   slowchat:
     aliases: [slow]
     description: Sets a delay between chat messages.
+  sounds:
+    aliases: [pmsounds, togglepmsounds, messagingsounds]
+    description: Toggles messaging sounds
   speed:
     description: Set your walk or fly speed.
   staffchat:

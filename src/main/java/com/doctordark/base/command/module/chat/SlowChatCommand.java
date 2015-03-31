@@ -34,6 +34,7 @@ public class SlowChatCommand extends BaseCommand {
             for (String argument : args) {
                 builder.append(argument).append(" ");
             }
+
             newTicks = BaseUtil.parse(builder.toString());
         }
 

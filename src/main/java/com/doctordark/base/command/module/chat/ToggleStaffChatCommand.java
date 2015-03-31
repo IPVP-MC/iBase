@@ -31,11 +31,11 @@ public class ToggleStaffChatCommand extends BaseCommand {
         Player player = (Player) sender;
         UUID uuid = player.getUniqueId();
 
-        BaseUser baseUser = this.plugin.getUserManager().getUser(uuid);
+        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
         boolean newChatToggled = !baseUser.isToggledStaffChat();
         baseUser.setToggledStaffChat(newChatToggled);
 
-        sender.sendMessage(ChatColor.GREEN + "You have toggled staff chat visibility on.");
+        sender.sendMessage(ChatColor.YELLOW + "You have toggled staff chat visibility " + (newChatToggled ? ChatColor.RED + "off" : ChatColor.GREEN + "on") + ChatColor.YELLOW + ".");
         return true;
     }
 }

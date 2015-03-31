@@ -97,9 +97,11 @@ public class ChatListener implements Listener {
         UUID recipientUUID = recipient.getUniqueId();
         if (!sender.hasPermission("base.messaging.bypass")) {
             BaseUser recipientUser = plugin.getUserManager().getUser(recipientUUID);
-            if ((recipientUser.isToggledMessages()) || (recipientUser.getIgnoring().contains(sender.getName()))) {
+            if (recipientUser.isToggledMessages() || recipientUser.getIgnoring().contains(sender.getName())) {
                 event.setCancelled(true);
                 sender.sendMessage(ChatColor.RED + "That player has private messages toggled.");
+            } else {
+                sender.sendMessage(ChatColor.GOLD + "That player does not have private messages toggled.");
             }
         }
     }

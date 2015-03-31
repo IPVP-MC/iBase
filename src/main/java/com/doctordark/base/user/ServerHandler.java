@@ -104,6 +104,7 @@ public class ServerHandler {
         } catch (IllegalArgumentException ex) {
             ex.printStackTrace();
         }
+
         return false;
     }
 

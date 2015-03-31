@@ -27,6 +27,7 @@ public class Warp implements ConfigurationSerializable {
         }
     }
 
+    @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("name", getName());

@@ -1,6 +1,7 @@
 package com.doctordark.base.util;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.lang.reflect.Field;
@@ -44,6 +45,7 @@ public final class GenericUtils {
                 }
             }
         }
+
         return output;
     }
 
@@ -63,11 +65,12 @@ public final class GenericUtils {
                 }
             }
         }
+
         return output;
     }
 
     public static <K, V> Map<K, V> castMap(Object object, Class<K> keyClass, Class<V> valueClass) {
-        Map<K, V> output = new HashMap();
+        Map<K, V> output = Maps.newHashMap();
         if ((object != null) && ((object instanceof Map))) {
             Map<?, ?> input = (Map) object;
             String keyClassName = keyClass.getSimpleName();
@@ -87,6 +90,7 @@ public final class GenericUtils {
                 }
             }
         }
+
         return output;
     }
 }

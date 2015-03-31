@@ -39,6 +39,7 @@ public class MessageSpyCommand extends BaseCommand {
 
             @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (!(sender instanceof Player)) {
+                    sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
                     return true;
                 }
 
@@ -66,6 +67,7 @@ public class MessageSpyCommand extends BaseCommand {
                 return Collections.emptyList();
             }
         });
+
         arguments.add(new CommandArgument("clear", "Clears all players you're spying on.") {
             @Override public String[] getAliases() {
                 return new String[0];
@@ -80,6 +82,7 @@ public class MessageSpyCommand extends BaseCommand {
                     sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
                     return true;
                 }
+
                 Player player = (Player) sender;
                 UUID uuid = player.getUniqueId();
                 BaseUser baseUser = plugin.getUserManager().getUser(uuid);
@@ -95,6 +98,7 @@ public class MessageSpyCommand extends BaseCommand {
                 return Collections.emptyList();
             }
         });
+
         arguments.add(new CommandArgument("add", "Adds a player to your message spy list.") {
             @Override public String[] getAliases() {
                 return new String[0];
@@ -119,31 +123,40 @@ public class MessageSpyCommand extends BaseCommand {
                     sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + args[0].toLowerCase() + " <del|playerName>");
                     return true;
                 }
+
                 if ((BaseUtil.containsIgnoreCase(messageSpying, args[1])) || (messageSpying.contains("all"))) {
                     sender.sendMessage(ChatColor.RED + "You are already spying on the PM's of " + (args[1].equalsIgnoreCase("all") ? "all players" : args[1]) + ".");
                     return true;
                 }
+
                 if (args[1].equalsIgnoreCase("all")) {
                     messageSpying.clear();
                     messageSpying.add("all");
                     sender.sendMessage(ChatColor.GREEN + "You are now spying on the PM's of all players.");
                     return true;
                 }
+
+                @SuppressWarnings("deprecation")
                 OfflinePlayer offlineTarget = Bukkit.getServer().getOfflinePlayer(args[1]);
+
                 if ((!offlineTarget.hasPlayedBefore()) && (offlineTarget.getPlayer() == null)) {
                     sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
                     return true;
                 }
+
                 if (offlineTarget.equals(sender)) {
                     sender.sendMessage(ChatColor.RED + "You cannot spy on the messages of yourself.");
                     return true;
                 }
+
                 String name = offlineTarget.getName();
                 String id = offlineTarget.getUniqueId().toString();
+
                 if (messageSpying.contains(id)) {
                     sender.sendMessage(ChatColor.RED + "You are already spying on the PM's of " + name + ".");
                     return true;
                 }
+
                 messageSpying.add(id);
 
                 sender.sendMessage(ChatColor.GREEN + "You are now spying on the PM's of " + name + ".");
@@ -154,6 +167,7 @@ public class MessageSpyCommand extends BaseCommand {
                 return null;
             }
         });
+
         arguments.add(new CommandArgument("del", "Deletes a player from your message spy list.") {
             @Override
             public String[] getAliases() {
@@ -188,7 +202,9 @@ public class MessageSpyCommand extends BaseCommand {
                     return true;
                 }
 
+                @SuppressWarnings("deprecation")
                 OfflinePlayer offlineTarget = Bukkit.getServer().getOfflinePlayer(args[1]);
+
                 if ((!offlineTarget.hasPlayedBefore()) && (!offlineTarget.isOnline())) {
                     sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
                     return true;
@@ -224,11 +240,13 @@ public class MessageSpyCommand extends BaseCommand {
         this.handler = new CommandArgumentHandler(arguments);
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        return this.handler.onCommand(sender, command, label, args);
+        return handler.onCommand(sender, command, label, args);
     }
 
+    @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return this.handler.onTabComplete(sender, command, label, args);
+        return handler.onTabComplete(sender, command, label, args);
     }
 }

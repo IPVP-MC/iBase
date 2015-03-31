@@ -57,12 +57,12 @@ public class RenameCommand extends BaseCommand {
             newName = ChatColor.translateAlternateColorCodes('&', builder.toString()).trim();
         }
 
-        if ((oldName == null) && (newName == null)) {
+        if (oldName == null && newName == null) {
             sender.sendMessage(ChatColor.RED + "Your held item already has no name.");
             return true;
         }
 
-        if ((oldName != null) && (oldName.equals(newName))) {
+        if (oldName != null && oldName.equals(newName)) {
             sender.sendMessage(ChatColor.RED + "Your held item is already named this.");
             return true;
         }
@@ -75,7 +75,7 @@ public class RenameCommand extends BaseCommand {
             return true;
         }
 
-        sender.sendMessage(ChatColor.YELLOW + "Renamed held item from " + (oldName == null ? "no name" : oldName) + ChatColor.YELLOW + " to " + newName + ChatColor.YELLOW + ".");
+        sender.sendMessage(ChatColor.YELLOW + "Renamed held item from " + (oldName == null ? "no name" : oldName) + " to " + newName + ".");
         return true;
     }
 

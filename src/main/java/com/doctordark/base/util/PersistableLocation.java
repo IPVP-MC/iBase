@@ -118,6 +118,16 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
     }
 
     @Override
+    public PersistableLocation clone() throws CloneNotSupportedException {
+        try {
+            return (PersistableLocation) super.clone();
+        } catch (CloneNotSupportedException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException();
+        }
+    }
+
+    @Override
     public String toString() {
         return "PersistableLocation [worldName=" + this.worldName + ", worldUID=" + this.worldUID + ", x=" + this.x + ", y=" + this.y + ", z=" + this.z + ", yaw=" + this.yaw + ", pitch=" + this.pitch + "]";
     }
@@ -156,15 +166,7 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
         return result;
     }
 
-    public PersistableLocation clone() throws CloneNotSupportedException {
-        try {
-            return (PersistableLocation) super.clone();
-        } catch (CloneNotSupportedException ex) {
-            ex.printStackTrace();
-            throw new RuntimeException();
-        }
-    }
-
+    @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("worldName", worldName);
