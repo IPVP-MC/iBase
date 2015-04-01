@@ -37,11 +37,11 @@ public class BackCommand extends BaseCommand implements Listener {
             return true;
         }
 
-        Player target = args.length < 1 ? (Player) sender : Bukkit.getServer().getPlayer(args[0]);
-
-        if ((target == null) || (!canSee(sender, target))) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
-            return true;
+        final Player target;
+        if (args.length > 1 && sender.hasPermission(command.getPermission() + ".others")) {
+            target = Bukkit.getServer().getPlayer(args[0]);
+        } else {
+            target = (Player) sender;
         }
 
         BaseUser targetUser = this.plugin.getUserManager().getUser(target.getUniqueId());

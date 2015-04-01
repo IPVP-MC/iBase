@@ -119,7 +119,7 @@ public class IgnoreCommand extends BaseCommand {
 
                 Player target = Bukkit.getServer().getPlayer(args[1]);
 
-                if ((target == null) || (!canSee(sender, target))) {
+                if (target == null || !canSee(sender, target)) {
                     sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
                     return true;
                 }

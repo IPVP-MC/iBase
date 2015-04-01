@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,23 +24,25 @@ public class HealCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Player target;
-        if (args.length < 1) {
-            if (sender instanceof Player) {
-                target = (Player)sender;
-            } else {
-                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
-                return true;
-            }
-        } else if (args[0].equalsIgnoreCase("all")) {
+        final Player target;
+        if (args.length > 1 && sender.hasPermission(command.getPermission() + ".others")) {
+            target = Bukkit.getServer().getPlayer(args[0]);
+        } else if (args[0].equalsIgnoreCase("all") && sender.hasPermission(command.getPermission() + ".all")) {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                if (player.hasPotionEffect(PotionEffectType.HUNGER)) {
+                    player.removePotionEffect(PotionEffectType.HUNGER);
+                }
+
                 player.setHealth(player.getMaxHealth());
             }
 
             Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Healed all online players.");
             return true;
+        } else if (!(sender instanceof Player))  {
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
+            return true;
         } else {
-            target = Bukkit.getServer().getPlayer(args[0]);
+            target = (Player) sender;
         }
 
         if ((target == null) || (!canSee(sender, target))) {

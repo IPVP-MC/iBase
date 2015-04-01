@@ -57,12 +57,12 @@ public class IpHistoryCommand extends BaseCommand {
             @SuppressWarnings("deprecation")
             OfflinePlayer target = Bukkit.getServer().getOfflinePlayer(args[1]);
 
-            if ((!target.hasPlayedBefore()) && (target.getPlayer() == null)) {
+            if (!target.hasPlayedBefore() && target.getPlayer() == null) {
                 sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
                 return true;
             }
 
-            BaseUser baseUser = this.plugin.getUserManager().getUser(target.getUniqueId());
+            BaseUser baseUser = plugin.getUserManager().getUser(target.getUniqueId());
             sender.sendMessage(ChatColor.GOLD + " IP Addresses used by " + target.getName() + ": ");
             Collection<String> ipList = baseUser.getAddressHistories();
 

@@ -37,16 +37,14 @@ public class GamemodeCommand extends BaseCommand {
             return true;
         }
 
-        Player target;
-        if (args.length < 2) {
-            if (sender instanceof Player) {
-                target = (Player) sender;
-            } else {
-                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
-                return true;
-            }
+        final Player target;
+        if (args.length > 1) {
+            target = Bukkit.getServer().getPlayer(args[0]);
+        } else if (!(sender instanceof Player))  {
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
+            return true;
         } else {
-            target = Bukkit.getServer().getPlayer(args[1]);
+            target = (Player) sender;
         }
 
         if ((target == null) || (!canSee(sender, target))) {

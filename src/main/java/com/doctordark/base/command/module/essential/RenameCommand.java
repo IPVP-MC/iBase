@@ -34,7 +34,7 @@ public class RenameCommand extends BaseCommand {
         Player player = (Player) sender;
         ItemStack stack = player.getItemInHand();
 
-        if ((stack == null) || (stack.getType() == Material.AIR)) {
+        if (stack == null || stack.getType() == Material.AIR) {
             sender.sendMessage(ChatColor.RED + "You are not holding anything.");
             return true;
         }

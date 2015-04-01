@@ -55,7 +55,7 @@ public class InvSeeCommand extends BaseCommand {
         if (inventory == null) {
             Player target = Bukkit.getServer().getPlayer(args[0]);
 
-            if ((target == null) || (!player.canSee(target))) {
+            if (target == null || !canSee(sender, target)) {
                 sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
                 return true;
             }

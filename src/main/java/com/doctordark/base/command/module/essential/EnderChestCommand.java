@@ -7,9 +7,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
-import java.util.List;
-
 public class EnderChestCommand extends BaseCommand {
 
     public EnderChestCommand() {
@@ -32,16 +29,13 @@ public class EnderChestCommand extends BaseCommand {
 
         Player target = Bukkit.getServer().getPlayer(args[0]);
 
-        if ((target == null) || (!canSee(sender, target))) {
+        if (target == null || !canSee(sender, target)) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
             return true;
         }
 
-        ((Player) sender).openInventory(target.getEnderChest());
+        Player player = (Player) sender;
+        player.openInventory(target.getEnderChest());
         return true;
-    }
-
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return Collections.emptyList();
     }
 }

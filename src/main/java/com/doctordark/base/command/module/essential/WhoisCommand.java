@@ -38,7 +38,7 @@ public class WhoisCommand extends BaseCommand {
 
         Player target = Bukkit.getServer().getPlayer(args[0]);
 
-        if ((target == null) || (!canSee(sender, target))) {
+        if (target == null || !canSee(sender, target)) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
             return true;
         }

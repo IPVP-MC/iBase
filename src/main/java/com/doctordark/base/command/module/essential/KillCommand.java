@@ -25,18 +25,14 @@ public class KillCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Player target;
-        if (args.length < 1) {
-            if (sender instanceof Player) {
-                target = (Player)sender;
-            } else {
-                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
-                return true;
-            }
-        } else if (sender.hasPermission(getPermission() + ".others")) {
+        final Player target;
+        if (args.length > 1 && sender.hasPermission(command.getPermission() + ".others")) {
             target = Bukkit.getServer().getPlayer(args[0]);
+        } else if (!(sender instanceof Player))  {
+            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
+            return true;
         } else {
-            target = (Player)sender;
+            target = (Player) sender;
         }
 
         if ((target == null) || (!canSee(sender, target))) {

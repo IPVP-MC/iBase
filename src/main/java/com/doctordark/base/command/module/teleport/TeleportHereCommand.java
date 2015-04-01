@@ -23,6 +23,7 @@ public class TeleportHereCommand extends BaseCommand {
             sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
             return true;
         }
+
         if (args.length < 1) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
