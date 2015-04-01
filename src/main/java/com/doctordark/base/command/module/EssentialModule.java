@@ -19,6 +19,7 @@ public class EssentialModule extends BaseCommandModule {
         commands.add(new EntitiesCommand());
         commands.add(new FeedCommand());
         commands.add(new FlyCommand());
+        commands.add(new FreezeCommand(plugin));
         commands.add(new GamemodeCommand());
         commands.add(new HatCommand());
         commands.add(new HealCommand());

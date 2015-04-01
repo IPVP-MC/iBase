@@ -44,6 +44,8 @@ commands:
     description: Toggle flight for a player.
   feed:
     description: Feed a player.
+  freeze:
+    description: Command used to freeze players.
   gamemode:
     aliases: [gm]
     description: Update a players gamemode.

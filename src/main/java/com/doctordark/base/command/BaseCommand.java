@@ -128,6 +128,10 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @return the aliases for this command
      */
     public String[] getAliases() {
+        if (aliases == null) {
+            aliases = new String[0];
+        }
+
         return aliases;
     }
 

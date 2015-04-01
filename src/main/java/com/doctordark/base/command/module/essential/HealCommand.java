@@ -27,7 +27,7 @@ public class HealCommand extends BaseCommand {
         final Player target;
         if (args.length > 1 && sender.hasPermission(command.getPermission() + ".others")) {
             target = Bukkit.getServer().getPlayer(args[0]);
-        } else if (args[0].equalsIgnoreCase("all") && sender.hasPermission(command.getPermission() + ".all")) {
+        } else if (args.length > 0 && args[0].equalsIgnoreCase("all") && sender.hasPermission(command.getPermission() + ".all")) {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 if (player.hasPotionEffect(PotionEffectType.HUNGER)) {
                     player.removePotionEffect(PotionEffectType.HUNGER);
@@ -45,7 +45,7 @@ public class HealCommand extends BaseCommand {
             target = (Player) sender;
         }
 
-        if ((target == null) || (!canSee(sender, target))) {
+        if (target == null || !canSee(sender, target)) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
             return true;
         }

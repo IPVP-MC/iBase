@@ -27,24 +27,24 @@ public class SimpleCommandManager implements CommandManager {
         Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
             @Override
             public void run() {
-            for (BaseCommand command : commandMap.values()) {
-                String cmdName = command.getName();
-                PluginCommand pluginCommand = plugin.getCommand(cmdName);
+                for (BaseCommand command : commandMap.values()) {
+                    String cmdName = command.getName();
+                    PluginCommand pluginCommand = plugin.getCommand(cmdName);
 
-                if (pluginCommand == null) {
-                    console.sendMessage("[" + plugin.getName() + "] " + ChatColor.YELLOW + "Failed to register command '" + cmdName + "'.");
-                    console.sendMessage("[" + plugin.getName() + "] " + ChatColor.YELLOW + "Reason: Undefined in plugin.yml.");
-                    continue;
+                    if (pluginCommand == null) {
+                        console.sendMessage("[" + plugin.getName() + "] " + ChatColor.YELLOW + "Failed to register command '" + cmdName + "'.");
+                        console.sendMessage("[" + plugin.getName() + "] " + ChatColor.YELLOW + "Reason: Undefined in plugin.yml.");
+                        continue;
+                    }
+
+                    pluginCommand.setAliases(Arrays.asList(command.getAliases()));
+                    pluginCommand.setDescription(command.getDescription());
+                    pluginCommand.setExecutor(command);
+                    pluginCommand.setTabCompleter(command);
+                    pluginCommand.setUsage(command.getUsage());
+                    pluginCommand.setPermission(command.getPermission());
+                    pluginCommand.setPermissionMessage(PERMISSION_MESSAGE);
                 }
-
-                pluginCommand.setAliases(Arrays.asList(command.getAliases()));
-                pluginCommand.setDescription(command.getDescription());
-                pluginCommand.setExecutor(command);
-                pluginCommand.setTabCompleter(command);
-                pluginCommand.setUsage(command.getUsage());
-                pluginCommand.setPermission(command.getPermission());
-                pluginCommand.setPermissionMessage(PERMISSION_MESSAGE);
-            }
             }
         });
     }

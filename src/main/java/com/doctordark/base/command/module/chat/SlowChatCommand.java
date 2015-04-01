@@ -25,9 +25,11 @@ public class SlowChatCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        long oldTicks = this.plugin.getServerHandler().getRemainingChatSlowedMillis();
+        long oldTicks = plugin.getServerHandler().getRemainingChatSlowedMillis();
         long newTicks;
-        if (args.length < 1) {
+        if (oldTicks > 0L) {
+            newTicks = 0L;
+        } else if (args.length < 1) {
             newTicks = oldTicks > 0L ? 0L : DEFAULT_DELAY;
         } else {
             StringBuilder builder = new StringBuilder();
@@ -38,15 +40,10 @@ public class SlowChatCommand extends BaseCommand {
             newTicks = BaseUtil.parse(builder.toString());
         }
 
-        if ((newTicks <= 0L) && (oldTicks <= 0L)) {
-            sender.sendMessage(ChatColor.RED + "Global chat will continue to be un-slowed.");
-            return true;
-        }
-
         plugin.getServerHandler().setChatSlowedMillis(newTicks);
-
-        Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + "Global chat is " + (newTicks > 0L ? ChatColor.GOLD + "now slowed for " +
-                DurationFormatUtils.formatDurationWords(newTicks, true, true) : String.valueOf(ChatColor.RED) + "no longer slowed") + ChatColor.YELLOW + ".");
+        Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + "Global chat is " + (newTicks > 0L ?
+                ChatColor.GOLD + "now slowed for " + DurationFormatUtils.formatDurationWords(newTicks, true, true) :
+                ChatColor.RED) + "no longer slowed" + ChatColor.YELLOW + ".");
         return true;
     }
 }
