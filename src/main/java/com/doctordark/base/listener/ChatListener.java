@@ -14,6 +14,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
@@ -89,6 +91,10 @@ public class ChatListener implements Listener {
         }
     }
 
+    public static void main(String[] args) {
+        System.out.println(LocalTime.now(ZoneId.of("GMT")).toString());
+    }
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerPreMessage(PlayerMessageEvent event) {
         String message = event.getMessage();
@@ -100,8 +106,6 @@ public class ChatListener implements Listener {
             if (recipientUser.isToggledMessages() || recipientUser.getIgnoring().contains(sender.getName())) {
                 event.setCancelled(true);
                 sender.sendMessage(ChatColor.RED + "That player has private messages toggled.");
-            } else {
-                sender.sendMessage(ChatColor.GOLD + "That player does not have private messages toggled.");
             }
         }
     }

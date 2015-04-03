@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Command used to set a players game-mode.
@@ -39,7 +40,7 @@ public class GamemodeCommand extends BaseCommand {
 
         final Player target;
         if (args.length > 1) {
-            target = Bukkit.getServer().getPlayer(args[0]);
+            target = Bukkit.getServer().getPlayer(args[1]);
         } else if (!(sender instanceof Player))  {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -84,6 +85,7 @@ public class GamemodeCommand extends BaseCommand {
      * @return the game-mode from name
      */
     private GameMode getGameModeByName(String id) {
+        id = id.toLowerCase(Locale.ENGLISH);
         if (id.equalsIgnoreCase("gmc") || id.contains("creat") || id.equalsIgnoreCase("1") || id.equalsIgnoreCase("c")) {
             return GameMode.CREATIVE;
         } else if (id.equalsIgnoreCase("gms") || id.contains("survi") || id.equalsIgnoreCase("0") || id.equalsIgnoreCase("s")) {

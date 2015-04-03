@@ -87,6 +87,8 @@ public class AutoRestartHandler {
                             DurationFormatUtils.formatDurationWords(remainingSeconds * 1000L, true, true) + ChatColor.RED + ((reason == null) ||
                             (reason.isEmpty()) ? "." : " [" + ChatColor.GRAY + reason + ChatColor.RED + "]."));
                 }
+
+                remainingSeconds--;
             }
         };
 

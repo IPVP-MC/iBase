@@ -38,7 +38,7 @@ public class BackCommand extends BaseCommand implements Listener {
         }
 
         final Player target;
-        if (args.length > 1 && sender.hasPermission(command.getPermission() + ".others")) {
+        if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
             target = Bukkit.getServer().getPlayer(args[0]);
         } else {
             target = (Player) sender;

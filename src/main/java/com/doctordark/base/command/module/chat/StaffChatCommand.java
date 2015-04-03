@@ -28,7 +28,7 @@ public class StaffChatCommand extends BaseCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final Player target;
-        if (args.length > 1 && sender.hasPermission(command.getPermission() + ".others")) {
+        if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
             target = Bukkit.getServer().getPlayer(args[0]);
         } else if (!(sender instanceof Player))  {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
@@ -37,7 +37,19 @@ public class StaffChatCommand extends BaseCommand {
             target = (Player) sender;
         }
 
-        if ((target == null) || (((sender instanceof Player)) && (!((Player) sender).canSee(target)))) {
+        Player player = sender instanceof Player ? (Player) sender : null;
+
+        if ((target == null) || (player != null && !player.canSee(target))) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
+                return true;
+            }
+
+            if (args.length < 1) {
+                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+                return true;
+            }
+
             StringBuilder builder = new StringBuilder();
             for (String argument : args) {
                 builder.append(argument).append(" ");
@@ -48,7 +60,7 @@ public class StaffChatCommand extends BaseCommand {
 
             Bukkit.getServer().getConsoleSender().sendMessage(format);
             for (Player other : Bukkit.getServer().getOnlinePlayers()) {
-                BaseUser otherUser = this.plugin.getUserManager().getUser(other.getUniqueId());
+                BaseUser otherUser = plugin.getUserManager().getUser(other.getUniqueId());
                 if ((!otherUser.isToggledStaffChat()) && (other.hasPermission("base.command.staffchat"))) {
                     other.sendMessage(format);
                 }
@@ -58,7 +70,7 @@ public class StaffChatCommand extends BaseCommand {
         }
 
         UUID uuid = target.getUniqueId();
-        BaseUser baseTarget = this.plugin.getUserManager().getUser(uuid);
+        BaseUser baseTarget = plugin.getUserManager().getUser(uuid);
 
         boolean newStaffChat = !baseTarget.isInStaffChat() || (args.length >= 2 && Boolean.parseBoolean(args[1]));
         baseTarget.setInStaffChat(newStaffChat);

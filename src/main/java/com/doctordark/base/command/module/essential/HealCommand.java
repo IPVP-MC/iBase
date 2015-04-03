@@ -25,7 +25,7 @@ public class HealCommand extends BaseCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final Player target;
-        if (args.length > 1 && sender.hasPermission(command.getPermission() + ".others")) {
+        if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
             target = Bukkit.getServer().getPlayer(args[0]);
         } else if (args.length > 0 && args[0].equalsIgnoreCase("all") && sender.hasPermission(command.getPermission() + ".all")) {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {

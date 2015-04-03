@@ -27,7 +27,7 @@ public class VanishCommand extends BaseCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final Player target;
-        if (args.length > 1 && sender.hasPermission(command.getPermission() + ".others")) {
+        if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
             target = Bukkit.getServer().getPlayer(args[0]);
         } else if (!(sender instanceof Player))  {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));

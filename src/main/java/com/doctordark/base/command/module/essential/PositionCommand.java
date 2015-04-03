@@ -25,7 +25,7 @@ public class PositionCommand extends BaseCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final Player target;
-        if (args.length > 1) {
+        if (args.length > 0) {
             target = Bukkit.getServer().getPlayer(args[0]);
         } else if (!(sender instanceof Player))  {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
