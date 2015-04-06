@@ -62,7 +62,7 @@ public class VanishListener implements Listener {
         final Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        UserManager userManager = this.plugin.getUserManager();
+        UserManager userManager = plugin.getUserManager();
         final BaseUser baseUser = userManager.getUser(uuid);
         if (baseUser.isVanished()) {
             new BukkitRunnable() {
@@ -70,7 +70,7 @@ public class VanishListener implements Listener {
                     player.sendMessage(ChatColor.GOLD + "You have joined vanished.");
                     baseUser.updateVanishedState(true);
                 }
-            }.runTask(this.plugin);
+            }.runTask(plugin);
         }
 
         VanishPriority userPriority = VanishPriority.of(player);
@@ -86,7 +86,7 @@ public class VanishListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        BaseUser baseUser = this.plugin.getUserManager().getUser(uuid);
+        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
         if (baseUser.isVanished()) {
             event.setQuitMessage(null);
         }
@@ -96,7 +96,7 @@ public class VanishListener implements Listener {
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        BaseUser baseUser = this.plugin.getUserManager().getUser(uuid);
+        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
         if (baseUser.isVanished()) {
             event.setCancelled(true);
             player.sendMessage(ChatColor.RED + "You cannot drop items whilst vanished.");
@@ -108,7 +108,7 @@ public class VanishListener implements Listener {
         if ((event.getEntity().getShooter() instanceof Player)) {
             Player player = (Player) event.getEntity().getShooter();
             UUID uuid = player.getUniqueId();
-            BaseUser baseUser = this.plugin.getUserManager().getUser(uuid);
+            BaseUser baseUser = plugin.getUserManager().getUser(uuid);
             if (baseUser.isVanished()) {
                 event.setCancelled(true);
                 ItemStack stack = player.getItemInHand();
@@ -122,7 +122,7 @@ public class VanishListener implements Listener {
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        BaseUser baseUser = this.plugin.getUserManager().getUser(uuid);
+        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
         if (baseUser.isVanished()) {
             event.setCancelled(true);
         }
@@ -132,7 +132,7 @@ public class VanishListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         UUID uuid = player.getUniqueId();
-        BaseUser baseUser = this.plugin.getUserManager().getUser(uuid);
+        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
         if (baseUser.isVanished()) {
             event.setDeathMessage(null);
         }
@@ -143,7 +143,7 @@ public class VanishListener implements Listener {
         Entity entity = event.getEntity();
         if (((entity instanceof Player)) && (event.getCause() != EntityDamageEvent.DamageCause.SUICIDE)) {
             Player attacked = (Player) entity;
-            BaseUser attackedUser = this.plugin.getUserManager().getUser(attacked.getUniqueId());
+            BaseUser attackedUser = plugin.getUserManager().getUser(attacked.getUniqueId());
 
             Player attacker = BaseUtil.getFinalAttacker(event);
             if (attackedUser.isVanished()) {
@@ -256,22 +256,16 @@ public class VanishListener implements Listener {
     }
 
     public void handleFakeChest(Player player, Chest chest, boolean open) {
-        final int chestX;
-        final int chestY;
-        final int chestZ;
-
         Inventory chestInventory = chest.getInventory();
         if (chestInventory instanceof DoubleChestInventory) {
             DoubleChestInventory doubleChestInventory = (DoubleChestInventory) chestInventory;
             DoubleChest doubleChest = doubleChestInventory.getHolder();
-            chestX = (int) doubleChest.getX();
-            chestY = (int) doubleChest.getY();
-            chestZ = (int) doubleChest.getZ();
-        } else {
-            chestX = chest.getX();
-            chestY = chest.getY();
-            chestZ = chest.getZ();
+            chest = (Chest) doubleChest.getLeftSide();
         }
+
+        final int chestX = chest.getX();
+        final int chestY = chest.getY();
+        final int chestZ = chest.getZ();
 
         PacketPlayOutBlockAction packet = new PacketPlayOutBlockAction(chestX, chestY, chestZ, Blocks.CHEST, 1, open ? 1 : 0);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
