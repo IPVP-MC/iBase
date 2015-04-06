@@ -2,6 +2,7 @@ package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.base.listener.VanishPriority;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.util.BaseUtil;
 import org.apache.commons.lang.WordUtils;
@@ -60,7 +61,7 @@ public class WhoisCommand extends BaseCommand {
         sender.sendMessage(ChatColor.YELLOW + "  Location: " + ChatColor.GOLD + world.getName() + " " +
                 ChatColor.GRAY + "[" + WordUtils.capitalizeFully(world.getEnvironment().name().replace('_', ' ')) + "] " +
                 ChatColor.GOLD + "(" + x + ", " + y + ", " + z + ")");
-        sender.sendMessage(ChatColor.YELLOW + "  Vanished: " + ChatColor.GOLD + baseUser.isVanished());
+        sender.sendMessage(ChatColor.YELLOW + "  Vanished: " + ChatColor.GOLD + baseUser.isVanished() + " (priority=" + VanishPriority.of(target).getLevel() + ")");
         sender.sendMessage(ChatColor.YELLOW + "  Staff Chat: " + ChatColor.GOLD + baseUser.isInStaffChat());
         sender.sendMessage(ChatColor.YELLOW + "  Operator: " + ChatColor.GOLD + target.isOp());
         sender.sendMessage(ChatColor.YELLOW + "  Game Mode: " + ChatColor.GOLD + WordUtils.capitalizeFully(target.getGameMode().name().replace('_', ' ')));
