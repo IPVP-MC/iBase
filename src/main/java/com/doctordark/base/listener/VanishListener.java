@@ -7,10 +7,15 @@ import com.doctordark.base.util.BaseUtil;
 import com.google.common.collect.Maps;
 import net.minecraft.server.v1_7_R4.Blocks;
 import net.minecraft.server.v1_7_R4.PacketPlayOutBlockAction;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
@@ -27,7 +32,12 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -220,7 +230,7 @@ public class VanishListener implements Listener {
             Location chestLocation = fakeChestLocationMap.get(uuid);
             Block block = chestLocation.getBlock();
             BlockState blockState = block.getState();
-            if ((blockState instanceof Chest)) {
+            if (blockState instanceof Chest) {
                 Chest chest = (Chest) blockState;
                 handleFakeChest(player, chest, false);
             }
@@ -245,10 +255,23 @@ public class VanishListener implements Listener {
         }
     }
 
-    private void handleFakeChest(Player player, Chest chest, boolean open) {
-        int chestX = chest.getX();
-        int chestY = chest.getY();
-        int chestZ = chest.getZ();
+    public void handleFakeChest(Player player, Chest chest, boolean open) {
+        final int chestX;
+        final int chestY;
+        final int chestZ;
+
+        Inventory chestInventory = chest.getInventory();
+        if (chestInventory instanceof DoubleChestInventory) {
+            DoubleChestInventory doubleChestInventory = (DoubleChestInventory) chestInventory;
+            DoubleChest doubleChest = doubleChestInventory.getHolder();
+            chestX = (int) doubleChest.getX();
+            chestY = (int) doubleChest.getY();
+            chestZ = (int) doubleChest.getZ();
+        } else {
+            chestX = chest.getX();
+            chestY = chest.getY();
+            chestZ = chest.getZ();
+        }
 
         PacketPlayOutBlockAction packet = new PacketPlayOutBlockAction(chestX, chestY, chestZ, Blocks.CHEST, 1, open ? 1 : 0);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
