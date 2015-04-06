@@ -13,9 +13,12 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class ReplyCommand extends BaseCommand {
 
+    private static final long VANISH_REPLY_TIMEOUT = TimeUnit.SECONDS.toMillis(45L);
     private final BasePlugin plugin;
 
     public ReplyCommand(BasePlugin plugin) {
@@ -45,9 +48,9 @@ public class ReplyCommand extends BaseCommand {
             return true;
         }
 
-        Set<Player> recipients = Sets.newHashSet();
+        UUID uuid = player.getUniqueId();
 
-        if ((target == null) || (!canSee(sender, target))) {
+        if ((target == null) || (!canSee(sender, target) && System.currentTimeMillis() - plugin.getUserManager().getUser(uuid).getLastReceivedMessageMillis() > VANISH_REPLY_TIMEOUT)) {
             sender.sendMessage(ChatColor.GOLD + "There is no player to reply to.");
             return true;
         }
@@ -58,7 +61,7 @@ public class ReplyCommand extends BaseCommand {
         }
 
         String message = builder.toString();
-        recipients.add(target);
+        Set<Player> recipients = Sets.newHashSet(target);
 
         PlayerMessageEvent playerMessageEvent = new PlayerMessageEvent(player, recipients, message, false);
         Bukkit.getServer().getPluginManager().callEvent(playerMessageEvent);

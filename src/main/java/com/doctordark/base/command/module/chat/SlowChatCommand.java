@@ -43,7 +43,7 @@ public class SlowChatCommand extends BaseCommand {
         plugin.getServerHandler().setChatSlowedMillis(newTicks);
         Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + "Global chat is " + (newTicks > 0L ?
                 ChatColor.GOLD + "now slowed for " + DurationFormatUtils.formatDurationWords(newTicks, true, true) :
-                ChatColor.RED) + "no longer slowed" + ChatColor.YELLOW + ".");
+                ChatColor.RED + "no longer slowed") + ChatColor.YELLOW + ".");
         return true;
     }
 }

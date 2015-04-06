@@ -15,7 +15,7 @@ public class ChatModule extends BaseCommandModule {
         commands.add(new StaffChatCommand(plugin));
 
         commands.add(new IgnoreCommand(plugin));
-        commands.add(new MessageCommand());
+        commands.add(new MessageCommand(plugin));
         commands.add(new MessageSpyCommand(plugin));
         commands.add(new ReplyCommand(plugin));
         commands.add(new ToggleChatCommand(plugin));

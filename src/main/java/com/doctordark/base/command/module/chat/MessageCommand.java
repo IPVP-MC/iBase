@@ -1,5 +1,6 @@
 package com.doctordark.base.command.module.chat;
 
+import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.command.module.chat.event.PlayerMessageEvent;
 import com.google.common.collect.Sets;
@@ -11,10 +12,11 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class MessageCommand extends BaseCommand {
 
-    public MessageCommand() {
+    public MessageCommand(BasePlugin plugin) {
         super("message", "Sends a message to a recipient(s).", "base.command.message");
         setAliases(new String[]{"msg", "m", "whisper", "w", "tell"});
         setUsage("/(command) <playerName> [text...]");
@@ -32,6 +34,9 @@ public class MessageCommand extends BaseCommand {
             return true;
         }
 
+        Player player = (Player) sender;
+        UUID uuid = player.getUniqueId();
+
         Player target = Bukkit.getServer().getPlayer(args[0]);
 
         if (target == null || !canSee(sender, target)) {
@@ -44,11 +49,8 @@ public class MessageCommand extends BaseCommand {
             builder.append(args[i]).append(" ");
         }
 
-        Player player = (Player) sender;
         String message = builder.toString();
-
-        Set<Player> recipients = Sets.newHashSet();
-        recipients.add(target);
+        Set<Player> recipients = Sets.newHashSet(target);
 
         PlayerMessageEvent playerMessageEvent = new PlayerMessageEvent(player, recipients, message, false);
         Bukkit.getServer().getPluginManager().callEvent(playerMessageEvent);
