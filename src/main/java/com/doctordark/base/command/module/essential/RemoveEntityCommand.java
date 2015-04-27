@@ -1,12 +1,20 @@
 package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.base.util.BaseUtil;
+import com.doctordark.util.Utils;
 import com.google.common.collect.Lists;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
 
 import java.util.List;
 
@@ -15,7 +23,7 @@ public class RemoveEntityCommand extends BaseCommand {
     public RemoveEntityCommand() {
         super("removeentity", "Removes all of a specific entity.", "base.command.removeentity");
         setAliases(new String[0]);
-        setUsage("/(command) <worldName> <entityType> [radius]");
+        setUsage("/(command) <worldName> <entityType> [radius] [removeCustomNamed]");
     }
 
     @Override
@@ -41,9 +49,19 @@ public class RemoveEntityCommand extends BaseCommand {
 
         int radius = 0;
         if (args.length >= 3) {
-            Integer parsed = BaseUtil.getInteger(args[2]);
+            Integer parsed = Utils.getInteger(args[2]);
             if (parsed != null) {
                 radius = parsed;
+            }
+        }
+
+        boolean removeCustomNamed = false;
+        if (args.length >= 4) {
+            try {
+                removeCustomNamed = Boolean.parseBoolean(args[3]);
+            } catch (Exception ex) {
+                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
+                return true;
             }
         }
 
@@ -52,15 +70,19 @@ public class RemoveEntityCommand extends BaseCommand {
         int removed = 0;
         for (Chunk chunk : world.getLoadedChunks()) {
             for (Entity entity : chunk.getEntities()) {
-                if (entity.getType() == entityType) {
-                    if ((radius <= 0) || (location == null) || (location.distanceSquared(entity.getLocation()) <= radius)) {
-                        if ((!(entity instanceof Tameable)) || (!((Tameable) entity).isTamed())) {
-                            if ((!(entity instanceof LivingEntity)) || (((LivingEntity) entity).getCustomName() == null)) {
-                                entity.remove();
-                                removed++;
-                            }
+                if (entity.getType() != entityType) continue;
+                if ((radius <= 0) || (location != null && location.distanceSquared(entity.getLocation()) <= radius)) {
+                    if (entity instanceof Tameable && ((Tameable) entity).isTamed()) continue;
+
+                    if (entity instanceof LivingEntity) {
+                        LivingEntity livingEntity = (LivingEntity) entity;
+                        if (removeCustomNamed && livingEntity.getCustomName() != null) {
+                            continue;
                         }
                     }
+
+                    entity.remove();
+                    removed++;
                 }
             }
         }

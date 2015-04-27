@@ -11,7 +11,6 @@ import com.doctordark.base.task.AnnouncementHandler;
 import com.doctordark.base.task.AutoRestartHandler;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.user.NameHistory;
-import com.doctordark.base.user.ServerHandler;
 import com.doctordark.base.user.UserManager;
 import com.doctordark.base.util.PersistableLocation;
 import com.doctordark.base.warp.FlatFileWarpManager;
@@ -74,6 +73,7 @@ public class BasePlugin extends JavaPlugin {
         PluginManager manager = getServer().getPluginManager();
         manager.registerEvents(new ChatListener(this), this);
         manager.registerEvents(new ColouredSignListener(), this);
+        manager.registerEvents(new DecreasedLagListener(this), this);
         manager.registerEvents(new JoinListener(this), this);
         manager.registerEvents(new NameVerifyListener(), this);
         manager.registerEvents(new PingListener(), this);

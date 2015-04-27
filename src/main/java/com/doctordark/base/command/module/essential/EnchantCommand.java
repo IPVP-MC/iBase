@@ -1,7 +1,7 @@
 package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.base.util.BaseUtil;
+import com.doctordark.util.Utils;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -58,7 +58,7 @@ public class EnchantCommand extends BaseCommand {
             return true;
         }
 
-        Integer level = BaseUtil.getInteger(args[2]);
+        Integer level = Utils.getInteger(args[2]);
 
         if (level == null) {
             sender.sendMessage(ChatColor.RED + "'" + args[2] + "' is not a number.");

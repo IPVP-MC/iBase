@@ -3,7 +3,7 @@ package com.doctordark.base.listener;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.user.UserManager;
-import com.doctordark.base.util.BaseUtil;
+import com.doctordark.util.BukkitUtils;
 import com.google.common.collect.Maps;
 import net.minecraft.server.v1_7_R4.Blocks;
 import net.minecraft.server.v1_7_R4.PacketPlayOutBlockAction;
@@ -20,6 +20,7 @@ import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -33,6 +34,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -41,6 +43,7 @@ import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
@@ -93,6 +96,25 @@ public class VanishListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+    public void onPlayerDropItem(PlayerInteractEntityEvent event) {
+        Entity entity = event.getRightClicked();
+        if (entity instanceof Player) {
+            Player player = event.getPlayer();
+            if (!player.isOp()) {
+                return;
+            }
+
+            UUID uuid = player.getUniqueId();
+            BaseUser baseUser = plugin.getUserManager().getUser(uuid);
+            if (baseUser.isVanished()) {
+                Player clicked = (Player) entity;
+                player.openInventory(clicked.getInventory());
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
@@ -105,14 +127,14 @@ public class VanishListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        if ((event.getEntity().getShooter() instanceof Player)) {
-            Player player = (Player) event.getEntity().getShooter();
+        Projectile projectile = event.getEntity();
+        ProjectileSource source = projectile.getShooter();
+        if (source instanceof Player) {
+            Player player = (Player) source;
             UUID uuid = player.getUniqueId();
             BaseUser baseUser = plugin.getUserManager().getUser(uuid);
             if (baseUser.isVanished()) {
                 event.setCancelled(true);
-                ItemStack stack = player.getItemInHand();
-                stack.setAmount(stack.getAmount() + 1);
                 player.sendMessage(ChatColor.RED + "You cannot launch projectiles whilst vanished.");
             }
         }
@@ -140,12 +162,16 @@ public class VanishListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onEntityDamage(EntityDamageEvent event) {
+        if (event.getCause() == EntityDamageEvent.DamageCause.SUICIDE) {
+            return;
+        }
+
         Entity entity = event.getEntity();
-        if (((entity instanceof Player)) && (event.getCause() != EntityDamageEvent.DamageCause.SUICIDE)) {
+        if (entity instanceof Player) {
             Player attacked = (Player) entity;
             BaseUser attackedUser = plugin.getUserManager().getUser(attacked.getUniqueId());
 
-            Player attacker = BaseUtil.getFinalAttacker(event);
+            Player attacker = BukkitUtils.getFinalAttacker(event, true);
             if (attackedUser.isVanished()) {
                 if (attacker != null) {
                     attacker.sendMessage(ChatColor.RED + "That player is vanished.");
@@ -209,8 +235,9 @@ public class VanishListener implements Listener {
                     Chest chest = (Chest) state;
                     Location chestLocation = chest.getLocation();
 
-                    Inventory fakeInventory = Bukkit.getServer().createInventory(null, type, FAKE_CHEST_PREFIX + type.getDefaultTitle());
-                    fakeInventory.setContents(chest.getBlockInventory().getContents());
+                    Inventory chestInventory = chest.getInventory();
+                    Inventory fakeInventory = Bukkit.getServer().createInventory(null, chestInventory.getContents().length, FAKE_CHEST_PREFIX + type.getDefaultTitle());
+                    fakeInventory.setContents(chestInventory.getContents());
 
                     event.setCancelled(true);
                     player.openInventory(fakeInventory);

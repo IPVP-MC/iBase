@@ -48,7 +48,7 @@ public class InvSeeCommand extends BaseCommand {
         Inventory inventory = null;
         for (InventoryType type : this.types) {
             if (type.name().equalsIgnoreCase(args[0])) {
-                inventory = Bukkit.createInventory(player, type);
+                //inventory = Bukkit.createInventory(player, type);
             }
         }
 

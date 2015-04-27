@@ -212,6 +212,7 @@ public class BaseUser implements ConfigurationSerializable {
             return;
         }
 
+        player.spigot().setCollidesWithEntities(!vanished);
         VanishPriority playerPriority = VanishPriority.of(player);
         for (Player target : Bukkit.getServer().getOnlinePlayers()) {
             if ((vanished) && (playerPriority.isMoreThan(VanishPriority.of(target)))) {

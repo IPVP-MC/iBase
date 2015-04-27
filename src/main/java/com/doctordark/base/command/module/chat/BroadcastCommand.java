@@ -39,7 +39,7 @@ public class BroadcastCommand extends BaseCommand {
             return true;
         }
 
-        String format = this.plugin.getServerHandler().getBroadcastFormat();
+        String format = plugin.getServerHandler().getBroadcastFormat();
 
         Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', String.format(Locale.ENGLISH, format, message)));
         return true;

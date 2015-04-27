@@ -1,7 +1,7 @@
 package com.doctordark.base.command.module.chat;
 
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.base.util.BaseUtil;
+import com.doctordark.util.BukkitUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -34,9 +34,7 @@ public class SayCommand extends BaseCommand {
             return true;
         }
 
-        String name = BaseUtil.getDisplayName(sender);
-        String prefix = ChatColor.LIGHT_PURPLE + "[" + name + ChatColor.LIGHT_PURPLE + "]";
-
+        String prefix = ChatColor.LIGHT_PURPLE + "[" + BukkitUtils.getDisplayName(sender) + ChatColor.LIGHT_PURPLE + "]";
         Bukkit.getServer().broadcastMessage(prefix + " " + broadcast);
         return true;
     }

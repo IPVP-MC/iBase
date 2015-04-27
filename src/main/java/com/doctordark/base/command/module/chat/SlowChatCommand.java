@@ -2,7 +2,7 @@ package com.doctordark.base.command.module.chat;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.base.util.BaseUtil;
+import com.doctordark.util.Utils;
 import net.minecraft.util.org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -37,7 +37,7 @@ public class SlowChatCommand extends BaseCommand {
                 builder.append(argument).append(" ");
             }
 
-            newTicks = BaseUtil.parse(builder.toString());
+            newTicks = Utils.parse(builder.toString());
         }
 
         plugin.getServerHandler().setChatSlowedMillis(newTicks);

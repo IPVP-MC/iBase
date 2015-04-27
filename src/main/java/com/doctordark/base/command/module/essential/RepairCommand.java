@@ -52,11 +52,9 @@ public class RepairCommand extends BaseCommand {
             toRepair.add(target.getItemInHand());
         }
 
-        for (ItemStack stack : toRepair) {
-            if (stack != null && stack.getType() != Material.AIR) {
-                stack.setDurability((short) 0);
-            }
-        }
+        toRepair.stream().filter(stack -> stack != null && stack.getType() != Material.AIR).forEach(stack -> {
+            stack.setDurability((short) 0);
+        });
 
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Repaired " + (toRepair.size() > 1 ? "inventory" : "held item") + " of " + target.getName() + ".");
         return true;

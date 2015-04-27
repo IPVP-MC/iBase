@@ -1,7 +1,7 @@
 package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.base.util.BaseUtil;
+import com.doctordark.util.Utils;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -58,7 +58,7 @@ public class SpeedCommand extends BaseCommand {
         if (args[1].equalsIgnoreCase("reset")) {
             multiplier = flight ? DEFAULT_FLIGHT_SPEED : DEFAULT_WALK_SPEED;
         } else {
-            multiplier = BaseUtil.getFloat(args[1]);
+            multiplier = Utils.getFloat(args[1]);
             if (multiplier == null) {
                 sender.sendMessage(ChatColor.RED + "Invalid speed multiplier: '" + args[1] + "'.");
                 return true;

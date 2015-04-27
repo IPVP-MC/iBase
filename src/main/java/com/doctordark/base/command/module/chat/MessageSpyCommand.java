@@ -5,7 +5,7 @@ import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.command.CommandArgument;
 import com.doctordark.base.command.CommandArgumentHandler;
 import com.doctordark.base.user.BaseUser;
-import com.doctordark.base.util.BaseUtil;
+import com.doctordark.util.Utils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
@@ -16,7 +16,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class MessageSpyCommand extends BaseCommand {
 
@@ -124,7 +128,7 @@ public class MessageSpyCommand extends BaseCommand {
                     return true;
                 }
 
-                if ((BaseUtil.containsIgnoreCase(messageSpying, args[1])) || (messageSpying.contains("all"))) {
+                if (messageSpying.contains("all") || Utils.containsIgnoreCase(messageSpying, args[1])) {
                     sender.sendMessage(ChatColor.RED + "You are already spying on the PM's of " + (args[1].equalsIgnoreCase("all") ? "all players" : args[1]) + ".");
                     return true;
                 }

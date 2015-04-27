@@ -2,7 +2,7 @@ package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.base.util.BaseUtil;
+import com.doctordark.util.Utils;
 import com.google.common.collect.Maps;
 import net.minecraft.util.org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
@@ -10,13 +10,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.Map;
 import java.util.UUID;
@@ -28,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class FreezeCommand extends BaseCommand implements Listener {
 
     private final Map<UUID, Long> frozenPlayers;
+
     private long defaultFreezeDuration;
     private long serverFrozenMillis;
 
@@ -58,7 +60,7 @@ public class FreezeCommand extends BaseCommand implements Listener {
                 builder.append(args[i]).append(" ");
             }
 
-            freezeTicks = BaseUtil.parse(builder.toString());
+            freezeTicks = Utils.parse(builder.toString());
         }
 
         final long millis = System.currentTimeMillis();
@@ -86,14 +88,37 @@ public class FreezeCommand extends BaseCommand implements Listener {
         UUID targetUUID = target.getUniqueId();
         if (getRemainingPlayerFrozenMillis(targetUUID) > 0L) {
             frozenPlayers.remove(targetUUID);
+            target.sendMessage(ChatColor.GREEN + "You have been un-frozen.");
             Command.broadcastCommandMessage(sender, ChatColor.YELLOW + target.getName() + " is no longer frozen.");
         } else {
             frozenPlayers.put(targetUUID, millis + freezeTicks);
+            target.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "You have been frozen.");
             Command.broadcastCommandMessage(sender, ChatColor.YELLOW + target.getName() + " is now frozen for " +
                     DurationFormatUtils.formatDurationWords(freezeTicks, true, true) + ".");
         }
 
         return true;
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        Entity entity = event.getEntity();
+        if (entity instanceof Player) {
+            Player player = (Player) entity;
+            if ((getRemainingServerFrozenMillis() > 0L || getRemainingPlayerFrozenMillis(player.getUniqueId()) > 0L) && (!player.hasPermission("base.freeze.bypass"))) {
+                event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "You cannot use commands whilst frozen.");
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onPreCommandProcess(PlayerCommandPreprocessEvent event) {
+        Player player = event.getPlayer();
+        if ((getRemainingServerFrozenMillis() > 0L || getRemainingPlayerFrozenMillis(player.getUniqueId()) > 0L) && (!player.hasPermission("base.freeze.bypass"))) {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "You cannot use commands whilst frozen.");
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -107,21 +132,13 @@ public class FreezeCommand extends BaseCommand implements Listener {
         }
 
         Player player = event.getPlayer();
-
-        long remainingServerFrozenMillis = getRemainingServerFrozenMillis();
-        if (remainingServerFrozenMillis > 0L) {
-            event.setTo(event.getFrom());
-            return;
-        }
-
-        long remainingPlayerFrozenMillis = getRemainingPlayerFrozenMillis(player.getUniqueId());
-        if (remainingPlayerFrozenMillis > 0L) {
+        if ((getRemainingServerFrozenMillis() > 0L || getRemainingPlayerFrozenMillis(player.getUniqueId()) > 0L) && (!player.hasPermission("base.freeze.bypass"))) {
             event.setTo(event.getFrom());
         }
     }
 
     /**
-     * Gets the remaining time the server is frozen for movement.
+     * Gets the remaining time the server is frozen.
      *
      * @return the remaining time in milliseconds
      */
@@ -130,7 +147,7 @@ public class FreezeCommand extends BaseCommand implements Listener {
     }
 
     /**
-     * Gets the remaining time a player is frozen for movement.
+     * Gets the remaining time a player is frozen.
      *
      * @param uuid the uuid of player to get for
      * @return the remaining time in milliseconds

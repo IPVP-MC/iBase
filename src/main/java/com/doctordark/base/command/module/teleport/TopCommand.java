@@ -1,7 +1,7 @@
 package com.doctordark.base.command.module.teleport;
 
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.base.util.BaseUtil;
+import com.doctordark.util.BukkitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -31,14 +31,14 @@ public class TopCommand extends BaseCommand {
 
         Player player = (Player) sender;
         Location location = player.getLocation();
-        Location highestLocation = BaseUtil.getHighestBlock(location);
+        Location highestLocation = BukkitUtils.getHighestLocation(location);
 
-        if (highestLocation == null) {
+        if (highestLocation.equals(location)) {
             sender.sendMessage(ChatColor.RED + "No highest location found.");
             return true;
         }
 
-        player.teleport(highestLocation, PlayerTeleportEvent.TeleportCause.COMMAND);
+        player.teleport(highestLocation.add(0, 2, 0), PlayerTeleportEvent.TeleportCause.COMMAND);
         sender.sendMessage(ChatColor.GOLD + "Teleported to highest location.");
         return true;
     }

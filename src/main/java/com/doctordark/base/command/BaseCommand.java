@@ -8,9 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents a base command for the plugin.
@@ -44,16 +44,8 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @return the completions based on given arguments
      */
     public List<String> getCompletions(String[] args, List<String> input) {
-        List<String> results = new ArrayList<String>();
         String argument = args[(args.length - 1)];
-
-        for (String string : input) {
-            if (string.regionMatches(true, 0, argument, 0, argument.length())) {
-                results.add(string);
-            }
-        }
-
-        return results;
+        return input.stream().filter(string -> string.regionMatches(true, 0, argument, 0, argument.length())).collect(Collectors.toList());
     }
 
     /**

@@ -5,7 +5,6 @@ import com.doctordark.base.command.BaseCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.Collections;
 import java.util.List;
 
 public class RulesCommand extends BaseCommand {
@@ -21,7 +20,7 @@ public class RulesCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        List<String> rules = this.plugin.getServerHandler().getServerRules();
+        List<String> rules = plugin.getServerHandler().getServerRules();
         sender.sendMessage(rules.toArray(new String[rules.size()]));
         return true;
     }

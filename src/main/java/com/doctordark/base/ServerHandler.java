@@ -1,6 +1,5 @@
-package com.doctordark.base.user;
+package com.doctordark.base;
 
-import com.doctordark.base.BasePlugin;
 import com.doctordark.base.util.GenericUtils;
 import com.google.common.collect.Lists;
 import net.minecraft.server.v1_7_R4.PlayerList;
@@ -25,6 +24,8 @@ public class ServerHandler {
     private String broadcastFormat;
     private String fullServerKickMessage;
     private FileConfiguration config;
+    private boolean decreasedLagMode;
+
     private final BasePlugin plugin;
 
     public ServerHandler(BasePlugin plugin) {
@@ -128,6 +129,14 @@ public class ServerHandler {
         return this.serverRules;
     }
 
+    public boolean isDecreasedLagMode() {
+        return decreasedLagMode;
+    }
+
+    public void setDecreasedLagMode(boolean decreasedLagMode) {
+        this.decreasedLagMode = decreasedLagMode;
+    }
+
     public void reloadServerData() {
         plugin.reloadConfig();
         config = plugin.getConfig();
@@ -151,6 +160,7 @@ public class ServerHandler {
             chatSlowedDelay = config.getInt("chat.slowed.delay", 15);
         }
 
+        decreasedLagMode = config.getBoolean("decreased-lag-mode");
         broadcastFormat = ChatColor.translateAlternateColorCodes('&',
                 config.getString("broadcast.format", "&e[Base] &7%1$s"));
         fullServerKickMessage = ChatColor.translateAlternateColorCodes('&',
@@ -163,6 +173,7 @@ public class ServerHandler {
         config.set("chat.slowed-delay", getChatSlowedDelay());
         config.set("announcements.delay", getAnnouncementDelay());
         config.set("max-players", getMaxPlayers());
+        config.set("decreased-lag-mode", isDecreasedLagMode());
         plugin.saveConfig();
     }
 }

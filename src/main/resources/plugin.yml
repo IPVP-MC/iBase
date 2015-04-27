@@ -1,6 +1,6 @@
-name: Base
-version: 2.7
-description: Base brings general commands to minecraft servers
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
 author: DoctorDark
 main: com.doctordark.base.BasePlugin
 commands:
@@ -16,9 +16,9 @@ commands:
     description: Management of auto-announcements.
   back:
     description: Teleport to last known location.
-  basereload:
-    aliases: [breload]
-    description: Reload the configuration of 'Base' plugin.
+  base:
+    aliases: [baseplugin]
+    description: Manages this plugin.
   biome:
     description: Check the biome a player is in.
   broadcast:
@@ -129,6 +129,7 @@ commands:
   staffchat:
     aliases: [sc, ac]
     description: Speak in staff chat mode only.
+  stoplag:
   sudo:
     description: Force another player to run a command.
   teleport:
