@@ -20,7 +20,6 @@ import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -29,7 +28,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -43,7 +41,6 @@ import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
@@ -122,21 +119,6 @@ public class VanishListener implements Listener {
         if (baseUser.isVanished()) {
             event.setCancelled(true);
             player.sendMessage(ChatColor.RED + "You cannot drop items whilst vanished.");
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
-    public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        Projectile projectile = event.getEntity();
-        ProjectileSource source = projectile.getShooter();
-        if (source instanceof Player) {
-            Player player = (Player) source;
-            UUID uuid = player.getUniqueId();
-            BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-            if (baseUser.isVanished()) {
-                event.setCancelled(true);
-                player.sendMessage(ChatColor.RED + "You cannot launch projectiles whilst vanished.");
-            }
         }
     }
 
