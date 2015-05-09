@@ -273,6 +273,17 @@ public final class BukkitUtils {
      * @return the highest {@link Location} from origin
      */
     public static Location getHighestLocation(Location origin) {
+        return getHighestLocation(origin, null);
+    }
+
+    /**
+     * Gets the highest {@link Location} at another specified {@link Location}.
+     *
+     * @param origin the {@link Location} the location to find at
+     * @param def    the default {@link Location} if not found
+     * @return the highest {@link Location} from origin
+     */
+    public static Location getHighestLocation(Location origin, Location def) {
         Validate.notNull(origin, "The location cannot be null");
 
         Location cloned = origin.clone();
@@ -291,7 +302,7 @@ public final class BukkitUtils {
             }
         }
 
-        return origin;
+        return def;
     }
 
     /**
