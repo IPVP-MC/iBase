@@ -2,6 +2,7 @@ package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.base.event.PlayerFreezeEvent;
 import com.doctordark.util.Utils;
 import com.google.common.collect.Maps;
 import net.minecraft.util.org.apache.commons.lang3.time.DurationFormatUtils;
@@ -86,15 +87,23 @@ public class FreezeCommand extends BaseCommand implements Listener {
         }
 
         UUID targetUUID = target.getUniqueId();
-        if (getRemainingPlayerFrozenMillis(targetUUID) > 0L) {
+        boolean shouldFreeze = getRemainingPlayerFrozenMillis(targetUUID) > 0;
+
+        PlayerFreezeEvent playerFreezeEvent = new PlayerFreezeEvent(target, shouldFreeze);
+        Bukkit.getServer().getPluginManager().callEvent(playerFreezeEvent);
+        if (playerFreezeEvent.isCancelled()) {
+            sender.sendMessage(ChatColor.RED + "Unable to freeze " + target.getName() + ".");
+            return false;
+        }
+
+        if (shouldFreeze) {
             frozenPlayers.remove(targetUUID);
             target.sendMessage(ChatColor.GREEN + "You have been un-frozen.");
             Command.broadcastCommandMessage(sender, ChatColor.YELLOW + target.getName() + " is no longer frozen.");
         } else {
             frozenPlayers.put(targetUUID, millis + freezeTicks);
             target.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "You have been frozen.");
-            Command.broadcastCommandMessage(sender, ChatColor.YELLOW + target.getName() + " is now frozen for " +
-                    DurationFormatUtils.formatDurationWords(freezeTicks, true, true) + ".");
+            Command.broadcastCommandMessage(sender, ChatColor.YELLOW + target.getName() + " is now frozen for " + DurationFormatUtils.formatDurationWords(freezeTicks, true, true) + ".");
         }
 
         return true;
