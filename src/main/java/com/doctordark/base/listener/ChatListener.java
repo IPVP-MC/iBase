@@ -142,12 +142,14 @@ public class ChatListener implements Listener {
         String recipientId = recipient.getUniqueId().toString();
 
         String format = ChatColor.GOLD + "[" + ChatColor.DARK_RED + "SS: " + ChatColor.YELLOW + "%1$s" + ChatColor.WHITE + " -> " + ChatColor.YELLOW + "%2$s" + ChatColor.GOLD + "] %3$s";
-        Bukkit.getServer().getOnlinePlayers().stream().filter(online -> (!sender.equals(online)) && (!recipient.equals(online))).forEach(online -> {
-            BaseUser baseOnline = plugin.getUserManager().getUser(online.getUniqueId());
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            if (player.equals(sender) || recipient.equals(sender)) continue;
+
+            BaseUser baseOnline = plugin.getUserManager().getUser(player.getUniqueId());
             Set<String> messageSpying = baseOnline.getMessageSpyingIds();
-            if ((messageSpying.contains("all")) || (messageSpying.contains(recipientId)) || (messageSpying.contains(senderId))) {
-                online.sendMessage(String.format(Locale.ENGLISH, format, sender.getName(), recipient.getName(), message));
+            if (messageSpying.contains("all") || messageSpying.contains(recipientId) || messageSpying.contains(senderId)) {
+                player.sendMessage(String.format(Locale.ENGLISH, format, sender.getName(), recipient.getName(), message));
             }
-        });
+        }
     }
 }

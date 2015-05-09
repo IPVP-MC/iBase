@@ -8,7 +8,10 @@ import net.minecraft.server.v1_7_R4.IChatBaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Collection;
 
 public class Text extends ChatComponentText {
 
@@ -101,7 +104,12 @@ public class Text extends ChatComponentText {
     }
 
     public void broadcast(String permission) {
-        Bukkit.getServer().getOnlinePlayers().stream().filter(player -> permission == null || player.hasPermission(permission)).forEach(this::send);
+        for (Player player  : Bukkit.getServer().getOnlinePlayers()) {
+            if (permission == null || player.hasPermission(permission)) {
+                send(player);
+            }
+        }
+        
         send(Bukkit.getServer().getConsoleSender());
     }
 }
