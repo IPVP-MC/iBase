@@ -33,15 +33,18 @@ public class MessageSpyCommand extends BaseCommand {
 
         List<CommandArgument> arguments = Lists.newArrayList();
         arguments.add(new CommandArgument("list", "Lists all players you're spying on.") {
-            @Override public String[] getAliases() {
+            @Override
+            public String[] getAliases() {
                 return new String[0];
             }
 
-            @Override public String getUsage(String label) {
+            @Override
+            public String getUsage(String label) {
                 return "/" + label + " " + getName();
             }
 
-            @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+            @Override
+            public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
                     return true;
@@ -52,7 +55,7 @@ public class MessageSpyCommand extends BaseCommand {
                 BaseUser baseUser = plugin.getUserManager().getUser(uuid);
 
                 Set<String> spyingNames = Sets.newHashSet();
-                for (String spyingId : baseUser.getMessageSpyingIds()) {
+                for (String spyingId : baseUser.getMessageSpying()) {
                     OfflinePlayer target = Bukkit.getServer().getOfflinePlayer(UUID.fromString(spyingId));
                     spyingNames.add(target.getName());
                 }
@@ -67,21 +70,25 @@ public class MessageSpyCommand extends BaseCommand {
                 return true;
             }
 
-            @Override public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+            @Override
+            public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
                 return Collections.emptyList();
             }
         });
 
         arguments.add(new CommandArgument("clear", "Clears all players you're spying on.") {
-            @Override public String[] getAliases() {
+            @Override
+            public String[] getAliases() {
                 return new String[0];
             }
 
-            @Override public String getUsage(String label) {
+            @Override
+            public String getUsage(String label) {
                 return "/" + label + " " + getName();
             }
 
-            @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+            @Override
+            public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
                     return true;
@@ -91,28 +98,32 @@ public class MessageSpyCommand extends BaseCommand {
                 UUID uuid = player.getUniqueId();
                 BaseUser baseUser = plugin.getUserManager().getUser(uuid);
 
-                Set<String> messageSpying = baseUser.getMessageSpyingIds();
+                Set<String> messageSpying = baseUser.getMessageSpying();
                 messageSpying.clear();
 
                 sender.sendMessage(ChatColor.YELLOW + "You are no longer spying the PM's of anyone.");
                 return true;
             }
 
-            @Override public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+            @Override
+            public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
                 return Collections.emptyList();
             }
         });
 
         arguments.add(new CommandArgument("add", "Adds a player to your message spy list.") {
-            @Override public String[] getAliases() {
+            @Override
+            public String[] getAliases() {
                 return new String[0];
             }
 
-            @Override public String getUsage(String label) {
+            @Override
+            public String getUsage(String label) {
                 return "/" + label + " " + getName() + " <all|playerName>";
             }
 
-            @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+            @Override
+            public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
                     return true;
@@ -121,7 +132,7 @@ public class MessageSpyCommand extends BaseCommand {
                 Player player = (Player) sender;
                 UUID uuid = player.getUniqueId();
                 BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-                Set<String> messageSpying = baseUser.getMessageSpyingIds();
+                Set<String> messageSpying = baseUser.getMessageSpying();
 
                 if (args.length < 2) {
                     sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + args[0].toLowerCase() + " <del|playerName>");
@@ -167,7 +178,8 @@ public class MessageSpyCommand extends BaseCommand {
                 return true;
             }
 
-            @Override public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+            @Override
+            public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
                 return null;
             }
         });
@@ -193,7 +205,7 @@ public class MessageSpyCommand extends BaseCommand {
                 Player player = (Player) sender;
                 UUID uuid = player.getUniqueId();
                 BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-                Set<String> messageSpying = baseUser.getMessageSpyingIds();
+                Set<String> messageSpying = baseUser.getMessageSpying();
 
                 if (args.length < 2) {
                     sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + args[0].toLowerCase() + " <playerName>");

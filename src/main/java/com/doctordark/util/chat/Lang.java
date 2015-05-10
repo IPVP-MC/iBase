@@ -1,5 +1,6 @@
 package com.doctordark.util.chat;
 
+import com.google.common.collect.Maps;
 import net.minecraft.server.v1_7_R4.Item;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_7_R4.potion.CraftPotionEffectType;
@@ -23,7 +24,7 @@ public class Lang {
      * translatable strings into the language of the minecraft/craftbukkit server,
      * as well as retrieving the translatable representations of Items and Enchantments
      * to be sent to the client using raw chat message.
-     * <p/>
+     * <p>
      * The complete listing of translations can be found in your craftbukkit,
      * minecraft, or minecraft_server jar at /assets/minecraft/lang/
      */
@@ -38,10 +39,11 @@ public class Lang {
      * @throws IOException
      */
     public static void initialize(String lang) throws IOException {
-        translations = new HashMap<>();
+        translations = Maps.newHashMap();
         if (lang == null) {
             lang = "en_US";
         }
+
         if (!lang.equals(language)) {
             language = lang;
             String resourcePath = "/assets/minecraft/lang/" + language + ".lang";
@@ -176,7 +178,7 @@ public class Lang {
 
     /**
      * translate the provided translatable string into the server's language,
-     * <p/>
+     * <p>
      * if args are provided, the translated string must contain the same number of
      * placeholders, the args will be substituted using String.format()
      * eg.

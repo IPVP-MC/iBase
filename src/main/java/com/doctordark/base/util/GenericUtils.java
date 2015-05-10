@@ -5,29 +5,11 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public final class GenericUtils {
-
-    public static Field getField(Class<?> clazz, String fieldName) {
-        Class<?> tmpClass = clazz;
-        while (clazz != null) {
-            for (Field field : tmpClass.getDeclaredFields()) {
-                String candidateName = field.getName();
-                if (candidateName.equals(fieldName)) {
-                    field.setAccessible(true);
-                    return field;
-                }
-            }
-
-            tmpClass = tmpClass.getSuperclass();
-        }
-
-        return null;
-    }
 
     public static <E> List<E> castList(Object object, Class<E> type) {
         List<E> output = Lists.newArrayList();

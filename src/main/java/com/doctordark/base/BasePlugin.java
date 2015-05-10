@@ -6,22 +6,33 @@ import com.doctordark.base.command.module.ChatModule;
 import com.doctordark.base.command.module.EssentialModule;
 import com.doctordark.base.command.module.InventoryModule;
 import com.doctordark.base.command.module.TeleportModule;
-import com.doctordark.base.listener.*;
+import com.doctordark.base.listener.ChatListener;
+import com.doctordark.base.listener.ColouredSignListener;
+import com.doctordark.base.listener.DecreasedLagListener;
+import com.doctordark.base.listener.JoinListener;
+import com.doctordark.base.listener.NameVerifyListener;
+import com.doctordark.base.listener.PingListener;
+import com.doctordark.base.listener.PlayerLimitListener;
+import com.doctordark.base.listener.VanishListener;
 import com.doctordark.base.task.AnnouncementHandler;
 import com.doctordark.base.task.AutoRestartHandler;
-import com.doctordark.base.user.BaseUser;
-import com.doctordark.base.user.NameHistory;
-import com.doctordark.base.user.UserManager;
 import com.doctordark.base.util.PersistableLocation;
 import com.doctordark.base.warp.FlatFileWarpManager;
 import com.doctordark.base.warp.Warp;
 import com.doctordark.base.warp.WarpManager;
+import com.doctordark.base.user.BaseUser;
+import com.doctordark.base.user.ConsoleUser;
+import com.doctordark.base.user.NameHistory;
+import com.doctordark.base.user.ServerParticipator;
+import com.doctordark.base.user.UserManager;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class BasePlugin extends JavaPlugin {
+
+    private static BasePlugin plugin;
 
     private AutoRestartHandler autoRestartHandler;
     private BukkitRunnable announcementTask;
@@ -32,10 +43,12 @@ public class BasePlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        super.onEnable();
+        BasePlugin.plugin = this;
 
         ConfigurationSerialization.registerClass(Warp.class);
+        ConfigurationSerialization.registerClass(ServerParticipator.class);
         ConfigurationSerialization.registerClass(BaseUser.class);
+        ConfigurationSerialization.registerClass(ConsoleUser.class);
         ConfigurationSerialization.registerClass(NameHistory.class);
         ConfigurationSerialization.registerClass(PersistableLocation.class);
 
@@ -52,6 +65,12 @@ public class BasePlugin extends JavaPlugin {
         getServerHandler().saveServerData();
         getUserManager().saveUserData();
         getWarpManager().saveWarpData();
+
+        BasePlugin.plugin = null;
+    }
+
+    public static BasePlugin getPlugin() {
+        return plugin;
     }
 
     private void registerManagers() {

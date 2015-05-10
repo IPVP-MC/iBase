@@ -32,7 +32,7 @@ public class SpeedCommand extends BaseCommand {
         final Player target;
         if (args.length > 2 && sender.hasPermission(command.getPermission() + ".others")) {
             target = Bukkit.getServer().getPlayer(args[2]);
-        } else if (!(sender instanceof Player))  {
+        } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
         } else {

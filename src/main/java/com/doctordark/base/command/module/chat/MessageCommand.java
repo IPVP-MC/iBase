@@ -35,8 +35,6 @@ public class MessageCommand extends BaseCommand {
         }
 
         Player player = (Player) sender;
-        UUID uuid = player.getUniqueId();
-
         Player target = Bukkit.getServer().getPlayer(args[0]);
 
         if (target == null || !canSee(sender, target)) {

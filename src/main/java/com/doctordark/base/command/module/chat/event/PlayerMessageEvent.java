@@ -2,7 +2,6 @@ package com.doctordark.base.command.module.chat.event;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.user.BaseUser;
-import com.doctordark.base.user.UserManager;
 import com.google.common.collect.Iterables;
 import org.apache.commons.lang.Validate;
 import org.bukkit.ChatColor;
@@ -16,6 +15,7 @@ import java.util.Set;
 public class PlayerMessageEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
+
     private boolean cancelled = false;
     private final Player sender;
     private final Player recipient;
@@ -49,20 +49,18 @@ public class PlayerMessageEvent extends Event implements Cancellable {
         Validate.notNull(sender, "The sender cannot be null");
         Validate.notNull(recipient, "The recipient cannot be null");
 
-        BasePlugin plugin = BasePlugin.getPlugin(BasePlugin.class);
-        UserManager userManager = plugin.getUserManager();
+        BasePlugin plugin = BasePlugin.getPlugin();
+        BaseUser sendingUser = plugin.getUserManager().getUser(sender.getUniqueId());
+        BaseUser recipientUser = plugin.getUserManager().getUser(recipient.getUniqueId());
 
-        BaseUser sendingUser = userManager.getUser(sender.getUniqueId());
-        BaseUser recipientUser = userManager.getUser(recipient.getUniqueId());
-
-        sendingUser.setLastRepliedTo(recipientUser);
-        recipientUser.setLastRepliedTo(sendingUser);
+        sendingUser.setLastRepliedTo(recipientUser.getUniqueId());
+        recipientUser.setLastRepliedTo(sendingUser.getUniqueId());
 
         long millis = System.currentTimeMillis();
         recipientUser.setLastReceivedMessageMillis(millis);
 
-        this.sender.sendMessage(ChatColor.BLUE + "(" + sender.getName() + " -> " + recipient.getName() + "): " + ChatColor.DARK_AQUA + message);
-        this.recipient.sendMessage(ChatColor.BLUE + "(" + sender.getName() + " -> " + recipient.getName() + "): " + ChatColor.DARK_AQUA + message);
+        sender.sendMessage(ChatColor.BLUE + "(" + sender.getName() + " -> " + recipient.getName() + "): " + ChatColor.DARK_AQUA + message);
+        recipient.sendMessage(ChatColor.BLUE + "(" + sender.getName() + " -> " + recipient.getName() + "): " + ChatColor.DARK_AQUA + message);
     }
 
     @Override

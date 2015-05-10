@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class NameVerifyListener implements Listener {
 
-    private static final Pattern namePattern = Pattern.compile("^[a-zA-Z0-9_]{1,16}$");
+    private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{1,16}$");
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
@@ -19,9 +19,9 @@ public class NameVerifyListener implements Listener {
         if (result == PlayerLoginEvent.Result.ALLOWED) {
             Player player = event.getPlayer();
             String playerName = player.getName();
-            if (!namePattern.matcher(playerName).matches()) {
+            if (!NAME_PATTERN.matcher(playerName).matches()) {
                 Bukkit.getLogger().info("Name verification: " + playerName + " was kicked for having an invalid name (to disable, turn off the name-verification feature in the config)");
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Invalid player name detecte d.");
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Invalid player name detected.");
             }
         }
     }

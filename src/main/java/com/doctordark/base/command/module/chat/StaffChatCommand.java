@@ -3,6 +3,7 @@ package com.doctordark.base.command.module.chat;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.user.BaseUser;
+import com.doctordark.base.user.ServerParticipator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -12,7 +13,6 @@ import org.bukkit.entity.Player;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 public class StaffChatCommand extends BaseCommand {
 
@@ -27,53 +27,48 @@ public class StaffChatCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        final Player target;
-        if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
-            target = Bukkit.getServer().getPlayerExact(args[0]);
-        } else if (!(sender instanceof Player))  {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
+        final ServerParticipator participator = plugin.getUserManager().getParticipator(sender);
+
+        if (participator == null) {
+            sender.sendMessage(ChatColor.RED + "You are not allowed to do this.");
             return true;
-        } else {
-            target = (Player) sender;
         }
 
-        Player player = sender instanceof Player ? (Player) sender : null;
-
-        if ((target == null) || (player != null && !player.canSee(target))) {
+        final ServerParticipator target;
+        if (args.length <= 0) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
+                sender.sendMessage(ChatColor.RED + "Usage: /" + label + " <message|playerName>");
                 return true;
             }
 
-            if (args.length < 1) {
-                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
-                return true;
-            }
-
-            StringBuilder builder = new StringBuilder();
-            for (String argument : args) {
-                builder.append(argument).append(" ");
-            }
-
-            String message = builder.toString();
-            String format = ChatColor.AQUA + String.format(Locale.ENGLISH, "%1$s: %2$s", sender.getName(), message);
-
-            Bukkit.getServer().getConsoleSender().sendMessage(format);
-            for (Player other : Bukkit.getServer().getOnlinePlayers()) {
-                BaseUser otherUser = plugin.getUserManager().getUser(other.getUniqueId());
-                if ((!otherUser.isToggledStaffChat()) && (other.hasPermission("base.command.staffchat"))) {
-                    other.sendMessage(format);
+            target = participator;
+        } else {
+            Player targetPlayer = Bukkit.getPlayerExact(args[0]);
+            if (targetPlayer == null || !canSee(sender, targetPlayer) || !sender.hasPermission(getPermission() + ".others")) {
+                StringBuilder builder = new StringBuilder();
+                for (String argument : args) {
+                    builder.append(argument).append(" ");
                 }
+
+                String message = builder.toString();
+                String format = ChatColor.AQUA + String.format(Locale.ENGLISH, "%1$s: %2$s", sender.getName(), message);
+
+                Bukkit.getServer().getConsoleSender().sendMessage(format);
+                for (Player other : Bukkit.getServer().getOnlinePlayers()) {
+                    BaseUser otherUser = plugin.getUserManager().getUser(other.getUniqueId());
+                    if (otherUser.isStaffChatVisible() && other.hasPermission("base.command.staffchat")) {
+                        other.sendMessage(format);
+                    }
+                }
+
+                return true;
             }
 
-            return true;
+            target = plugin.getUserManager().getUser(targetPlayer.getUniqueId());
         }
 
-        UUID uuid = target.getUniqueId();
-        BaseUser baseTarget = plugin.getUserManager().getUser(uuid);
-
-        boolean newStaffChat = !baseTarget.isInStaffChat() || (args.length >= 2 && Boolean.parseBoolean(args[1]));
-        baseTarget.setInStaffChat(newStaffChat);
+        boolean newStaffChat = !target.isInStaffChat() || (args.length >= 2 && Boolean.parseBoolean(args[1]));
+        target.setInStaffChat(newStaffChat);
 
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Staff chat mode of " + target.getName() + " set to " + newStaffChat + ".");
         return true;

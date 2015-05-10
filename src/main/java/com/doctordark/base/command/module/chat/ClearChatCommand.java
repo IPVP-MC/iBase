@@ -7,8 +7,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collection;
-
 public class ClearChatCommand extends BaseCommand {
 
     public ClearChatCommand() {
@@ -18,9 +16,8 @@ public class ClearChatCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Collection<? extends Player> players = Bukkit.getServer().getOnlinePlayers();
         String[] messages = new String[101];
-        for (Player player : players) {
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             player.sendMessage(messages);
         }
 

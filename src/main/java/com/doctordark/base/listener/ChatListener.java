@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.permissions.Permissible;
 
 import java.util.Iterator;
 import java.util.Locale;
@@ -23,9 +24,16 @@ import java.util.concurrent.TimeUnit;
 
 public class ChatListener implements Listener {
 
+    private static final String MESSAGE_SPY_FORMAT = ChatColor.GOLD + "[" + ChatColor.DARK_RED + "SS: " +
+            ChatColor.YELLOW + "%1$s" + ChatColor.WHITE + " -> " + ChatColor.YELLOW + "%2$s" + ChatColor.GOLD + "] %3$s";
+
     private static final String STAFF_CHAT_FORMAT = "%1$s: %2$s";
-    private static final String STAFF_CHAT_PERMISSION = "base.command.staffchat";
-    private static final long AFK_TIME = TimeUnit.MINUTES.toMillis(5L);
+
+    private static final String STAFF_CHAT_NOTIFY = "base.command.staffchat";
+    private static final String SLOWED_CHAT_BYPASS = "base.slowchat.bypass";
+    private static final String TOGGLED_CHAT_BYPASS = "base.disablechat.bypass";
+
+    private static final long AUTO_IDLE_TIME = TimeUnit.MINUTES.toMillis(5L);
 
     private final BasePlugin plugin;
 
@@ -42,23 +50,23 @@ public class ChatListener implements Listener {
         for (Iterator<Player> iterator = event.getRecipients().iterator(); iterator.hasNext(); ) {
             Player target = iterator.next();
             BaseUser targetUser = plugin.getUserManager().getUser(target.getUniqueId());
-            if (targetUser.isToggledChat()) {
+            if (baseUser.isInStaffChat() && !targetUser.isStaffChatVisible()) {
                 iterator.remove();
-            } else {
-                Set<String> ignoring = targetUser.getIgnoring();
-                if (ignoring.contains(name)) {
-                    iterator.remove();
-                }
+            } else if (targetUser.getIgnoring().contains(name)) {
+                iterator.remove();
+            } else if (!targetUser.isGlobalChatVisible()) {
+                iterator.remove();
             }
         }
 
         // More thread-safe alternative.
         if (baseUser.isInStaffChat()) {
             Set<CommandSender> staffChattable = Sets.newHashSet();
-            Bukkit.getServer().getPluginManager().getPermissionSubscriptions(STAFF_CHAT_PERMISSION).
-                    stream().filter(permissible -> permissible instanceof CommandSender).forEach(permissible -> {
-                staffChattable.add((CommandSender) permissible);
-            });
+            for (Permissible permissible : Bukkit.getPluginManager().getPermissionSubscriptions(STAFF_CHAT_NOTIFY)) {
+                if (permissible instanceof CommandSender) {
+                    staffChattable.add((CommandSender) permissible);
+                }
+            }
 
             if (staffChattable.contains(player) && baseUser.isInStaffChat()) {
                 String format = ChatColor.AQUA + String.format(Locale.ENGLISH, STAFF_CHAT_FORMAT, player.getName(), event.getMessage());
@@ -67,10 +75,10 @@ public class ChatListener implements Listener {
                     if (target instanceof Player) {
                         Player targetPlayer = (Player) target;
                         BaseUser targetUser = plugin.getUserManager().getUser(targetPlayer.getUniqueId());
-                        if (targetUser.isToggledStaffChat()) continue;
+                        if (targetUser.isStaffChatVisible()) {
+                            target.sendMessage(format);
+                        }
                     }
-
-                    target.sendMessage(format);
                 }
 
                 event.setCancelled(true);
@@ -79,15 +87,15 @@ public class ChatListener implements Listener {
         }
 
         long remainingChatDisabled = plugin.getServerHandler().getRemainingChatDisabledMillis();
-        if ((remainingChatDisabled > 0L) && (!player.hasPermission("base.command.disablechat"))) {
-            player.sendMessage(ChatColor.RED + "For non staff members; global chat is currently disabled for another " + ChatColor.GOLD +
-                    DurationFormatUtils.formatDurationWords(remainingChatDisabled, true, true) + ChatColor.RED + ".");
+        if (remainingChatDisabled > 0L && !player.hasPermission(TOGGLED_CHAT_BYPASS)) {
             event.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "Global chat is currently disabled for another " + ChatColor.GOLD +
+                    DurationFormatUtils.formatDurationWords(remainingChatDisabled, true, true) + ChatColor.RED + ".");
             return;
         }
 
         long remainingChatSlowed = plugin.getServerHandler().getRemainingChatSlowedMillis();
-        if ((remainingChatSlowed > 0L) && (!player.hasPermission("base.command.slowchat"))) {
+        if ((remainingChatSlowed > 0L) && (!player.hasPermission(SLOWED_CHAT_BYPASS))) {
             long speakTimeRemaining = baseUser.getLastSpeakTimeRemaining();
             if (speakTimeRemaining <= 0L) {
                 baseUser.updateLastSpeakTime();
@@ -106,13 +114,12 @@ public class ChatListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerPreMessage(PlayerMessageEvent event) {
-        String message = event.getMessage();
         CommandSender sender = event.getSender();
         Player recipient = event.getRecipient();
         UUID recipientUUID = recipient.getUniqueId();
         if (!sender.hasPermission("base.messaging.bypass")) {
             BaseUser recipientUser = plugin.getUserManager().getUser(recipientUUID);
-            if (recipientUser.isToggledMessages() || recipientUser.getIgnoring().contains(sender.getName())) {
+            if (!recipientUser.isMessagesVisible() || recipientUser.getIgnoring().contains(sender.getName())) {
                 event.setCancelled(true);
                 sender.sendMessage(ChatColor.RED + recipient.getName() + " has private messaging toggled.");
             }
@@ -121,7 +128,7 @@ public class ChatListener implements Listener {
         }
 
         BaseUser senderUser = plugin.getUserManager().getUser(recipientUUID);
-        if (senderUser.isToggledMessages()) {
+        if (senderUser.isMessagesVisible()) {
             event.setCancelled(true);
             sender.sendMessage(ChatColor.RED + "You have private messages toggled.");
         }
@@ -133,22 +140,22 @@ public class ChatListener implements Listener {
         Player recipient = event.getRecipient();
         String message = event.getMessage();
 
-        if (BukkitUtils.getIdleTime(recipient) > AFK_TIME) {
-            sender.sendMessage(ChatColor.RED + recipient.getName() + " may not respond as their idle time is over " + DurationFormatUtils.formatDurationWords(AFK_TIME, true, true) + ".");
+        if (BukkitUtils.getIdleTime(recipient) > AUTO_IDLE_TIME) {
+            sender.sendMessage(ChatColor.RED + recipient.getName() + " may not respond as their idle time is over " +
+                    DurationFormatUtils.formatDurationWords(AUTO_IDLE_TIME, true, true) + ".");
         }
 
         UUID senderUUID = sender.getUniqueId();
         String senderId = senderUUID.toString();
         String recipientId = recipient.getUniqueId().toString();
 
-        String format = ChatColor.GOLD + "[" + ChatColor.DARK_RED + "SS: " + ChatColor.YELLOW + "%1$s" + ChatColor.WHITE + " -> " + ChatColor.YELLOW + "%2$s" + ChatColor.GOLD + "] %3$s";
         for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            if (player.equals(sender) || recipient.equals(sender)) continue;
-
-            BaseUser baseOnline = plugin.getUserManager().getUser(player.getUniqueId());
-            Set<String> messageSpying = baseOnline.getMessageSpyingIds();
-            if (messageSpying.contains("all") || messageSpying.contains(recipientId) || messageSpying.contains(senderId)) {
-                player.sendMessage(String.format(Locale.ENGLISH, format, sender.getName(), recipient.getName(), message));
+            if (!player.equals(sender) && !recipient.equals(sender)) {
+                BaseUser baseOnline = plugin.getUserManager().getUser(player.getUniqueId());
+                Set<String> messageSpying = baseOnline.getMessageSpying();
+                if (messageSpying.contains("all") || messageSpying.contains(recipientId) || messageSpying.contains(senderId)) {
+                    player.sendMessage(String.format(Locale.ENGLISH, MESSAGE_SPY_FORMAT, sender.getName(), recipient.getName(), message));
+                }
             }
         }
     }

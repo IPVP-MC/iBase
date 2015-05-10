@@ -3,6 +3,7 @@ package com.doctordark.base.command.module.chat;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.command.module.chat.event.PlayerMessageEvent;
+import com.doctordark.base.user.BaseUser;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,7 +11,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -36,21 +36,22 @@ public class ReplyCommand extends BaseCommand {
         }
 
         Player player = (Player) sender;
-        Player target = plugin.getUserManager().getUser(player.getUniqueId()).getLastRepliedTo();
+        UUID uuid = player.getUniqueId();
+        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
 
+        UUID lastReplied = baseUser.getLastRepliedTo();
+        Player target = lastReplied == null ? null : Bukkit.getPlayer(lastReplied);
         if (args.length < 1) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
-
-            if ((target != null) && (canSee(sender, target))) {
+            if (lastReplied != null && canSee(sender, target)) {
                 sender.sendMessage(ChatColor.RED + "You are in a conversation with " + target.getName() + ".");
             }
 
             return true;
         }
 
-        UUID uuid = player.getUniqueId();
-
-        if ((target == null) || (!canSee(sender, target) && System.currentTimeMillis() - plugin.getUserManager().getUser(uuid).getLastReceivedMessageMillis() > VANISH_REPLY_TIMEOUT)) {
+        long millis = System.currentTimeMillis();
+        if (target == null || (!canSee(sender, target) && millis - baseUser.getLastReceivedMessageMillis() > VANISH_REPLY_TIMEOUT)) {
             sender.sendMessage(ChatColor.GOLD + "There is no player to reply to.");
             return true;
         }

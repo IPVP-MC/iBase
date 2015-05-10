@@ -13,7 +13,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class IgnoreCommand extends BaseCommand {
 
@@ -26,15 +30,18 @@ public class IgnoreCommand extends BaseCommand {
 
         List<CommandArgument> arguments = Lists.newArrayList();
         arguments.add(new CommandArgument("clear", "Clears all ignored players.") {
-            @Override public String[] getAliases() {
+            @Override
+            public String[] getAliases() {
                 return new String[0];
             }
 
-            @Override public String getUsage(String label) {
+            @Override
+            public String getUsage(String label) {
                 return "/" + label + " " + getName();
             }
 
-            @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+            @Override
+            public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
                     return true;
@@ -53,21 +60,25 @@ public class IgnoreCommand extends BaseCommand {
                 return true;
             }
 
-            @Override public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+            @Override
+            public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
                 return Collections.emptyList();
             }
         });
 
         arguments.add(new CommandArgument("list", "Lists all ignored players.") {
-            @Override public String[] getAliases() {
+            @Override
+            public String[] getAliases() {
                 return new String[0];
             }
 
-            @Override public String getUsage(String label) {
+            @Override
+            public String getUsage(String label) {
                 return "/" + label + " " + getName();
             }
 
-            @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+            @Override
+            public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
                     return true;
@@ -87,21 +98,25 @@ public class IgnoreCommand extends BaseCommand {
                 return true;
             }
 
-            @Override public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+            @Override
+            public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
                 return Collections.emptyList();
             }
         });
 
         arguments.add(new CommandArgument("add", "Ignores a player.") {
-            @Override public String[] getAliases() {
+            @Override
+            public String[] getAliases() {
                 return new String[]{"set"};
             }
 
-            @Override public String getUsage(String label) {
+            @Override
+            public String getUsage(String label) {
                 return "/" + label + " " + getName() + " <playerName>";
             }
 
-            @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+            @Override
+            public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
                     return true;
@@ -151,15 +166,18 @@ public class IgnoreCommand extends BaseCommand {
         });
 
         arguments.add(new CommandArgument("del", "Un-ignores a player.") {
-            @Override public String[] getAliases() {
+            @Override
+            public String[] getAliases() {
                 return new String[]{"delete", "remove", "unset"};
             }
 
-            @Override public String getUsage(String label) {
+            @Override
+            public String getUsage(String label) {
                 return "/" + label + " " + getName() + " <playerName>";
             }
 
-            @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+            @Override
+            public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 if (!(sender instanceof Player)) {
                     sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
                     return true;

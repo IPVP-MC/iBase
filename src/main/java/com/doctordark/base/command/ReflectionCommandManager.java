@@ -15,7 +15,11 @@ import org.bukkit.plugin.SimplePluginManager;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public class ReflectionCommandManager implements CommandManager {
 
@@ -100,7 +104,7 @@ public class ReflectionCommandManager implements CommandManager {
     /**
      * Gets a plugin command by its name and owning plugin.
      *
-     * @param name the name of the command
+     * @param name   the name of the command
      * @param plugin the ownership of the command
      * @return the plugin command with given name
      */

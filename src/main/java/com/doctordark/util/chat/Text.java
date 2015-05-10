@@ -11,8 +11,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Collection;
-
 public class Text extends ChatComponentText {
 
     public Text() {
@@ -104,12 +102,12 @@ public class Text extends ChatComponentText {
     }
 
     public void broadcast(String permission) {
-        for (Player player  : Bukkit.getServer().getOnlinePlayers()) {
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
             if (permission == null || player.hasPermission(permission)) {
                 send(player);
             }
         }
-        
+
         send(Bukkit.getServer().getConsoleSender());
     }
 }

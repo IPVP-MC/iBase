@@ -3,6 +3,7 @@ package com.doctordark.base.command.module.essential;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.user.BaseUser;
+import com.doctordark.base.user.ServerParticipator;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -12,7 +13,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import sun.net.util.IPAddressUtil;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 public class IpHistoryCommand extends BaseCommand {
 
@@ -27,9 +32,14 @@ public class IpHistoryCommand extends BaseCommand {
 
     private List<String> getSharingPlayerNames(String ipAddress) {
         final List<String> sharingNames = Lists.newArrayList();
-        for (BaseUser baseUser : plugin.getUserManager().getUsers().values()) {
+        for (ServerParticipator participator : plugin.getUserManager().getParticipators().values()) {
+            if (!(participator instanceof BaseUser)) {
+                continue;
+            }
+
+            BaseUser baseUser = (BaseUser) participator;
             if (baseUser.getAddressHistories().contains(ipAddress)) {
-                UUID uuid = baseUser.getUserUUID();
+                UUID uuid = baseUser.getUniqueId();
                 OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(uuid);
                 String playerName = player.getName();
                 if (playerName != null) {

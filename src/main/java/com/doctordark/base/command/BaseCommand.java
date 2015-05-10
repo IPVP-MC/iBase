@@ -26,9 +26,9 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
     /**
      * Constructs a new base command with a given name, description and permission.
      *
-     * @param name the name of the command
+     * @param name        the name of the command
      * @param description the description of the command
-     * @param permission the permission of the command
+     * @param permission  the permission of the command
      */
     public BaseCommand(String name, String description, String permission) {
         this.name = name;
@@ -39,7 +39,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
     /**
      * Gets completions based on the characters of argument.
      *
-     * @param args the array of arguments for command
+     * @param args  the array of arguments for command
      * @param input the current completion list
      * @return the completions based on given arguments
      */
@@ -141,7 +141,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * by sending a player not found messaging.
      *
      * @param sender the sender to validate for
-     * @param id the id of the player that may be null
+     * @param id     the id of the player that may be null
      * @return true if player was null
      */
     public boolean validateNullPlayer(CommandSender sender, String id) {
@@ -153,7 +153,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * Gets a player whose name matches the given id.
      *
      * @param sender the sender executing command
-     * @param id the id to search for
+     * @param id     the id to search for
      * @return player with given name, null if is not visible to sender
      */
     public Player findPlayer(CommandSender sender, String id) {

@@ -16,7 +16,7 @@ public class Config extends YamlConfiguration {
     /**
      * Creates a new config with a given name.
      *
-     * @param plugin the plugin to create for
+     * @param plugin   the plugin to create for
      * @param fileName the name of the file
      */
     public Config(JavaPlugin plugin, String fileName) {
@@ -26,8 +26,8 @@ public class Config extends YamlConfiguration {
     /**
      * Creates a new config with a given name and file extension.
      *
-     * @param plugin the plugin to create for
-     * @param fileName the name of the file
+     * @param plugin        the plugin to create for
+     * @param fileName      the name of the file
      * @param fileExtension the extension of the file
      */
     public Config(JavaPlugin plugin, String fileName, String fileExtension) {

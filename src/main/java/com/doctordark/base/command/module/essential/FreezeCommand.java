@@ -29,8 +29,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class FreezeCommand extends BaseCommand implements Listener {
 
-    private final Map<UUID, Long> frozenPlayers;
+    private static final String FREEZE_BYPASS = "base.freeze.bypass";
 
+    private final Map<UUID, Long> frozenPlayers;
     private long defaultFreezeDuration;
     private long serverFrozenMillis;
 
@@ -41,8 +42,7 @@ public class FreezeCommand extends BaseCommand implements Listener {
 
         this.frozenPlayers = Maps.newHashMap();
         this.defaultFreezeDuration = TimeUnit.MINUTES.toMillis(5L);
-
-        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
@@ -103,7 +103,8 @@ public class FreezeCommand extends BaseCommand implements Listener {
         } else {
             frozenPlayers.put(targetUUID, millis + freezeTicks);
             target.sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "You have been frozen.");
-            Command.broadcastCommandMessage(sender, ChatColor.YELLOW + target.getName() + " is now frozen for " + DurationFormatUtils.formatDurationWords(freezeTicks, true, true) + ".");
+            Command.broadcastCommandMessage(sender, ChatColor.YELLOW + target.getName() + " is now frozen for " +
+                    DurationFormatUtils.formatDurationWords(freezeTicks, true, true) + ".");
         }
 
         return true;
@@ -114,7 +115,7 @@ public class FreezeCommand extends BaseCommand implements Listener {
         Entity entity = event.getEntity();
         if (entity instanceof Player) {
             Player player = (Player) entity;
-            if ((getRemainingServerFrozenMillis() > 0L || getRemainingPlayerFrozenMillis(player.getUniqueId()) > 0L) && (!player.hasPermission("base.freeze.bypass"))) {
+            if ((getRemainingServerFrozenMillis() > 0L || getRemainingPlayerFrozenMillis(player.getUniqueId()) > 0L) && (!player.hasPermission(FREEZE_BYPASS))) {
                 event.setCancelled(true);
                 player.sendMessage(ChatColor.RED + "You cannot use commands whilst frozen.");
             }
@@ -124,7 +125,7 @@ public class FreezeCommand extends BaseCommand implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPreCommandProcess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        if ((getRemainingServerFrozenMillis() > 0L || getRemainingPlayerFrozenMillis(player.getUniqueId()) > 0L) && (!player.hasPermission("base.freeze.bypass"))) {
+        if ((getRemainingServerFrozenMillis() > 0L || getRemainingPlayerFrozenMillis(player.getUniqueId()) > 0L) && (!player.hasPermission(FREEZE_BYPASS))) {
             event.setCancelled(true);
             player.sendMessage(ChatColor.RED + "You cannot use commands whilst frozen.");
         }
@@ -141,7 +142,7 @@ public class FreezeCommand extends BaseCommand implements Listener {
         }
 
         Player player = event.getPlayer();
-        if ((getRemainingServerFrozenMillis() > 0L || getRemainingPlayerFrozenMillis(player.getUniqueId()) > 0L) && (!player.hasPermission("base.freeze.bypass"))) {
+        if ((getRemainingServerFrozenMillis() > 0L || getRemainingPlayerFrozenMillis(player.getUniqueId()) > 0L) && (!player.hasPermission(FREEZE_BYPASS))) {
             event.setTo(event.getFrom());
         }
     }

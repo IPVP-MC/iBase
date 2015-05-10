@@ -16,7 +16,7 @@ public class PlayerLimitListener implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         Player player = event.getPlayer();
         PlayerLoginEvent.Result result = event.getResult();

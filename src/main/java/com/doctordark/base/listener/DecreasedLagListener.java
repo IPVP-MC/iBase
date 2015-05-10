@@ -39,7 +39,7 @@ public class DecreasedLagListener implements Listener {
         Player player = event.getPlayer();
         BaseCommand baseCommand = plugin.getCommandManager().getCommand("stoplag");
         if (player.hasPermission(baseCommand.getPermission())) {
-            event.getPlayer().sendMessage(ChatColor.YELLOW + "Intensive server activity is currently prevented. Use /" + baseCommand.getName() +" to toggle.");
+            event.getPlayer().sendMessage(ChatColor.YELLOW + "Intensive server activity is currently prevented. Use /" + baseCommand.getName() + " to toggle.");
         }
     }
 
@@ -96,7 +96,6 @@ public class DecreasedLagListener implements Listener {
     public void onEntityExplode(EntityExplodeEvent event) {
         if (plugin.getServerHandler().isDecreasedLagMode()) {
             Location location = event.getLocation();
-            World world = location.getWorld();
             Entity entity = event.getEntity();
             if (entity != null) {
                 entity.remove();

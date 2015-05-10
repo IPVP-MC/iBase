@@ -3,7 +3,7 @@ package com.doctordark.base.command.module;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommandModule;
 import com.doctordark.base.command.module.chat.SayCommand;
-import com.doctordark.base.command.module.chat.SoundsCommand;
+import com.doctordark.base.command.module.chat.ToggleSoundsCommand;
 import com.doctordark.base.command.module.essential.AmivisCommand;
 import com.doctordark.base.command.module.essential.AutoRestartCommand;
 import com.doctordark.base.command.module.essential.BaseCommandExecutor;
@@ -70,7 +70,7 @@ public class EssentialModule extends BaseCommandModule {
         commands.add(new SayCommand());
         commands.add(new SeenCommand(plugin));
         commands.add(new SetMaxPlayersCommand(plugin));
-        commands.add(new SoundsCommand(plugin));
+        commands.add(new ToggleSoundsCommand(plugin));
         commands.add(new SpeedCommand());
         commands.add(new StopLagCommand(plugin));
         commands.add(new SudoCommand());

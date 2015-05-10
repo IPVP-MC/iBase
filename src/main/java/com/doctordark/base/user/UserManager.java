@@ -2,69 +2,105 @@ package com.doctordark.base.user;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.util.Config;
-import org.bukkit.Bukkit;
+import com.google.common.collect.Maps;
+import org.apache.commons.lang.Validate;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class UserManager implements Listener {
+public class UserManager {
 
+    private final ConsoleUser console;
+    private final Map<UUID, ServerParticipator> participators;
     private final Config userConfig;
-    private final Map<String, BaseUser> users;
 
     public UserManager(BasePlugin plugin) {
-        this.users = new HashMap<>();
-        this.userConfig = new Config(plugin, "users");
-        reloadUserData();
-        Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
-    }
+        this.participators = Maps.newHashMap();
+        this.userConfig = new Config(plugin, "participators");
+        this.reloadUserData();
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        String id = uuid.toString();
-        if (!this.users.containsKey(id)) {
-            this.users.put(id, new BaseUser(uuid));
+        // Load the ConsoleUser data here.
+        if (this.participators.containsKey(ConsoleUser.CONSOLE_UUID)) {
+            this.console = (ConsoleUser) this.participators.get(ConsoleUser.CONSOLE_UUID);
+        } else {
+            this.participators.put(ConsoleUser.CONSOLE_UUID, this.console = new ConsoleUser());
         }
     }
 
-    public Map<String, BaseUser> getUsers() {
-        return this.users;
+    /**
+     * Gets the {@link ConsoleUser}.
+     *
+     * @return the {@link ConsoleUser}
+     */
+    public ConsoleUser getConsole() {
+        return console;
+    }
+
+    public Map<UUID, ServerParticipator> getParticipators() {
+        return this.participators;
+    }
+
+    /**
+     * Gets a {@link ServerParticipator} by a given {@link CommandSender}.
+     *
+     * @param sender the {@link CommandSender} to get for
+     * @return the {@link ServerParticipator} or null if not found
+     */
+    public ServerParticipator getParticipator(CommandSender sender) {
+        Validate.notNull(sender, "CommandSender cannot be null");
+        if (sender instanceof ConsoleCommandSender) {
+            return console;
+        } else if (sender instanceof Player) {
+            Player player = (Player) sender;
+            return participators.get(player.getUniqueId());
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Gets a {@link ServerParticipator} from a given {@link UUID}.
+     *
+     * @param uuid the {@link UUID} to get from
+     * @return the returned {@link ServerParticipator}
+     */
+    public ServerParticipator getParticipator(UUID uuid) {
+        Validate.notNull(uuid, "Unique ID cannot be null");
+        return participators.get(uuid);
     }
 
     public BaseUser getUser(UUID uuid) {
-        String id = uuid.toString();
-        if (!this.users.containsKey(id)) {
-            this.users.put(id, new BaseUser(uuid));
+        ServerParticipator participator = getParticipator(uuid);
+        if (participator != null && participator instanceof BaseUser) {
+            return (BaseUser) participator;
+        } else {
+            final BaseUser baseUser;
+            participators.put(uuid, baseUser = new BaseUser(uuid));
+            return baseUser;
         }
-        return this.users.get(id);
     }
 
     public void reloadUserData() {
-        this.users.clear();
+        this.participators.clear();
 
-        Object object = this.userConfig.get("users");
-        if ((object != null) && ((object instanceof MemorySection))) {
+        Object object = this.userConfig.get("participators");
+        if (object != null && object instanceof MemorySection) {
             MemorySection section = (MemorySection) object;
             for (String id : section.getKeys(false)) {
-                BaseUser baseUser = (BaseUser) this.userConfig.get("users." + id);
-                this.users.put(id, baseUser);
+                ServerParticipator participator = (ServerParticipator) userConfig.get("participators." + id);
+                this.participators.put(UUID.fromString(id), participator);
             }
         }
     }
 
     public void saveUserData() {
-        for (BaseUser user : this.users.values()) {
-            String id = user.getUserUUID().toString();
-            userConfig.set("users." + id, user);
+        for (Map.Entry<UUID, ServerParticipator> entry : participators.entrySet()) {
+            String id = entry.getValue().getUniqueId().toString();
+            userConfig.set("participators." + id, entry.getValue());
         }
 
         userConfig.save();

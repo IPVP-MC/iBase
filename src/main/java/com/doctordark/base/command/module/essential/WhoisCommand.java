@@ -52,7 +52,6 @@ public class WhoisCommand extends BaseCommand {
         int z = location.getBlockZ();
 
         BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-
         sender.sendMessage(ChatColor.GRAY + BukkitUtils.generateLine());
         sender.sendMessage(ChatColor.GREEN + " [" + target.getDisplayName() + ChatColor.GREEN + "]");
         sender.sendMessage(ChatColor.YELLOW + "  Health: " + ChatColor.GOLD + target.getHealth() + "/" + target.getMaxHealth());

@@ -1,7 +1,13 @@
 package com.doctordark.base.command.module;
 
 import com.doctordark.base.command.BaseCommandModule;
-import com.doctordark.base.command.module.inventory.*;
+import com.doctordark.base.command.module.inventory.ClearInvCommand;
+import com.doctordark.base.command.module.inventory.GiveCommand;
+import com.doctordark.base.command.module.inventory.IdCommand;
+import com.doctordark.base.command.module.inventory.InvSeeCommand;
+import com.doctordark.base.command.module.inventory.ItemCommand;
+import com.doctordark.base.command.module.inventory.MoreCommand;
+import com.doctordark.base.command.module.inventory.SkullCommand;
 
 public class InventoryModule extends BaseCommandModule {
 

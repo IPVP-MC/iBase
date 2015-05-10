@@ -35,11 +35,11 @@ public class SkullCommand extends BaseCommand {
             return true;
         }
 
-        Player player = (Player)sender;
+        Player player = (Player) sender;
         String ownerName = (args.length > 0) ? args[0] : sender.getName();
 
-        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short)3);
-        SkullMeta meta = (SkullMeta)skull.getItemMeta();
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        SkullMeta meta = (SkullMeta) skull.getItemMeta();
         meta.setOwner(ownerName);
         meta.setDisplayName(ChatColor.GREEN + ownerName);
         skull.setItemMeta(meta);

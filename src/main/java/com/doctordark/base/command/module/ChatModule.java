@@ -2,7 +2,19 @@ package com.doctordark.base.command.module;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommandModule;
-import com.doctordark.base.command.module.chat.*;
+import com.doctordark.base.command.module.chat.BroadcastCommand;
+import com.doctordark.base.command.module.chat.BroadcastRawCommand;
+import com.doctordark.base.command.module.chat.ClearChatCommand;
+import com.doctordark.base.command.module.chat.DisableChatCommand;
+import com.doctordark.base.command.module.chat.IgnoreCommand;
+import com.doctordark.base.command.module.chat.MessageCommand;
+import com.doctordark.base.command.module.chat.MessageSpyCommand;
+import com.doctordark.base.command.module.chat.ReplyCommand;
+import com.doctordark.base.command.module.chat.SlowChatCommand;
+import com.doctordark.base.command.module.chat.StaffChatCommand;
+import com.doctordark.base.command.module.chat.ToggleChatCommand;
+import com.doctordark.base.command.module.chat.ToggleMessagesCommand;
+import com.doctordark.base.command.module.chat.ToggleStaffChatCommand;
 
 public class ChatModule extends BaseCommandModule {
 

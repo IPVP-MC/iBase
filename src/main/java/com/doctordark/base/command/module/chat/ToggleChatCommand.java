@@ -32,10 +32,10 @@ public class ToggleChatCommand extends BaseCommand {
         UUID uuid = player.getUniqueId();
 
         BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-        boolean newChatToggled = !baseUser.isToggledChat();
-        baseUser.setToggledChat(newChatToggled);
+        boolean newChatToggled = !baseUser.isGlobalChatVisible();
+        baseUser.setGlobalChatVisible(newChatToggled);
 
-        sender.sendMessage(ChatColor.YELLOW + "You have toggled global chat visibility " + (newChatToggled ? ChatColor.RED + "off" : ChatColor.GREEN + "on") + ChatColor.YELLOW + ".");
+        sender.sendMessage(ChatColor.YELLOW + "You have toggled global chat visibility " + (newChatToggled ? ChatColor.GREEN + "on" : ChatColor.RED + "off") + ChatColor.YELLOW + ".");
         return true;
     }
 }

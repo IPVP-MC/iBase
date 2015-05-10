@@ -2,7 +2,6 @@ package com.doctordark.base.listener;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.user.BaseUser;
-import com.doctordark.base.user.UserManager;
 import com.doctordark.util.BukkitUtils;
 import com.google.common.collect.Maps;
 import net.minecraft.server.v1_7_R4.Blocks;
@@ -31,6 +30,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -41,7 +41,6 @@ import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
 import java.util.UUID;
@@ -62,21 +61,16 @@ public class VanishListener implements Listener {
         final Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        UserManager userManager = plugin.getUserManager();
-        final BaseUser baseUser = userManager.getUser(uuid);
+        final BaseUser baseUser = plugin.getUserManager().getUser(uuid);
         if (baseUser.isVanished()) {
-            new BukkitRunnable() {
-                public void run() {
-                    player.sendMessage(ChatColor.GOLD + "You have joined vanished.");
-                    baseUser.updateVanishedState(true);
-                }
-            }.runTask(plugin);
+            player.sendMessage(ChatColor.GOLD + "You have joined vanished.");
+            baseUser.updateVanishedState(true);
         }
 
         VanishPriority userPriority = VanishPriority.of(player);
         for (Player target : Bukkit.getServer().getOnlinePlayers()) {
-            BaseUser baseTarget = userManager.getUser(target.getUniqueId());
-            if ((baseTarget.isVanished()) && (VanishPriority.of(target).isMoreThan(userPriority))) {
+            BaseUser baseTarget = plugin.getUserManager().getUser(target.getUniqueId());
+            if (baseTarget.isVanished() && VanishPriority.of(target).isMoreThan(userPriority)) {
                 player.hidePlayer(target);
             }
         }
@@ -192,6 +186,17 @@ public class VanishListener implements Listener {
         if (baseUser.isVanished()) {
             event.setCancelled(true);
             player.sendMessage(ChatColor.RED + "You cannot place blocks whilst vanished.");
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+    public void onBucketEmpty(PlayerBucketEmptyEvent event) {
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
+        if (baseUser.isVanished()) {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "You cannot empty buckets whilst vanished.");
         }
     }
 

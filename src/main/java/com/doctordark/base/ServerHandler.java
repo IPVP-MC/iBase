@@ -1,8 +1,8 @@
 package com.doctordark.base;
 
-import com.doctordark.base.util.GenericUtils;
 import com.google.common.collect.Lists;
 import net.minecraft.server.v1_7_R4.PlayerList;
+import net.minecraft.util.org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -92,21 +92,16 @@ public class ServerHandler {
         return this.maxPlayers;
     }
 
-    public boolean setMaxPlayers(int count) {
-        try {
-            PlayerList playerList = ((CraftServer) Bukkit.getServer()).getServer().getPlayerList();
-            Field field = GenericUtils.getField(playerList.getClass(), "maxPlayers");
-            field.setInt(playerList, count);
-            this.maxPlayers = count;
-            return true;
-        } catch (IllegalAccessException ex) {
-            ex.printStackTrace();
-            return false;
-        } catch (IllegalArgumentException ex) {
-            ex.printStackTrace();
-        }
+    public boolean setMaxPlayers(int maxPlayers) {
+        return setMaxPlayers(maxPlayers, true);
+    }
 
-        return false;
+    public boolean setMaxPlayers(int maxPlayers, boolean inject) {
+        Validate.isTrue(maxPlayers >= 0, "Max players cannot be negative");
+
+        this.maxPlayers = maxPlayers;
+        Bukkit.setMaxPlayers(maxPlayers);
+        return true;
     }
 
     public String getBroadcastFormat() {
@@ -158,6 +153,11 @@ public class ServerHandler {
             chatDisabledMillis = config.getLong("chat.disabled.millis", 0L);
             chatSlowedMillis = config.getLong("chat.slowed.millis", 0L);
             chatSlowedDelay = config.getInt("chat.slowed.delay", 15);
+        }
+
+        this.maxPlayers = config.getInt("max-players", 150);
+        if (maxPlayers > 0) {
+            Bukkit.setMaxPlayers(maxPlayers);
         }
 
         decreasedLagMode = config.getBoolean("decreased-lag-mode");

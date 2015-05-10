@@ -41,7 +41,7 @@ public class GamemodeCommand extends BaseCommand {
         final Player target;
         if (args.length > 1) {
             target = Bukkit.getServer().getPlayer(args[1]);
-        } else if (!(sender instanceof Player))  {
+        } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
         } else {

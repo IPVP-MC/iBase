@@ -1,6 +1,10 @@
 package com.doctordark.util.chat;
 
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_7_R4.ChatClickable;
+import net.minecraft.server.v1_7_R4.ChatHoverable;
+import net.minecraft.server.v1_7_R4.ChatMessage;
+import net.minecraft.server.v1_7_R4.EnumChatFormat;
+import net.minecraft.server.v1_7_R4.IChatBaseComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;

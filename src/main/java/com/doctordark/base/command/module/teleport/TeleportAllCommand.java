@@ -36,6 +36,7 @@ public class TeleportAllCommand extends BaseCommand {
 
         return true;
     }
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         return (args.length == 1) ? null : Collections.<String>emptyList();

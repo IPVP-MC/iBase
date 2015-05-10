@@ -24,10 +24,10 @@ public class JoinListener implements Listener {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
 
-        BaseUser baseUser = this.plugin.getUserManager().getUser(uuid);
+        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
         baseUser.tryLoggingName(player);
 
         String ipAddress = player.getAddress().getHostString();
-        baseUser.logAddress(ipAddress);
+        baseUser.tryLoggingAddress(ipAddress);
     }
 }

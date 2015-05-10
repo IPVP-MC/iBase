@@ -1,69 +1,46 @@
 package com.doctordark.base.user;
 
-import com.doctordark.base.BasePlugin;
 import com.doctordark.base.listener.VanishPriority;
 import com.doctordark.base.util.GenericUtils;
 import com.doctordark.base.util.PersistableLocation;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import com.google.common.net.InetAddresses;
+import net.minecraft.util.org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
-import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.UUID;
 
-public class BaseUser implements ConfigurationSerializable {
+public class BaseUser extends ServerParticipator {
 
-    private final TreeSet<String> ignoring = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
-    private final Set<String> messageSpying = Sets.newHashSet();
     private final List<String> addressHistories = Lists.newArrayList();
     private final List<NameHistory> nameHistories = Lists.newArrayList();
 
-    private final UUID userUUID;
     private Location backLocation;
-    private UUID lastRepliedTo;
+    private boolean messagingSounds;
     private boolean vanished;
-    private boolean inStaffChat;
-    private boolean toggledMessagingSounds;
-    private boolean toggledStaffChat;
-    private boolean toggledChat;
-    private boolean toggledMessages;
-    private long lastSpeakTimeMillis;
-    private long lastReceivedMessageMillis;
-    private long lastSentMessageMillis;
 
-    public BaseUser(UUID userUUID) {
-        this.userUUID = userUUID;
+    /**
+     * @see ServerParticipator#ServerParticipator(UUID)
+     */
+    public BaseUser(UUID uniqueID) {
+        super(uniqueID);
     }
 
+    /**
+     * @see ServerParticipator#ServerParticipator(Map)
+     */
     public BaseUser(Map<String, Object> map) {
-        if (map.containsKey("userUUID")) {
-            this.userUUID = UUID.fromString((String) map.get("userUUID"));
-        } else {
-            this.userUUID = null;
-        }
+        super(map);
 
-        if (map.containsKey("ignoring")) {
-            this.ignoring.addAll(GenericUtils.castList(map.get("ignoring"), String.class));
-        }
-
-        if (map.containsKey("messageSpying")) {
-            this.messageSpying.addAll(GenericUtils.castList(map.get("messageSpying"), String.class));
-        }
-
-        if (map.containsKey("ipHistories")) {
-            this.addressHistories.addAll(GenericUtils.castList(map.get("ipHistories"), String.class));
-        }
+        if (map.containsKey("addressHistories")) {
+            this.addressHistories.addAll(GenericUtils.castList(map.get("addressHistories"), String.class));
+        } 
 
         if (map.containsKey("nameHistories")) {
             this.nameHistories.addAll(GenericUtils.castList(map.get("nameHistories"), NameHistory.class));
@@ -71,97 +48,34 @@ public class BaseUser implements ConfigurationSerializable {
 
         if (map.containsKey("backLocation")) {
             Object object = map.get("backLocation");
-            if ((object instanceof PersistableLocation)) {
+            if (object instanceof PersistableLocation) {
                 this.backLocation = ((PersistableLocation) object).getLocation();
             }
         }
 
-        if (map.containsKey("lastRepliedTo")) {
-            this.lastRepliedTo = UUID.fromString((String) map.get("lastRepliedTo"));
+        if (map.containsKey("messagingSounds")) {
+            this.messagingSounds = (Boolean) map.get("messagingSounds");
         }
 
         if (map.containsKey("vanished")) {
             this.vanished = (Boolean) map.get("vanished");
         }
-
-        if (map.containsKey("inStaffChat")) {
-            this.inStaffChat = (Boolean) map.get("inStaffChat");
-        }
-
-        if (map.containsKey("toggledMessagingSounds")) {
-            this.toggledMessagingSounds = (Boolean) map.get("toggledMessagingSounds");
-        }
-
-        if (map.containsKey("toggledStaffChat")) {
-            this.toggledStaffChat = (Boolean) map.get("toggledStaffChat");
-        }
-
-        if (map.containsKey("toggledChat")) {
-            this.toggledChat = (Boolean) map.get("toggledChat");
-        }
-
-        if (map.containsKey("toggledMessages")) {
-            this.toggledMessages = (Boolean) map.get("toggledMessages");
-        }
-
-        if (map.containsKey("lastSpeakTimeMillis")) {
-            this.lastSpeakTimeMillis = ((Integer) map.get("lastSpeakTimeMillis") * 1000L);
-        }
-
-        if (map.containsKey("lastReceivedMessageMillis")) {
-            this.lastReceivedMessageMillis = ((Integer) map.get("lastReceivedMessageMillis") * 1000L);
-        }
-
-        if (map.containsKey("lastSentMessageMillis")) {
-            this.lastReceivedMessageMillis = ((Integer) map.get("lastSentMessageMillis") * 1000L);
-        }
     }
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("userUUID", getUserUUID().toString());
-        map.put("ignoring", new ArrayList<>(getIgnoring()));
-        map.put("messageSpying", new ArrayList<>(getMessageSpyingIds()));
-        map.put("ipHistories", getAddressHistories());
+        Map<String, Object> map = super.serialize();
+        map.put("addressHistories", getAddressHistories());
         map.put("nameHistories", getNameHistories());
-
-        if (backLocation != null) {
-            map.put("backLocation", new PersistableLocation(backLocation));
-        }
-
-        if (lastRepliedTo != null) {
-            map.put("lastRepliedTo", lastRepliedTo.toString());
-        }
-
-        map.put("vanished", isVanished());
-        map.put("inStaffChat", isInStaffChat());
-        map.put("toggledMessagingSounds", isToggledMessagingSounds());
-        map.put("toggledStaffChat", isToggledStaffChat());
-        map.put("toggledChat", isToggledChat());
-        map.put("toggledMessages", isToggledMessages());
-        map.put("lastSpeakTimeMillis", (int) (getLastSpeakTimeMillis() / 1000L));
-        map.put("lastReceivedMessageMillis", (int) (getLastReceivedMessageMillis() / 1000L));
-        map.put("lastSentMessageMillis", (int) (getLastSentMessageMillis() / 1000L));
+        if (backLocation != null) map.put("backLocation", new PersistableLocation(backLocation));
+        map.put("messagingSounds", isMessagingSounds());
+        map.put("vanished", vanished);
         return map;
     }
 
-    public TreeSet<String> getIgnoring() {
-        return this.ignoring;
-    }
-
-    public Set<String> getMessageSpyingIds() {
-        return this.messageSpying;
-    }
-
-    public List<String> getAddressHistories() {
-        return this.addressHistories;
-    }
-
-    public void logAddress(String address) {
-        if (!this.addressHistories.contains(address)) {
-            this.addressHistories.add(address);
-        }
+    @Override
+    public String getName() {
+        return getLastKnownName();
     }
 
     public List<NameHistory> getNameHistories() {
@@ -170,26 +84,24 @@ public class BaseUser implements ConfigurationSerializable {
 
     public void tryLoggingName(Player player) {
         String playerName = player.getName();
-        for (NameHistory nameHistory : getNameHistories()) {
+        for (NameHistory nameHistory : nameHistories) {
             if (nameHistory.getName().contains(playerName)) {
                 return;
             }
         }
 
-        long millis = System.currentTimeMillis();
-        this.nameHistories.add(new NameHistory(playerName, millis));
+        nameHistories.add(new NameHistory(playerName, System.currentTimeMillis()));
     }
 
-    public Player getLastRepliedTo() {
-        return this.lastRepliedTo == null ? null : Bukkit.getServer().getPlayer(this.lastRepliedTo);
+    public List<String> getAddressHistories() {
+        return this.addressHistories;
     }
 
-    public void setLastRepliedTo(BaseUser baseUser) {
-        this.lastRepliedTo = baseUser.getUserUUID();
-    }
-
-    public void setLastRepliedTo(UUID lastRepliedTo) {
-        this.lastRepliedTo = lastRepliedTo;
+    public void tryLoggingAddress(String address) {
+        if (!addressHistories.contains(address)) {
+            Validate.isTrue(InetAddresses.isInetAddress(address), "Not an Inet address");
+            addressHistories.add(address);
+        }
     }
 
     public Location getBackLocation() {
@@ -200,20 +112,30 @@ public class BaseUser implements ConfigurationSerializable {
         this.backLocation = backLocation;
     }
 
+    public boolean isMessagingSounds() {
+        return messagingSounds;
+    }
+
+    public void setMessagingSounds(boolean messagingSounds) {
+        this.messagingSounds = messagingSounds;
+    }
+
     public boolean isVanished() {
-        return this.vanished;
+        return vanished;
+    }
+
+    public void setVanished(boolean vanished) {
+        setVanished(vanished, true);
     }
 
     public void setVanished(boolean vanished, boolean update) {
         this.vanished = vanished;
-        if (update) {
-            updateVanishedState(vanished);
-        }
+        if (update) updateVanishedState(vanished);
     }
 
     public void updateVanishedState(boolean vanished) {
-        Player player = getPlayer();
-        if ((player == null) || (!player.isOnline())) {
+        Player player = toPlayer();
+        if (player == null || !player.isOnline()) {
             return;
         }
 
@@ -229,94 +151,22 @@ public class BaseUser implements ConfigurationSerializable {
         }
     }
 
-    public boolean isInStaffChat() {
-        return this.inStaffChat;
+    /**
+     * Gets the last known name of this {@link BaseUser}.
+     *
+     * @return the last known name
+     */
+    public String getLastKnownName() {
+        return Iterables.getLast(nameHistories).getName();
     }
 
-    public void setInStaffChat(boolean inStaffChat) {
-        this.inStaffChat = inStaffChat;
-    }
-
-    public boolean isToggledMessagingSounds() {
-        return toggledMessagingSounds;
-    }
-
-    public void setToggledMessagingSounds(boolean toggledMessagingSounds) {
-        this.toggledMessagingSounds = toggledMessagingSounds;
-    }
-
-    public boolean isToggledStaffChat() {
-        return this.toggledStaffChat;
-    }
-
-    public void setToggledStaffChat(boolean toggledStaffChat) {
-        this.toggledStaffChat = toggledStaffChat;
-    }
-
-    public boolean isToggledChat() {
-        return this.toggledChat;
-    }
-
-    public void setToggledChat(boolean toggledChat) {
-        this.toggledChat = toggledChat;
-    }
-
-    public boolean isToggledMessages() {
-        return this.toggledMessages;
-    }
-
-    public void setToggledMessages(boolean toggledMessages) {
-        this.toggledMessages = toggledMessages;
-    }
-
-    public long getLastSpeakTimeMillis() {
-        return this.lastSpeakTimeMillis;
-    }
-
-    public void setLastSpeakTimeMillis(long lastSpeakTimeMillis) {
-        this.lastSpeakTimeMillis = lastSpeakTimeMillis;
-    }
-
-    public long getLastSpeakTimeRemaining() {
-        if (this.lastSpeakTimeMillis > 0L) {
-            return this.lastSpeakTimeMillis - System.currentTimeMillis();
-        }
-
-        return 0L;
-    }
-
-    public void updateLastSpeakTime() {
-        BasePlugin plugin = JavaPlugin.getPlugin(BasePlugin.class);
-        long slowChatDelay = plugin.getServerHandler().getChatSlowedDelay() * 1000L;
-        this.lastSpeakTimeMillis = (System.currentTimeMillis() + slowChatDelay);
-    }
-
-    public long getLastReceivedMessageMillis() {
-        return this.lastReceivedMessageMillis;
-    }
-
-    public void setLastReceivedMessageMillis(long lastReceivedMessageMillis) {
-        this.lastReceivedMessageMillis = lastReceivedMessageMillis;
-    }
-
-    public long getLastSentMessageMillis() {
-        return this.lastSentMessageMillis;
-    }
-
-    public void setLastSentMessageMillis(long lastSentMessageMillis) {
-        this.lastSentMessageMillis = lastSentMessageMillis;
-    }
-
-    public UUID getUserUUID() {
-        return this.userUUID;
-    }
-
-    public String getName() {
-        return Iterables.getLast(this.nameHistories).getName();
-    }
-
-    public Player getPlayer() {
+    /**
+     * Converts this {@link BaseUser} to a {@link Player}.
+     *
+     * @return the converted {@link Player}
+     */
+    public Player toPlayer() {
         Server server = Bukkit.getServer();
-        return server.getPlayer(getUserUUID());
+        return server.getPlayer(getUniqueId());
     }
 }

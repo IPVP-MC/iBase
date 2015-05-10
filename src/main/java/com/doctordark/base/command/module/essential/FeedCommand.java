@@ -40,7 +40,7 @@ public class FeedCommand extends BaseCommand {
 
             Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Fed all online players.");
             return true;
-        } else if (!(sender instanceof Player))  {
+        } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
         } else {
