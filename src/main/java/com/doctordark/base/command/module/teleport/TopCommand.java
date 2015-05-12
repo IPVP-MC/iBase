@@ -30,10 +30,11 @@ public class TopCommand extends BaseCommand {
         }
 
         Player player = (Player) sender;
-        Location location = player.getLocation();
-        Location highestLocation = BukkitUtils.getHighestLocation(location);
+        Location location = player.getLocation().clone();
+        location.setY(location.getBlockY());
 
-        if (highestLocation.equals(location)) {
+        Location highestLocation = BukkitUtils.getHighestLocation(location);
+        if (highestLocation == null || highestLocation.equals(location)) {
             sender.sendMessage(ChatColor.RED + "No highest location found.");
             return true;
         }
