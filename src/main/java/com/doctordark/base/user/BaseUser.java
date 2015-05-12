@@ -5,13 +5,25 @@ import com.doctordark.base.util.GenericUtils;
 import com.doctordark.base.util.PersistableLocation;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.common.net.InetAddresses;
+import net.minecraft.server.v1_7_R4.Packet;
+import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
+import net.minecraft.server.v1_7_R4.PlayerConnection;
 import net.minecraft.util.org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftEntityEquipment;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -24,6 +36,8 @@ public class BaseUser extends ServerParticipator {
     private Location backLocation;
     private boolean messagingSounds;
     private boolean vanished;
+    private boolean glintEnabled = true;
+    private long lastGlintUse;
 
     /**
      * @see ServerParticipator#ServerParticipator(UUID)
@@ -40,7 +54,7 @@ public class BaseUser extends ServerParticipator {
 
         if (map.containsKey("addressHistories")) {
             this.addressHistories.addAll(GenericUtils.castList(map.get("addressHistories"), String.class));
-        } 
+        }
 
         if (map.containsKey("nameHistories")) {
             this.nameHistories.addAll(GenericUtils.castList(map.get("nameHistories"), NameHistory.class));
@@ -60,6 +74,14 @@ public class BaseUser extends ServerParticipator {
         if (map.containsKey("vanished")) {
             this.vanished = (Boolean) map.get("vanished");
         }
+
+        if (map.containsKey("glintEnabled")) {
+            this.glintEnabled = (Boolean) map.get("glintEnabled");
+        }
+
+        if (map.containsKey("lastGlintUse")) {
+            this.lastGlintUse = Long.parseLong((String) map.get("lastGlintUser"));
+        }
     }
 
     @Override
@@ -69,7 +91,9 @@ public class BaseUser extends ServerParticipator {
         map.put("nameHistories", getNameHistories());
         if (backLocation != null) map.put("backLocation", new PersistableLocation(backLocation));
         map.put("messagingSounds", isMessagingSounds());
-        map.put("vanished", vanished);
+        map.put("vanished", isVanished());
+        map.put("glintEnabled", isGlintEnabled());
+        map.put("lastGlintUse", getLastGlintUse());
         return map;
     }
 
@@ -149,6 +173,74 @@ public class BaseUser extends ServerParticipator {
                 target.showPlayer(player);
             }
         }
+    }
+
+    /**
+     * Checks if glint for {@link org.bukkit.enchantments.Enchantment}s on
+     * {@link org.bukkit.inventory.ItemStack}s is enabled for this {@link BaseUser}.
+     *
+     * @return true if glint is enabled
+     */
+    public boolean isGlintEnabled() {
+        return glintEnabled;
+    }
+
+    /**
+     * Sets if glint for {@link org.bukkit.enchantments.Enchantment}s on
+     * {@link org.bukkit.inventory.ItemStack}s is enabled for this {@link BaseUser}.
+     *
+     * @param glintEnabled the value to set
+     */
+    public void setGlintEnabled(boolean glintEnabled) {
+        this.setGlintEnabled(glintEnabled, true);
+    }
+
+    /**
+     * Sets if glint for {@link org.bukkit.enchantments.Enchantment}s on
+     * {@link org.bukkit.inventory.ItemStack}s is enabled for this {@link BaseUser}.
+     *
+     * @param glintEnabled the value to set
+     * @param update       if it should update for nearby entities
+     */
+    public void setGlintEnabled(boolean glintEnabled, boolean update) {
+        Player player = toPlayer();
+        if (player == null || !player.isOnline()) {
+            return;
+        }
+
+        this.glintEnabled = glintEnabled;
+        int viewDistance = Bukkit.getViewDistance();
+        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
+        for (Entity entity : player.getNearbyEntities(viewDistance, viewDistance, viewDistance)) {
+            if (entity instanceof Player) {
+                if (entity.equals(player)) continue;
+
+                Player target = (Player) entity;
+                PlayerInventory inventory = target.getInventory();
+                int entityID = entity.getEntityId();
+
+                ItemStack[] armour = inventory.getArmorContents();
+                for (int i = 0; i < armour.length; i++) {
+                    ItemStack stack = armour[i];
+                    if (stack != null && stack.getType() != Material.AIR) {
+                        connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, (i + 1), CraftItemStack.asNMSCopy(stack)));
+                    }
+                }
+
+                ItemStack stack = inventory.getItemInHand();
+                if (stack != null && stack.getType() != Material.AIR) {
+                    connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, CraftEntityEquipment.WEAPON_SLOT, CraftItemStack.asNMSCopy(stack)));
+                }
+            }
+        }
+    }
+
+    public long getLastGlintUse() {
+        return lastGlintUse;
+    }
+
+    public void setLastGlintUse(long lastGlintUse) {
+        this.lastGlintUse = lastGlintUse;
     }
 
     /**

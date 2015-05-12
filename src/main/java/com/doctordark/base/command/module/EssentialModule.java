@@ -15,6 +15,7 @@ import com.doctordark.base.command.module.essential.FeedCommand;
 import com.doctordark.base.command.module.essential.FlyCommand;
 import com.doctordark.base.command.module.essential.FreezeCommand;
 import com.doctordark.base.command.module.essential.GamemodeCommand;
+import com.doctordark.base.command.module.essential.GlintCommand;
 import com.doctordark.base.command.module.essential.HatCommand;
 import com.doctordark.base.command.module.essential.HealCommand;
 import com.doctordark.base.command.module.essential.IpHistoryCommand;
@@ -53,6 +54,7 @@ public class EssentialModule extends BaseCommandModule {
         commands.add(new FlyCommand());
         commands.add(new FreezeCommand(plugin));
         commands.add(new GamemodeCommand());
+        commands.add(new GlintCommand(plugin));
         commands.add(new HatCommand());
         commands.add(new HealCommand());
         commands.add(new IpHistoryCommand(plugin));

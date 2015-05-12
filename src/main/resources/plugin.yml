@@ -54,6 +54,8 @@ commands:
   globalwarp:
     aliases: [gw]
     description: Warps that can be used by anyone.
+  glint:
+    description: Toggles enchantment glints.
   hat:
     description: Wear something as a hat.
   heal:

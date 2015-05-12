@@ -25,7 +25,9 @@ import com.doctordark.base.user.ConsoleUser;
 import com.doctordark.base.user.NameHistory;
 import com.doctordark.base.user.ServerParticipator;
 import com.doctordark.base.user.UserManager;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -56,6 +58,11 @@ public class BasePlugin extends JavaPlugin {
         registerCommands();
         registerListeners();
         reloadSchedulers();
+
+        Plugin plugin = getServer().getPluginManager().getPlugin("ProtocolLib");
+        if (plugin != null && plugin.isEnabled()) {
+            ProtocolHook.hook(this);
+        }
     }
 
     @Override
