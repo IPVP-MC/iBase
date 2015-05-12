@@ -5,6 +5,7 @@ import com.doctordark.util.Utils;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
@@ -53,7 +54,7 @@ public class EnchantCommand extends BaseCommand {
 
         ItemStack stack = target.getItemInHand();
 
-        if (stack == null) {
+        if (stack == null || stack.getType() == Material.AIR) {
             sender.sendMessage(ChatColor.RED + target.getName() + " is not holding an item.");
             return true;
         }
