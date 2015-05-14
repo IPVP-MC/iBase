@@ -25,13 +25,15 @@ public class TeleportAllCommand extends BaseCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command is only exeuctable by players.");
+            sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
             return true;
         }
 
         Player player = (Player) sender;
         for (Player target : Bukkit.getServer().getOnlinePlayers()) {
-            target.teleport(player, PlayerTeleportEvent.TeleportCause.COMMAND);
+            if (!target.equals(player) && player.canSee(target)) {
+                target.teleport(player, PlayerTeleportEvent.TeleportCause.COMMAND);
+            }
         }
 
         return true;
