@@ -80,7 +80,7 @@ public class BaseUser extends ServerParticipator {
         }
 
         if (map.containsKey("lastGlintUse")) {
-            this.lastGlintUse = Long.parseLong((String) map.get("lastGlintUser"));
+            this.lastGlintUse = Long.parseLong((String) map.get("lastGlintUse"));
         }
     }
 
@@ -93,7 +93,7 @@ public class BaseUser extends ServerParticipator {
         map.put("messagingSounds", isMessagingSounds());
         map.put("vanished", isVanished());
         map.put("glintEnabled", isGlintEnabled());
-        map.put("lastGlintUse", getLastGlintUse());
+        map.put("lastGlintUse", Long.toString(getLastGlintUse()));
         return map;
     }
 
@@ -164,6 +164,8 @@ public class BaseUser extends ServerParticipator {
         }
 
         player.spigot().setCollidesWithEntities(!vanished);
+        player.setCanSeeInvisibles(vanished); // allow vanished players to see those invisible.
+
         VanishPriority playerPriority = VanishPriority.of(player);
         for (Player target : Bukkit.getServer().getOnlinePlayers()) {
             if (player.equals(target)) continue;
