@@ -9,6 +9,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.user.UserManager;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +31,8 @@ public class ProtocolHook {
 
                     // Clear the Enchants from the item for this player.
                     ItemStack stack = packet.getItemModifier().read(0);
+                    if (stack == null || stack.getType() == Material.AIR) return;
+
                     for (Enchantment enchantment : stack.getEnchantments().keySet()) {
                         stack.removeEnchantment(enchantment);
                     }
