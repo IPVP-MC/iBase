@@ -7,14 +7,19 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.net.InetAddresses;
+import net.minecraft.server.v1_7_R4.DataWatcher;
+import net.minecraft.server.v1_7_R4.Item;
 import net.minecraft.server.v1_7_R4.Packet;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
+import net.minecraft.server.v1_7_R4.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_7_R4.PlayerConnection;
 import net.minecraft.util.org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftEntityEquipment;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
@@ -34,6 +39,7 @@ public class BaseUser extends ServerParticipator {
     private final List<NameHistory> nameHistories = Lists.newArrayList();
 
     private Location backLocation;
+    private boolean hadEntityCollision;
     private boolean messagingSounds;
     private boolean vanished;
     private boolean glintEnabled = true;
@@ -63,7 +69,10 @@ public class BaseUser extends ServerParticipator {
         if (map.containsKey("backLocation")) {
             Object object = map.get("backLocation");
             if (object instanceof PersistableLocation) {
-                this.backLocation = ((PersistableLocation) object).getLocation();
+                PersistableLocation persistableLocation = ((PersistableLocation) object);
+                if (persistableLocation.getWorld() != null) {
+                    this.backLocation = ((PersistableLocation) object).getLocation();
+                }
             }
         }
 
@@ -89,7 +98,10 @@ public class BaseUser extends ServerParticipator {
         Map<String, Object> map = super.serialize();
         map.put("addressHistories", getAddressHistories());
         map.put("nameHistories", getNameHistories());
-        if (backLocation != null) map.put("backLocation", new PersistableLocation(backLocation));
+        if (backLocation != null && backLocation.getWorld() != null) { // the world may
+            map.put("backLocation", new PersistableLocation(backLocation));
+        }
+
         map.put("messagingSounds", isMessagingSounds());
         map.put("vanished", isVanished());
         map.put("glintEnabled", isGlintEnabled());
@@ -153,14 +165,26 @@ public class BaseUser extends ServerParticipator {
     }
 
     public void setVanished(boolean vanished, boolean update) {
+        if (this.vanished == vanished) {
+            return;
+        }
+
         this.vanished = vanished;
-        if (update) updateVanishedState(vanished);
+        if (update) {
+            updateVanishedState(vanished);
+        }
     }
 
     public void updateVanishedState(boolean vanished) {
         Player player = toPlayer();
         if (player == null || !player.isOnline()) {
             return;
+        }
+
+        if (vanished) {
+            this.hadEntityCollision = player.spigot().getCollidesWithEntities();
+        } else {
+            player.spigot().setCollidesWithEntities(this.hadEntityCollision);
         }
 
         player.spigot().setCollidesWithEntities(!vanished);
@@ -214,9 +238,14 @@ public class BaseUser extends ServerParticipator {
         int viewDistance = Bukkit.getViewDistance();
         PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
         for (Entity entity : player.getNearbyEntities(viewDistance, viewDistance, viewDistance)) {
-            if (entity instanceof Player) {
-                if (entity.equals(player)) continue;
-
+            if (entity instanceof org.bukkit.entity.Item) {
+                org.bukkit.entity.Item item = (org.bukkit.entity.Item) entity;
+                if (item instanceof CraftItem) {
+                    CraftItem craftItem = (CraftItem) item;
+                    DataWatcher watcher = craftItem.getHandle().getDataWatcher();
+                    connection.sendPacket(new PacketPlayOutEntityMetadata(entity.getEntityId(), watcher, true));
+                }
+            } else if (entity instanceof Player && !entity.equals(player)) {
                 Player target = (Player) entity;
                 PlayerInventory inventory = target.getInventory();
                 int entityID = entity.getEntityId();
