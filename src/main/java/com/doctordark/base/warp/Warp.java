@@ -2,6 +2,7 @@ package com.doctordark.base.warp;
 
 import com.doctordark.base.util.PersistableLocation;
 import com.google.common.collect.Maps;
+import net.minecraft.util.org.apache.commons.lang3.Validate;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
@@ -13,6 +14,9 @@ public class Warp implements ConfigurationSerializable {
     private Location location;
 
     public Warp(String name, Location location) {
+        Validate.notNull(name, "Warp name cannot be null");
+        Validate.notNull(location, "Warp location cannot be null");
+
         this.name = name;
         this.location = location;
     }
@@ -31,7 +35,7 @@ public class Warp implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         Map<String, Object> map = Maps.newHashMap();
         map.put("name", getName());
-        map.put("location", new PersistableLocation(getLocation()));
+        map.put("location", new PersistableLocation(location));
         return map;
     }
 
@@ -40,6 +44,7 @@ public class Warp implements ConfigurationSerializable {
     }
 
     public void setName(String name) {
+        Validate.notNull(name, "Warp name cannot be null");
         this.name = name;
     }
 
@@ -48,6 +53,7 @@ public class Warp implements ConfigurationSerializable {
     }
 
     public void setLocation(Location location) {
+        Validate.notNull(location, "Warp location cannot be null");
         this.location = location;
     }
 }

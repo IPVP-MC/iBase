@@ -86,6 +86,11 @@ public class WarpExecutor extends BaseCommand {
     }
 
     private boolean handleWarp(CommandSender sender, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(ChatColor.RED + "Only players can teleport to warps.");
+            return true;
+        }
+
         final Warp warp = plugin.getWarpManager().getWarp(args[0]);
 
         if (warp == null) {
@@ -93,8 +98,8 @@ public class WarpExecutor extends BaseCommand {
             return true;
         }
 
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can teleport to warps.");
+        if (warp.getLocation().getWorld() == null) {
+            sender.sendMessage(ChatColor.RED + "That warp has an invalid world!");
             return true;
         }
 
@@ -131,7 +136,8 @@ public class WarpExecutor extends BaseCommand {
     private void warpPlayer(Player player, Warp warp) {
         UUID uuid = player.getUniqueId();
         if (taskMap.containsKey(uuid)) {
-            taskMap.get(uuid).cancel();
+            BukkitRunnable runnable = taskMap.get(uuid);
+            if (runnable != null) runnable.cancel();
             taskMap.remove(uuid);
         }
 
