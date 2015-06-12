@@ -5,7 +5,7 @@ import com.google.common.collect.Sets;
 import java.util.Set;
 
 /**
- * Represents a command module / package.
+ * Represents a {@link BaseCommandModule} for management of {@link BaseCommand}s.
  */
 public abstract class BaseCommandModule {
 
@@ -13,50 +13,50 @@ public abstract class BaseCommandModule {
     protected boolean enabled;
 
     public BaseCommandModule() {
-        enabled = true; //TODO: non hardcoded
-        commands = Sets.newHashSet();
+        this.enabled = true; //TODO: Configurable
+        this.commands = Sets.newHashSet();
     }
 
     /**
-     * Gets all the commands in this module.
+     * Gets all the {@link BaseCommand}s registered to this {@link BaseCommandModule}.
      *
-     * @return set of commands in module
+     * @return set of registered {@link BaseCommand}s
      */
     Set<BaseCommand> getCommands() {
         return commands;
     }
 
     /**
-     * Un-registers a command from the module.
+     * Un-registers a {@link BaseCommand} from this {@link BaseCommandModule}.
      *
-     * @param command the command to unregister
+     * @param command the {@link BaseCommand} to unregister
      */
     void unregisterCommand(BaseCommand command) {
         commands.remove(command);
     }
 
     /**
-     * Un-registers all the commands in the module.
+     * Un-registers all the {@link BaseCommand}s in this {@link BaseCommandModule}.
      */
     void unregisterCommands() {
         commands.clear();
     }
 
     /**
-     * Checks if this module is enabled.
+     * Checks if this {@link BaseCommandModule} is enabled.
      *
-     * @return true if module is enabled
+     * @return true if is enabled
      */
     boolean isEnabled() {
         return enabled;
     }
 
     /**
-     * Sets if this module is enabled.
+     * Sets if this {@link BaseCommandModule} is enabled.
      *
-     * @param enabled if module should be enabled
+     * @param enabled if should be enabled
      */
-    public void setEnabled(boolean enabled) {
+    void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 }

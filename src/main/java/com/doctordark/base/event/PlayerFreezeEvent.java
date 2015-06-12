@@ -5,6 +5,9 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
+/**
+ * Event called when a {@link Player} is about to be frozen of movement and commands.
+ */
 public class PlayerFreezeEvent extends PlayerEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
@@ -18,7 +21,7 @@ public class PlayerFreezeEvent extends PlayerEvent implements Cancellable {
     }
 
     /**
-     * Checks if the user will be frozen during
+     * Checks if this {@link Player} will be frozen during
      * this event.
      *
      * @return true if will be frozen

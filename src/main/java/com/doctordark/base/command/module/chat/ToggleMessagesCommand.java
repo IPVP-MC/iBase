@@ -2,14 +2,11 @@ package com.doctordark.base.command.module.chat;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.base.command.module.chat.event.PlayerMessageEvent;
 import com.doctordark.base.user.BaseUser;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 
 import java.util.UUID;
 
@@ -22,17 +19,6 @@ public class ToggleMessagesCommand extends BaseCommand {
         setAliases(new String[]{"togglepm", "toggleprivatemessages"});
         setUsage("/(command)");
         this.plugin = plugin;
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-    public void onPlayerMessage(PlayerMessageEvent event) {
-        Player recipient = event.getRecipient();
-        BaseUser recipientUser = plugin.getUserManager().getUser(recipient.getUniqueId());
-        if (recipientUser.isMessagesVisible()) {
-            CommandSender sender = event.getSender();
-            event.setCancelled(true);
-            sender.sendMessage(ChatColor.RED + "That player has private messages toggled.");
-        }
     }
 
     @Override
@@ -49,7 +35,7 @@ public class ToggleMessagesCommand extends BaseCommand {
         boolean newToggled = !baseUser.isMessagesVisible();
         baseUser.setMessagesVisible(newToggled);
 
-        sender.sendMessage(ChatColor.YELLOW + "You have toggled private messages " + (newToggled ? ChatColor.RED + "off" : ChatColor.GREEN + "on") + ChatColor.YELLOW + ".");
+        sender.sendMessage(ChatColor.YELLOW + "You have toggled private messages " + (newToggled ? ChatColor.GREEN + "on" : ChatColor.RED + "off") + ChatColor.YELLOW + ".");
         return true;
     }
 }

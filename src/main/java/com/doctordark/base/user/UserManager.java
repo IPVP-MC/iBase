@@ -21,7 +21,7 @@ public class UserManager {
     public UserManager(BasePlugin plugin) {
         this.participators = Maps.newHashMap();
         this.userConfig = new Config(plugin, "participators");
-        this.reloadUserData();
+        this.reloadParticipatorData();
 
         // Load the ConsoleUser data here.
         if (this.participators.containsKey(ConsoleUser.CONSOLE_UUID)) {
@@ -40,6 +40,11 @@ public class UserManager {
         return console;
     }
 
+    /**
+     * Gets the {@link ServerParticipator}s held by this {@link UserManager}.
+     *
+     * @return map of {@link ServerParticipator}s held
+     */
     public Map<UUID, ServerParticipator> getParticipators() {
         return this.participators;
     }
@@ -73,6 +78,12 @@ public class UserManager {
         return participators.get(uuid);
     }
 
+    /**
+     * Gets a {@link BaseUser} from a given {@link UUID}.
+     *
+     * @param uuid the {@link UUID} to get for
+     * @return the {@link BaseUser} or null
+     */
     public BaseUser getUser(UUID uuid) {
         ServerParticipator participator = getParticipator(uuid);
         if (participator != null && participator instanceof BaseUser) {
@@ -84,7 +95,10 @@ public class UserManager {
         }
     }
 
-    public void reloadUserData() {
+    /**
+     * Reloads the {@link ServerParticipator} data from storage.
+     */
+    public void reloadParticipatorData() {
         this.participators.clear();
 
         Object object = this.userConfig.get("participators");
@@ -97,7 +111,10 @@ public class UserManager {
         }
     }
 
-    public void saveUserData() {
+    /**
+     * Saves the {@link ServerParticipator} data to storage.
+     */
+    public void saveParticipatorData() {
         for (Map.Entry<UUID, ServerParticipator> entry : participators.entrySet()) {
             String id = entry.getValue().getUniqueId().toString();
             userConfig.set("participators." + id, entry.getValue());

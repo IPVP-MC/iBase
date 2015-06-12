@@ -65,7 +65,7 @@ public class ReflectionCommandManager implements CommandManager {
     }
 
     @Override
-    public boolean isCommand(BaseCommand command) {
+    public boolean containsCommand(BaseCommand command) {
         return commandMap.containsValue(command);
     }
 

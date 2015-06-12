@@ -3,6 +3,7 @@ package com.doctordark.base.listener;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.module.chat.event.PlayerMessageEvent;
 import com.doctordark.base.user.BaseUser;
+import com.doctordark.base.user.ServerParticipator;
 import com.doctordark.util.BukkitUtils;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang.time.DurationFormatUtils;
@@ -127,8 +128,8 @@ public class ChatListener implements Listener {
             return;
         }
 
-        BaseUser senderUser = plugin.getUserManager().getUser(recipientUUID);
-        if (senderUser.isMessagesVisible()) {
+        ServerParticipator senderParticipator = plugin.getUserManager().getParticipator(sender);
+        if (!senderParticipator.isMessagesVisible()) {
             event.setCancelled(true);
             sender.sendMessage(ChatColor.RED + "You have private messages toggled.");
         }

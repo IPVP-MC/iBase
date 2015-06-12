@@ -9,8 +9,8 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.user.UserManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,20 +19,22 @@ public class ProtocolHook {
 
     private static final ItemStack AIR = new ItemStack(Material.AIR, 1);
 
-    public static void hook(BasePlugin plugin) {
+    public static void hook(BasePlugin basePlugin) {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        UserManager userManager = plugin.getUserManager();
+        UserManager userManager = basePlugin.getUserManager();
 
         // Packet listener to disable enchantment glint for entity equipment.
-        protocolManager.addPacketListener(new PacketAdapter(plugin, PacketType.Play.Server.ENTITY_EQUIPMENT) {
+        protocolManager.addPacketListener(new PacketAdapter(basePlugin, PacketType.Play.Server.ENTITY_EQUIPMENT) {
             @Override
             public void onPacketSending(PacketEvent event) {
+                if (!basePlugin.getServerHandler().useProtocolLib) {
+                    return;
+                }
+
                 Player player = event.getPlayer();
                 BaseUser baseUser = userManager.getUser(player.getUniqueId());
                 if (!baseUser.isGlintEnabled()) {
-                    PacketContainer packet = event.getPacket().deepClone();
-
-                    // Clear the Enchants from the item for this player.
+                    PacketContainer packet = event.getPacket();
                     ItemStack stack = packet.getItemModifier().read(0);
                     if (stack != null && stack.getType() != Material.AIR) {
                         convert(stack);
@@ -42,25 +44,55 @@ public class ProtocolHook {
         });
 
         // Packet listener to disable enchantment glint for ground items.
-        protocolManager.addPacketListener(new PacketAdapter(plugin, PacketType.Play.Server.ENTITY_METADATA) {
+        protocolManager.addPacketListener(new PacketAdapter(basePlugin, PacketType.Play.Server.ENTITY_METADATA) {
             @Override
             public void onPacketSending(PacketEvent event) {
-                PacketContainer packet = event.getPacket();
+                if (!basePlugin.getServerHandler().useProtocolLib) {
+                    return;
+                }
 
-                // See if we are modifying an item stack
-                if (packet.getEntityModifier(event).read(0) instanceof Item) {
-                    WrappedDataWatcher watcher = new WrappedDataWatcher(packet.getWatchableCollectionModifier().read(0));
-                    ItemStack stack = watcher.getItemStack(10);
-                    if (stack != null && stack.getType() != Material.AIR) {
-                        Player player = event.getPlayer();
-                        BaseUser baseUser = userManager.getUser(player.getUniqueId());
-                        if (!baseUser.isGlintEnabled()) {
+                Player player = event.getPlayer();
+                BaseUser baseUser = userManager.getUser(player.getUniqueId());
+                if (!baseUser.isGlintEnabled()) {
+                    PacketContainer packet = event.getPacket();
+
+                    // See if we are modifying an item stack
+                    if (packet.getEntityModifier(event).read(0) instanceof Item) {
+                        WrappedDataWatcher watcher = new WrappedDataWatcher(packet.getWatchableCollectionModifier().read(0));
+                        ItemStack stack = watcher.getItemStack(10).clone();
+                        if (stack != null && stack.getType() != Material.AIR) {
                             convert(stack);
                         }
                     }
                 }
             }
         });
+
+        // Packet listener to disable enchantment glint for own items.
+        /*protocolManager.addPacketListener(new PacketAdapter(plugin, PacketType.Play.Server.SET_SLOT, PacketType.Play.Server.WINDOW_ITEMS) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+                if (!basePlugin.getServerHandler().useProtocolLib) {
+                    return;
+                }
+
+                Player player = event.getPlayer();
+                BaseUser baseUser = userManager.getUser(player.getUniqueId());
+                if (!baseUser.isGlintEnabled()) {
+                    PacketContainer packet = event.getPacket();
+                    if (packet.getType() == PacketType.Play.Server.SET_SLOT) {
+                        convert(packet.getItemModifier().read(0));
+                    } else {
+                        ItemStack[] elements = packet.getItemArrayModifier().read(0);
+                        for (ItemStack next : elements) {
+                            if (next != null && next.getType() != Material.AIR) {
+                                convert(next);
+                            }
+                        }
+                    }
+                }
+            }
+        });*/
     }
 
     private static ItemStack convert(ItemStack origin) {

@@ -235,32 +235,34 @@ public class BaseUser extends ServerParticipator {
         }
 
         this.glintEnabled = glintEnabled;
-        int viewDistance = Bukkit.getViewDistance();
-        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
-        for (Entity entity : player.getNearbyEntities(viewDistance, viewDistance, viewDistance)) {
-            if (entity instanceof org.bukkit.entity.Item) {
-                org.bukkit.entity.Item item = (org.bukkit.entity.Item) entity;
-                if (item instanceof CraftItem) {
-                    CraftItem craftItem = (CraftItem) item;
-                    DataWatcher watcher = craftItem.getHandle().getDataWatcher();
-                    connection.sendPacket(new PacketPlayOutEntityMetadata(entity.getEntityId(), watcher, true));
-                }
-            } else if (entity instanceof Player && !entity.equals(player)) {
-                Player target = (Player) entity;
-                PlayerInventory inventory = target.getInventory();
-                int entityID = entity.getEntityId();
-
-                ItemStack[] armour = inventory.getArmorContents();
-                for (int i = 0; i < armour.length; i++) {
-                    ItemStack stack = armour[i];
-                    if (stack != null && stack.getType() != Material.AIR) {
-                        connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, (i + 1), CraftItemStack.asNMSCopy(stack)));
+        if (BasePlugin.getPlugin().getServerHandler().useProtocolLib) {
+            int viewDistance = Bukkit.getViewDistance();
+            PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
+            for (Entity entity : player.getNearbyEntities(viewDistance, viewDistance, viewDistance)) {
+                if (entity instanceof org.bukkit.entity.Item) {
+                    org.bukkit.entity.Item item = (org.bukkit.entity.Item) entity;
+                    if (item instanceof CraftItem) {
+                        CraftItem craftItem = (CraftItem) item;
+                        DataWatcher watcher = craftItem.getHandle().getDataWatcher();
+                        connection.sendPacket(new PacketPlayOutEntityMetadata(entity.getEntityId(), watcher, true));
                     }
-                }
+                } else if (entity instanceof Player && !entity.equals(player)) {
+                    Player target = (Player) entity;
+                    PlayerInventory inventory = target.getInventory();
+                    int entityID = entity.getEntityId();
 
-                ItemStack stack = inventory.getItemInHand();
-                if (stack != null && stack.getType() != Material.AIR) {
-                    connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, CraftEntityEquipment.WEAPON_SLOT, CraftItemStack.asNMSCopy(stack)));
+                    ItemStack[] armour = inventory.getArmorContents();
+                    for (int i = 0; i < armour.length; i++) {
+                        ItemStack stack = armour[i];
+                        if (stack != null && stack.getType() != Material.AIR) {
+                            connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, (i + 1), CraftItemStack.asNMSCopy(stack)));
+                        }
+                    }
+
+                    ItemStack stack = inventory.getItemInHand();
+                    if (stack != null && stack.getType() != Material.AIR) {
+                        connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, CraftEntityEquipment.WEAPON_SLOT, CraftItemStack.asNMSCopy(stack)));
+                    }
                 }
             }
         }

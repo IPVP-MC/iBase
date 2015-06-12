@@ -26,11 +26,6 @@ public class ConsoleUser extends ServerParticipator implements ConfigurationSeri
     }
 
     @Override
-    public Map<String, Object> serialize() {
-        return super.serialize();
-    }
-
-    @Override
     public String getName() {
         return name;
     }

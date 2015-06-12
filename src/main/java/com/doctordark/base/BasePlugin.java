@@ -61,7 +61,12 @@ public class BasePlugin extends JavaPlugin {
 
         Plugin plugin = getServer().getPluginManager().getPlugin("ProtocolLib");
         if (plugin != null && plugin.isEnabled()) {
-            ProtocolHook.hook(this);
+            try {
+                ProtocolHook.hook(this);
+            } catch (Exception ex) {
+                Bukkit.getLogger().severe("Error hooking into ProtocolLib from Base.");
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -70,7 +75,7 @@ public class BasePlugin extends JavaPlugin {
         super.onDisable();
 
         getServerHandler().saveServerData();
-        getUserManager().saveUserData();
+        getUserManager().saveParticipatorData();
         getWarpManager().saveWarpData();
 
         BasePlugin.plugin = null;
@@ -88,7 +93,7 @@ public class BasePlugin extends JavaPlugin {
     }
 
     private void registerCommands() {
-        commandManager = new SimpleCommandManager(this);
+        commandManager = new SimpleCommandManager(this); //TODO: Configurable
         commandManager.registerAll(new ChatModule(this));
         commandManager.registerAll(new EssentialModule(this));
         commandManager.registerAll(new InventoryModule());

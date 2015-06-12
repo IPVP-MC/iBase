@@ -16,16 +16,15 @@ import java.util.Set;
  */
 public class SimpleCommandManager implements CommandManager {
 
-    private static final String PERMISSION_MESSAGE = ChatColor.RED + "You do not have permission for this command.";
+    private static final String PERMISSION_MESSAGE = ChatColor.RED + "You do not have permission to execute this command.";
 
-    private final Map<String, BaseCommand> commandMap;
+    private final Map<String, BaseCommand> commandMap = Maps.newHashMap();
 
     public SimpleCommandManager(final BasePlugin plugin) {
-        final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-        this.commandMap = Maps.newHashMap();
+        final ConsoleCommandSender console = plugin.getServer().getConsoleSender();
 
         // Load all the modules first.
-        Bukkit.getServer().getScheduler().runTask(plugin, new Runnable() {
+        plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
             @Override
             public void run() {
                 for (BaseCommand command : commandMap.values()) {
@@ -50,7 +49,7 @@ public class SimpleCommandManager implements CommandManager {
     }
 
     @Override
-    public boolean isCommand(BaseCommand command) {
+    public boolean containsCommand(BaseCommand command) {
         return commandMap.containsValue(command);
     }
 

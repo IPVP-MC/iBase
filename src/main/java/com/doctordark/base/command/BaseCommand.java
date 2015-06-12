@@ -7,24 +7,27 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Represents a base command for the plugin.
+ * Represents a {@link BaseCommand} for a {@link org.bukkit.plugin.Plugin}.
  */
 public abstract class BaseCommand implements CommandExecutor, TabCompleter {
 
     private final String name;
     private final String description;
     private final String permission;
+
     private String[] aliases;
     private String usage;
 
     /**
-     * Constructs a new base command with a given name, description and permission.
+     * Constructs a new {@link BaseCommand} with a given name, description and permission.
      *
      * @param name        the name of the command
      * @param description the description of the command
@@ -34,6 +37,17 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
         this.name = name;
         this.description = description;
         this.permission = permission;
+    }
+
+    /**
+     * Constructs a new {@link BaseCommand} with a given name, description and {@link Permission}.
+     *
+     * @param name        the name of the command
+     * @param description the description of the command
+     * @param permission  the @link Permission} of the command
+     */
+    public BaseCommand(String name, String description, Permission permission) {
+        this(name, description, permission.getName());
     }
 
     /**
@@ -49,56 +63,64 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
     }
 
     /**
-     * Checks if this command can only be executed by players.
+     * Checks if this {@link BaseCommand} can only be executed by {@link Player}s.
      *
-     * @return true if it is a player only command
+     * @return true if is a {@link Player} only command
      */
     public boolean isPlayerOnlyCommand() {
         return false;
     }
 
     /**
-     * Gets the name of this base command.
+     * Gets the name of this {@link BaseCommand}.
      *
-     * @return the name of command
+     * @return the name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Gets the description of this base command.
+     * Gets the description of this {@link BaseCommand}.
      *
-     * @return the description of command
+     * @return the description
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * Gets the permission of this base command.
+     * Gets the permission of this {@link BaseCommand}.
      *
-     * @return the permission of command
+     * @return the permission
      */
     public String getPermission() {
         return permission;
     }
 
     /**
-     * Gets the usage for this base command.
+     * Gets the {@link Permission} of this {@link BaseCommand}.
      *
-     * @return the usage of command
+     * @return the {@link Permission} node
+     */
+    public Permission getBukkitPermission() {
+        return new Permission(getPermission());
+    }
+
+    /**
+     * Gets the usage for this {@link BaseCommand}.
+     *
+     * @return the usage
      */
     public String getUsage() {
         return usage;
     }
 
     /**
-     * Gets the usage for this base command for a
-     * given command label.
+     * Gets the usage for this {@link BaseCommand} for a given {@link Command} label.
      *
-     * @param label the label of command
-     * @return the usage of command
+     * @param label the label to get for
+     * @return the usage for given label
      */
     public String getUsage(String label) {
         String usage = getUsage();
@@ -106,18 +128,18 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
     }
 
     /**
-     * Sets the usage for this base command.
+     * Sets the usage for this {@link BaseCommand}.
      *
-     * @param usage the usage messaging to set
+     * @param usage the usage message to set
      */
     protected void setUsage(String usage) {
         this.usage = usage.replace("(command)", getName());
     }
 
     /**
-     * Gets the aliases for this base command.
+     * Gets the aliases for this {@link BaseCommand}.
      *
-     * @return the aliases for this command
+     * @return the aliases
      */
     public String[] getAliases() {
         if (aliases == null) {
@@ -128,7 +150,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
     }
 
     /**
-     * Sets the aliases for this base command.
+     * Sets the aliases for this {@link BaseCommand}.
      *
      * @param aliases the aliases to set
      */
@@ -162,23 +184,44 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
     }
 
     /**
-     * Checks if a CommandSender can see an online player.
+     * Checks if a {@link CommandSender} can see a {@link Player}.
      *
-     * @param sender the sender of command
-     * @param target the target to check for
-     * @return true if sender is not player or the sending player can see target
+     * @param sender the {@link CommandSender}
+     * @param target the {@link Player} to check against
+     * @return true if {@link CommandSender} is not a {@link Player} or can see
      */
     public boolean canSee(CommandSender sender, Player target) {
-        return target == null || (!(sender instanceof Player && !((Player) sender).canSee(target)));
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        return false;
+        return target != null && (!(sender instanceof Player) || ((Player) sender).canSee(target));
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         return Collections.emptyList();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BaseCommand)) return false;
+
+        BaseCommand that = (BaseCommand) o;
+
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (permission != null ? !permission.equals(that.permission) : that.permission != null) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(aliases, that.aliases)) return false;
+        return !(usage != null ? !usage.equals(that.usage) : that.usage != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (permission != null ? permission.hashCode() : 0);
+        result = 31 * result + (aliases != null ? Arrays.hashCode(aliases) : 0);
+        result = 31 * result + (usage != null ? usage.hashCode() : 0);
+        return result;
     }
 }

@@ -16,6 +16,7 @@ public class ServerHandler {
     private final List<String> announcements = Lists.newArrayList();
     private final List<String> serverRules = Lists.newArrayList();
 
+    public boolean useProtocolLib;
     private int announcementDelay;
     private long chatSlowedMillis;
     private long chatDisabledMillis;
@@ -160,6 +161,7 @@ public class ServerHandler {
             Bukkit.setMaxPlayers(maxPlayers);
         }
 
+        useProtocolLib = config.getBoolean("use-protocol-lib", true);
         decreasedLagMode = config.getBoolean("decreased-lag-mode");
         broadcastFormat = ChatColor.translateAlternateColorCodes('&',
                 config.getString("broadcast.format", "&e[Base] &7%1$s"));
@@ -168,6 +170,7 @@ public class ServerHandler {
     }
 
     public void saveServerData() {
+        config.set("use-protocol-lib", useProtocolLib);
         config.set("chat.disabled.millis", Long.valueOf(getChatDisabledMillis()));
         config.set("chat.slowed.millis", Long.valueOf(getChatSlowedMillis()));
         config.set("chat.slowed-delay", getChatSlowedDelay());

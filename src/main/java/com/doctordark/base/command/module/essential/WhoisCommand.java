@@ -60,7 +60,7 @@ public class WhoisCommand extends BaseCommand {
         sender.sendMessage(ChatColor.YELLOW + "  Location: " + ChatColor.GOLD + world.getName() + " " +
                 ChatColor.GRAY + "[" + WordUtils.capitalizeFully(world.getEnvironment().name().replace('_', ' ')) + "] " +
                 ChatColor.GOLD + "(" + x + ", " + y + ", " + z + ")");
-        sender.sendMessage(ChatColor.YELLOW + "  Vanished: " + ChatColor.GOLD + baseUser.isVanished() + " (priority=" + VanishPriority.of(target).getLevel() + ")");
+        sender.sendMessage(ChatColor.YELLOW + "  Vanished: " + ChatColor.GOLD + baseUser.isVanished() + " (priority=" + VanishPriority.of(target).getPriorityLevel() + ")");
         sender.sendMessage(ChatColor.YELLOW + "  Staff Chat: " + ChatColor.GOLD + baseUser.isInStaffChat());
         sender.sendMessage(ChatColor.YELLOW + "  Operator: " + ChatColor.GOLD + target.isOp());
         sender.sendMessage(ChatColor.YELLOW + "  Game Mode: " + ChatColor.GOLD + WordUtils.capitalizeFully(target.getGameMode().name().replace('_', ' ')));

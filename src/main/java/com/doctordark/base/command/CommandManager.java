@@ -1,50 +1,51 @@
 package com.doctordark.base.command;
 
 /**
- * Interface used for registering commands to plugin.
+ * Interface used for registering {@link BaseCommand}s to a {@link CommandManager}.
  */
 public interface CommandManager {
 
     /**
-     * Checks if a command is in the base.
+     * Checks if a {@link BaseCommand} is held by this {@link CommandManager}.
      *
-     * @param command the command to check
+     * @param command the {@link BaseCommand} to check
      */
-    boolean isCommand(BaseCommand command);
+    boolean containsCommand(BaseCommand command);
 
     /**
-     * Registers all the commands from the module into the base.
+     * Registers all the {@link BaseCommand}s from a {@link BaseCommandModule}
+     * into this {@link CommandManager}.
      *
-     * @param module the module to register
+     * @param module the {@link BaseCommandModule} to register
      */
     void registerAll(BaseCommandModule module);
 
     /**
-     * Registers a command to the base.
+     * Registers a {@link BaseCommand} to this {@link CommandManager}.
      *
-     * @param command the command to register
+     * @param command the {@link BaseCommand} to register
      */
     void registerCommand(BaseCommand command);
 
     /**
-     * Registers an array of commands to the base.
+     * Registers an array of {@link BaseCommand}s to this {@link CommandManager}.
      *
-     * @param commands the commands to register
+     * @param commands the {@link BaseCommand}s to register
      */
     void registerCommands(BaseCommand[] commands);
 
     /**
-     * Un-registers a command from the base.
+     * Un-registers a {@link BaseCommand} from this {@link CommandManager}.
      *
-     * @param command the command to unregister
+     * @param command the {@link BaseCommand} to unregister
      */
     void unregisterCommand(BaseCommand command);
 
     /**
-     * Gets a command by its name or aliases.
+     * Gets a {@link BaseCommand} by its name or aliases.
      *
      * @param id the id to search
-     * @return the command that matches id
+     * @return the {@link BaseCommand} that matches query
      */
     BaseCommand getCommand(String id);
 }
