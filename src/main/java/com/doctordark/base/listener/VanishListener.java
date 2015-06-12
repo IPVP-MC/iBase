@@ -26,6 +26,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -117,6 +118,19 @@ public class VanishListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+    public void onEntityTarget(EntityTargetEvent event) {
+        Entity target = event.getTarget();
+        if (target instanceof Player) {
+            Player player = (Player) target;
+            UUID uuid = player.getUniqueId();
+            BaseUser baseUser = plugin.getUserManager().getUser(uuid);
+            if (baseUser.isVanished()) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
@@ -150,7 +164,7 @@ public class VanishListener implements Listener {
 
             Player attacker = BukkitUtils.getFinalAttacker(event, true);
             if (attackedUser.isVanished()) {
-                if (attacker != null) {
+                if (attacker != null && VanishPriority.of(attacked) != VanishPriority.NONE) {
                     attacker.sendMessage(ChatColor.RED + "That player is vanished.");
                 }
 
