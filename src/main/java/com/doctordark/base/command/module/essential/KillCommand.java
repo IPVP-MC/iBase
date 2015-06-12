@@ -40,17 +40,17 @@ public class KillCommand extends BaseCommand {
             return true;
         }
 
+        if (target.isDead()) {
+            sender.sendMessage(ChatColor.RED + target.getName() + " is already dead.");
+            return true;
+        }
+
         @SuppressWarnings("deprecation")
         EntityDamageEvent event = new EntityDamageEvent(target, DamageCause.SUICIDE, 10000);
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
             sender.sendMessage(ChatColor.RED + "You cannot kill " + target.getName() + ".");
-            return true;
-        }
-
-        if (target.isDead()) {
-            sender.sendMessage(ChatColor.RED + target.getName() + " is already dead.");
             return true;
         }
 
