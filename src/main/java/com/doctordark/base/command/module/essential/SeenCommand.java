@@ -4,6 +4,7 @@ import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import me.confuser.banmanager.BanManager;
 import me.confuser.banmanager.bukkitutil.Message;
+import me.confuser.banmanager.commands.InfoCommand;
 import me.confuser.banmanager.data.PlayerData;
 import me.confuser.banmanager.util.IPUtils;
 import me.confuser.banmanager.util.UUIDUtils;
@@ -73,7 +74,7 @@ public class SeenCommand extends BaseCommand {
                     return;
                 }
 
-                String lastSeen = format.format(System.currentTimeMillis() - playerData.getLastSeen());
+                String lastSeen = format.format(playerData.getLastSeen() * 1000L);
                 sender.sendMessage(ChatColor.GOLD + target.getName() + ChatColor.GREEN + " was last seen at " + ChatColor.GOLD + lastSeen +
                         ChatColor.GREEN + (sender.hasPermission(command.getPermission() + ".ip") ? " using the address " +
                         ChatColor.GOLD + IPUtils.toString(playerData.getIp()) + ChatColor.GREEN : "") + ".");
