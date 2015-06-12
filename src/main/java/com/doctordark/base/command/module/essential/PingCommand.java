@@ -39,9 +39,7 @@ public class PingCommand extends BaseCommand {
             return true;
         }
 
-        int ping = ((CraftPlayer) target).getHandle().ping;
-
-        sender.sendMessage(ChatColor.GOLD + "Ping of " + target.getName() + ChatColor.YELLOW + ": " + ChatColor.BLUE + ping);
+        sender.sendMessage(ChatColor.GOLD + "Ping of " + target.getName() + ChatColor.YELLOW + ": " + ChatColor.BLUE + target.getPing());
         return true;
     }
 
