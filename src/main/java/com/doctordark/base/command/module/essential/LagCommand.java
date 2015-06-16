@@ -1,6 +1,7 @@
 package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.util.Utils;
 import net.minecraft.util.org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,7 +28,7 @@ public class LagCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        double tps = 20.0D;
+        double tps = Bukkit.spigot().getTPS()[0];
         double lag = Math.round((1.0D - tps / MAXIMUM_TPS) * 100.0D);
 
         ChatColor colour;
