@@ -1,7 +1,7 @@
 package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.util.Utils;
+import com.google.common.primitives.Ints;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -33,7 +33,7 @@ public class NearCommand extends BaseCommand {
             return true;
         }
 
-        Integer radius = Utils.getInteger(args[1]);
+        Integer radius = Ints.tryParse(args[1]);
 
         if (radius == null) {
             sender.sendMessage(ChatColor.RED + "'" + args[1] + "' is not a number.");

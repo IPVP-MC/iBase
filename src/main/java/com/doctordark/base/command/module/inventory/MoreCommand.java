@@ -1,7 +1,7 @@
 package com.doctordark.base.command.module.inventory;
 
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.util.Utils;
+import com.google.common.primitives.Ints;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -39,7 +39,7 @@ public class MoreCommand extends BaseCommand {
 
         Integer amount;
         if (args.length > 0) {
-            amount = Utils.getInteger(args[0]);
+            amount = Ints.tryParse(args[0]);
             if (amount == null) {
                 sender.sendMessage(ChatColor.RED + "'" + args[0] + "' is not a number.");
                 return true;

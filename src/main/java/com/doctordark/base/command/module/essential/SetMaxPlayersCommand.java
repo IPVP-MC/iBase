@@ -3,6 +3,7 @@ package com.doctordark.base.command.module.essential;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.util.Utils;
+import com.google.common.primitives.Ints;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -25,7 +26,7 @@ public class SetMaxPlayersCommand extends BaseCommand {
             return true;
         }
 
-        Integer amount = Utils.getInteger(args[0]);
+        Integer amount = Ints.tryParse(args[0]);
 
         if (amount == null) {
             sender.sendMessage(ChatColor.RED + "'" + args[0] + "' is not a number.");

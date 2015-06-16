@@ -1,8 +1,8 @@
 package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.util.Utils;
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Ints;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -49,7 +49,7 @@ public class RemoveEntityCommand extends BaseCommand {
 
         int radius = 0;
         if (args.length >= 3) {
-            Integer parsed = Utils.getInteger(args[2]);
+            Integer parsed = Ints.tryParse(args[2]);
             if (parsed != null) {
                 radius = parsed;
             }
