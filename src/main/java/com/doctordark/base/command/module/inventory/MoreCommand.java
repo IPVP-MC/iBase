@@ -44,6 +44,11 @@ public class MoreCommand extends BaseCommand {
                 sender.sendMessage(ChatColor.RED + "'" + args[0] + "' is not a number.");
                 return true;
             }
+
+            if (amount <= 0) {
+                sender.sendMessage(ChatColor.RED + "Item amounts must be positive.");
+                return true;
+            }
         } else {
             int curAmount = stack.getAmount();
             amount = stack.getMaxStackSize();
