@@ -55,6 +55,11 @@ public class InvSeeCommand extends BaseCommand {
         if (inventory == null) {
             Player target = Bukkit.getServer().getPlayer(args[0]);
 
+            if (sender.equals(target)) {
+                sender.sendMessage(ChatColor.RED + "You cannot check the inventory of yourself.");
+                return true;
+            }
+
             if (target == null || !canSee(sender, target)) {
                 sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
                 return true;
