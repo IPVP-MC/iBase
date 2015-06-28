@@ -52,7 +52,7 @@ public class WhoisCommand extends BaseCommand {
         int z = location.getBlockZ();
 
         BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-        sender.sendMessage(ChatColor.GRAY + BukkitUtils.generateLine());
+        sender.sendMessage(ChatColor.GRAY + BukkitUtils.STRAIGHT_LINE_DEFAULT);
         sender.sendMessage(ChatColor.GREEN + " [" + target.getDisplayName() + ChatColor.GREEN + "]");
         sender.sendMessage(ChatColor.YELLOW + "  Health: " + ChatColor.GOLD + target.getHealth() + "/" + target.getMaxHealth());
         sender.sendMessage(ChatColor.YELLOW + "  Hunger: " + ChatColor.GOLD + target.getFoodLevel() + "/" + 20 + " (" + target.getSaturation() + " saturation)");
@@ -66,7 +66,7 @@ public class WhoisCommand extends BaseCommand {
         sender.sendMessage(ChatColor.YELLOW + "  Game Mode: " + ChatColor.GOLD + WordUtils.capitalizeFully(target.getGameMode().name().replace('_', ' ')));
         sender.sendMessage(ChatColor.YELLOW + "  Idle Time: " + ChatColor.GOLD + DurationFormatUtils.formatDurationWords(BukkitUtils.getIdleTime(target), true, true));
         sender.sendMessage(ChatColor.YELLOW + "  IP Address: " + ChatColor.GOLD + target.getAddress().getHostString());
-        sender.sendMessage(ChatColor.GRAY + BukkitUtils.generateLine());
+        sender.sendMessage(ChatColor.GRAY + BukkitUtils.STRAIGHT_LINE_DEFAULT);
         return true;
     }
 

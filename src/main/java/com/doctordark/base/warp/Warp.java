@@ -1,8 +1,8 @@
 package com.doctordark.base.warp;
 
-import com.doctordark.base.util.PersistableLocation;
+import com.doctordark.util.PersistableLocation;
 import com.google.common.collect.Maps;
-import net.minecraft.util.org.apache.commons.lang3.Validate;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 

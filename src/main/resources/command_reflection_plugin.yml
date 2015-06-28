@@ -1,5 +1,0 @@
-name: Base
-version: 2.7
-description: Base brings general commands to minecraft servers
-author: DoctorDark
-main: com.doctordark.base.BasePlugin

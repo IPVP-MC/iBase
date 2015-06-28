@@ -1,5 +1,6 @@
 package com.doctordark.base.command;
 
+import com.doctordark.util.BukkitUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -12,7 +13,6 @@ import org.bukkit.permissions.Permission;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Represents a {@link BaseCommand} for a {@link org.bukkit.plugin.Plugin}.
@@ -58,8 +58,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @return the completions based on given arguments
      */
     public List<String> getCompletions(String[] args, List<String> input) {
-        String argument = args[(args.length - 1)];
-        return input.stream().filter(string -> string.regionMatches(true, 0, argument, 0, argument.length())).collect(Collectors.toList());
+        return BukkitUtils.getCompletions(args, input);
     }
 
     /**
@@ -212,7 +211,6 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
         // Probably incorrect - comparing Object[] arrays with Arrays.equals
         if (!Arrays.equals(aliases, that.aliases)) return false;
         return !(usage != null ? !usage.equals(that.usage) : that.usage != null);
-
     }
 
     @Override

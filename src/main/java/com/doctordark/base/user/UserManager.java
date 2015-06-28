@@ -1,7 +1,7 @@
 package com.doctordark.base.user;
 
 import com.doctordark.base.BasePlugin;
-import com.doctordark.base.util.Config;
+import com.doctordark.util.Config;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.Validate;
 import org.bukkit.command.CommandSender;

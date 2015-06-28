@@ -3,9 +3,9 @@ package com.doctordark.base.command.module.essential;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.event.PlayerFreezeEvent;
-import com.doctordark.util.Utils;
+import com.doctordark.util.JavaUtils;
 import com.google.common.collect.Maps;
-import net.minecraft.util.org.apache.commons.lang3.time.DurationFormatUtils;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -61,7 +61,7 @@ public class FreezeCommand extends BaseCommand implements Listener {
                 builder.append(args[i]).append(" ");
             }
 
-            freezeTicks = Utils.parse(builder.toString());
+            freezeTicks = JavaUtils.parse(builder.toString());
         }
 
         final long millis = System.currentTimeMillis();

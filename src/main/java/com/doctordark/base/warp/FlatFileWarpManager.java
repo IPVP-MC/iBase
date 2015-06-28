@@ -1,7 +1,7 @@
 package com.doctordark.base.warp;
 
-import com.doctordark.base.util.Config;
-import com.doctordark.base.util.GenericUtils;
+import com.doctordark.util.Config;
+import com.doctordark.util.GenericUtils;
 import com.google.common.collect.Lists;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -67,7 +67,7 @@ public class FlatFileWarpManager implements WarpManager {
     @Override
     public void reloadData() {
         warps.clear();
-        warps.addAll(GenericUtils.castList(config.get("warps"), Warp.class));
+        warps.addAll(GenericUtils.createList(config.get("warps"), Warp.class));
 
         warpDelaySeconds = plugin.getConfig().getInt("warp-delay-seconds", 0);
         nearbyPlayerRadiusCancel = plugin.getConfig().getInt("nearby-player-radius-cancel", 0);

@@ -3,9 +3,6 @@ package com.doctordark.base.listener;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,14 +29,12 @@ public class DecreasedLagListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if (!plugin.getServerHandler().isDecreasedLagMode()) {
-            return;
-        }
-
-        Player player = event.getPlayer();
-        BaseCommand baseCommand = plugin.getCommandManager().getCommand("stoplag");
-        if (player.hasPermission(baseCommand.getPermission())) {
-            event.getPlayer().sendMessage(ChatColor.YELLOW + "Intensive server activity is currently prevented. Use /" + baseCommand.getName() + " to toggle.");
+        if (plugin.getServerHandler().isDecreasedLagMode()) {
+            Player player = event.getPlayer();
+            BaseCommand baseCommand = plugin.getCommandManager().getCommand("stoplag");
+            if (player.hasPermission(baseCommand.getPermission())) {
+                event.getPlayer().sendMessage(ChatColor.YELLOW + "Intensive server activity is currently prevented. Use /" + baseCommand.getName() + " to toggle.");
+            }
         }
     }
 
@@ -95,12 +90,7 @@ public class DecreasedLagListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onEntityExplode(EntityExplodeEvent event) {
         if (plugin.getServerHandler().isDecreasedLagMode()) {
-            Location location = event.getLocation();
-            Entity entity = event.getEntity();
-            if (entity != null) {
-                entity.remove();
-            }
-
+            event.getEntity().remove();
             event.setCancelled(true);
         }
     }
@@ -108,8 +98,7 @@ public class DecreasedLagListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onExplosionPrime(ExplosionPrimeEvent event) {
         if (plugin.getServerHandler().isDecreasedLagMode()) {
-            Entity entity = event.getEntity();
-            entity.remove();
+            event.getEntity().remove();
             event.setCancelled(true);
         }
     }
@@ -117,14 +106,18 @@ public class DecreasedLagListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if (plugin.getServerHandler().isDecreasedLagMode()) {
-            CreatureSpawnEvent.SpawnReason spawnReason = event.getSpawnReason();
-            if (spawnReason == CreatureSpawnEvent.SpawnReason.SPAWNER_EGG) return;
-            if (spawnReason == CreatureSpawnEvent.SpawnReason.SPAWNER) return;
-            if (spawnReason == CreatureSpawnEvent.SpawnReason.BUILD_SNOWMAN) return;
-            if (spawnReason == CreatureSpawnEvent.SpawnReason.BUILD_IRONGOLEM) return;
-            if (spawnReason == CreatureSpawnEvent.SpawnReason.BUILD_WITHER) return;
-            if (spawnReason == CreatureSpawnEvent.SpawnReason.DISPENSE_EGG) return;
-            event.setCancelled(true);
+            switch (event.getSpawnReason()) {
+                case SPAWNER:
+                case SPAWNER_EGG:
+                case BUILD_SNOWMAN:
+                case BUILD_IRONGOLEM:
+                case BUILD_WITHER:
+                case DISPENSE_EGG:
+                    break;
+                default:
+                    event.setCancelled(true);
+                    break;
+            }
         }
     }
 }

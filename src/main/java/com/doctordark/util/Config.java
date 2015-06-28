@@ -1,4 +1,4 @@
-package com.doctordark.base.util;
+package com.doctordark.util;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -96,9 +96,8 @@ public class Config extends YamlConfiguration {
         Config config = (Config) o;
 
         if (fileName != null ? !fileName.equals(config.fileName) : config.fileName != null) return false;
-        if (plugin != null ? !plugin.equals(config.plugin) : config.plugin != null) return false;
+        return !(plugin != null ? !plugin.equals(config.plugin) : config.plugin != null);
 
-        return true;
     }
 
     @Override

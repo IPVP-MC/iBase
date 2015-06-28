@@ -1,19 +1,19 @@
-package com.doctordark.base.util;
+package com.doctordark.util;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.UUID;
 
 public class PersistableLocation implements ConfigurationSerializable, Cloneable {
 
+    private World world; // Lazy load this
     private String worldName;
     private UUID worldUID;
     private double x;
@@ -22,8 +22,10 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
     private float yaw;
     private float pitch;
 
-    public PersistableLocation(@Nonnull Location location) {
-        World world = location.getWorld();
+    public PersistableLocation(Location location) {
+        Preconditions.checkNotNull(location, "Location cannot be null");
+
+        this.world = location.getWorld();
         this.worldName = world.getName();
         this.worldUID = world.getUID();
         this.x = location.getX();
@@ -33,86 +35,200 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
         this.pitch = location.getPitch();
     }
 
+    public PersistableLocation(World world, double x, double y, double z) {
+        this.worldName = world.getName();
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.pitch = this.yaw = 0.0F;
+    }
+
+    public PersistableLocation(String worldName, double x, double y, double z) {
+        this.worldName = worldName;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.pitch = this.yaw = 0.0F;
+    }
+
     public PersistableLocation(Map<String, Object> map) {
-        this.worldName = ((String) map.get("worldName"));
+        this.worldName = (String) map.get("worldName");
         this.worldUID = UUID.fromString((String) map.get("worldUID"));
-        this.x = Double.parseDouble((String) map.get("x"));
-        this.y = Double.parseDouble((String) map.get("y"));
-        this.z = Double.parseDouble((String) map.get("z"));
+        this.x = (Double) map.get("x");
+        this.y = (Double) map.get("y");
+        this.z = (Double) map.get("z");
         this.yaw = Float.parseFloat((String) map.get("yaw"));
         this.pitch = Float.parseFloat((String) map.get("pitch"));
     }
 
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("worldName", worldName);
+        map.put("worldUID", worldUID.toString());
+        map.put("x", x);
+        map.put("y", y);
+        map.put("z", z);
+        map.put("yaw", Float.toString(yaw));
+        map.put("pitch", Float.toString(pitch));
+        return map;
+    }
+
+    /**
+     * Gets the name of the {@link World}.
+     *
+     * @return the world name
+     */
     public String getWorldName() {
         return this.worldName;
     }
 
+    /**
+     * Gets the {@link UUID} of the {@link World}.
+     *
+     * @return the world unique ID
+     */
     public UUID getWorldUID() {
         return this.worldUID;
     }
 
+    /**
+     * Gets the {@link World} this is in.
+     *
+     * @return the containing world
+     */
     public World getWorld() {
         Validate.notNull(this.worldUID, "World UUID cannot be null");
         Validate.notNull(this.worldName, "World name cannot be null");
 
-        Server server = Bukkit.getServer();
-        World world = server.getWorld(this.worldUID);
-        return world == null ? server.getWorld(this.worldName) : world;
+        if (world == null) world = Bukkit.getWorld(this.worldUID);
+        return world;
     }
 
+    /**
+     * Sets the {@link World} this is in.
+     *
+     * @param world the world to set
+     */
     public void setWorld(World world) {
         setWorldName(world.getName());
         setWorldUID(world.getUID());
+        this.world = world;
     }
 
+    /**
+     * Sets the name of the {@link World} this is in.
+     *
+     * @param worldName the name to set
+     */
     private void setWorldName(String worldName) {
         this.worldName = worldName;
     }
 
+    /**
+     * Sets the UID of the {@link World} this is in.
+     *
+     * @param worldUID the UID to set
+     */
     private void setWorldUID(UUID worldUID) {
         this.worldUID = worldUID;
     }
 
+    /**
+     * Gets the x co-ordinate of this.
+     *
+     * @return the x co-ordinate
+     */
     public double getX() {
         return this.x;
     }
 
+    /**
+     * Sets the x co-ordinate of this.
+     *
+     * @param x the co-ordinate to set
+     */
     public void setX(double x) {
         this.x = x;
     }
 
+    /**
+     * Gets the y co-ordinate of this.
+     *
+     * @return the y co-ordinate
+     */
     public double getY() {
         return this.y;
     }
 
+    /**
+     * Sets the y co-ordinate of this.
+     *
+     * @param y the co-ordinate to set
+     */
     public void setY(double y) {
         this.y = y;
     }
 
+    /**
+     * Gets the z co-ordinate of this.
+     *
+     * @return the z co-ordinate
+     */
     public double getZ() {
         return this.z;
     }
 
+    /**
+     * Sets the z co-ordinate of this.
+     *
+     * @param z the co-ordinate to set
+     */
     public void setZ(double z) {
         this.z = z;
     }
 
+    /**
+     * Gets the yaw of this.
+     *
+     * @return the yaw
+     */
     public float getYaw() {
         return this.yaw;
     }
 
+    /**
+     * Sets the yaw of this.
+     *
+     * @param yaw the yaw to set
+     */
     public void setYaw(float yaw) {
         this.yaw = yaw;
     }
 
+    /**
+     * Gets the pitch of this.
+     *
+     * @return the pitch
+     */
     public float getPitch() {
         return this.pitch;
     }
 
+    /**
+     * Sets the pitch of this.
+     *
+     * @param pitch the pitch to set
+     */
     public void setPitch(float pitch) {
         this.pitch = pitch;
     }
 
+    /**
+     * Converts this to a {@link Location}.
+     *
+     * @return the location instance
+     */
     public Location getLocation() {
         return new Location(getWorld(), getX(), getY(), getZ(), getYaw(), getPitch());
     }
@@ -129,7 +245,8 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
 
     @Override
     public String toString() {
-        return "PersistableLocation [worldName=" + this.worldName + ", worldUID=" + this.worldUID + ", x=" + this.x + ", y=" + this.y + ", z=" + this.z + ", yaw=" + this.yaw + ", pitch=" + this.pitch + "]";
+        return "PersistableLocation [worldName=" + this.worldName + ", worldUID=" + this.worldUID +
+                ", x=" + this.x + ", y=" + this.y + ", z=" + this.z + ", yaw=" + this.yaw + ", pitch=" + this.pitch + "]";
     }
 
     @Override
@@ -144,16 +261,17 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
         if (Double.compare(that.z, z) != 0) return false;
         if (Float.compare(that.yaw, yaw) != 0) return false;
         if (Float.compare(that.pitch, pitch) != 0) return false;
+        if (world != null ? !world.equals(that.world) : that.world != null) return false;
         if (worldName != null ? !worldName.equals(that.worldName) : that.worldName != null) return false;
         return !(worldUID != null ? !worldUID.equals(that.worldUID) : that.worldUID != null);
-
     }
 
     @Override
     public int hashCode() {
         int result;
         long temp;
-        result = worldName != null ? worldName.hashCode() : 0;
+        result = world != null ? world.hashCode() : 0;
+        result = 31 * result + (worldName != null ? worldName.hashCode() : 0);
         result = 31 * result + (worldUID != null ? worldUID.hashCode() : 0);
         temp = Double.doubleToLongBits(x);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
@@ -164,18 +282,5 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
         result = 31 * result + (yaw != +0.0f ? Float.floatToIntBits(yaw) : 0);
         result = 31 * result + (pitch != +0.0f ? Float.floatToIntBits(pitch) : 0);
         return result;
-    }
-
-    @Override
-    public Map<String, Object> serialize() {
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("worldName", worldName);
-        map.put("worldUID", worldUID.toString());
-        map.put("x", Double.toString(x));
-        map.put("y", Double.toString(y));
-        map.put("z", Double.toString(z));
-        map.put("yaw", Float.toString(yaw));
-        map.put("pitch", Float.toString(pitch));
-        return map;
     }
 }

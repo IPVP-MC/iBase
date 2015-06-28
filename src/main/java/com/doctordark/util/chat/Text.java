@@ -1,10 +1,6 @@
 package com.doctordark.util.chat;
 
-import net.minecraft.server.v1_7_R4.ChatClickable;
-import net.minecraft.server.v1_7_R4.ChatComponentText;
-import net.minecraft.server.v1_7_R4.ChatHoverable;
-import net.minecraft.server.v1_7_R4.EnumChatFormat;
-import net.minecraft.server.v1_7_R4.IChatBaseComponent;
+import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -19,6 +15,14 @@ public class Text extends ChatComponentText {
 
     public Text(String string) {
         super(string);
+    }
+
+    public Text(Object object) {
+        super(String.valueOf(object));
+    }
+
+    public Text append(Object object) {
+        return append(String.valueOf(object));
     }
 
     public Text append(String text) {
@@ -38,6 +42,10 @@ public class Text extends ChatComponentText {
 
     public static Trans fromItemStack(ItemStack stack) {
         return ChatUtil.fromItemStack(stack);
+    }
+
+    public Text localText(ItemStack stack) {
+        return append(ChatUtil.localFromItem(stack));
     }
 
     public Text appendItem(ItemStack stack) {
@@ -91,6 +99,10 @@ public class Text extends ChatComponentText {
     @Override
     public IChatBaseComponent f() {
         return h();
+    }
+
+    public String toRawText() {
+        return this.c();
     }
 
     public void send(CommandSender sender) {

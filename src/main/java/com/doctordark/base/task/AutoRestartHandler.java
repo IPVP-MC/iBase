@@ -2,7 +2,7 @@ package com.doctordark.base.task;
 
 import com.doctordark.base.BasePlugin;
 import net.minecraft.util.com.google.common.primitives.Ints;
-import net.minecraft.util.org.apache.commons.lang3.time.DurationFormatUtils;
+import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;

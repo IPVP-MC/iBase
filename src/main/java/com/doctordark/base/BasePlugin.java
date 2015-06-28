@@ -16,7 +16,7 @@ import com.doctordark.base.listener.PlayerLimitListener;
 import com.doctordark.base.listener.VanishListener;
 import com.doctordark.base.task.AnnouncementHandler;
 import com.doctordark.base.task.AutoRestartHandler;
-import com.doctordark.base.util.PersistableLocation;
+import com.doctordark.util.PersistableLocation;
 import com.doctordark.base.warp.FlatFileWarpManager;
 import com.doctordark.base.warp.Warp;
 import com.doctordark.base.warp.WarpManager;
@@ -25,6 +25,11 @@ import com.doctordark.base.user.ConsoleUser;
 import com.doctordark.base.user.NameHistory;
 import com.doctordark.base.user.ServerParticipator;
 import com.doctordark.base.user.UserManager;
+import com.doctordark.util.bossbar.BossBarManager;
+import com.doctordark.util.chat.Lang;
+import com.doctordark.util.cuboid.Cuboid;
+import com.doctordark.util.cuboid.NamedCuboid;
+import com.doctordark.util.itemdb.ItemDb;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
@@ -32,13 +37,18 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.IOException;
+
 public class BasePlugin extends JavaPlugin {
 
     private static BasePlugin plugin;
 
+    private ItemDb itemDb;
+
     private AutoRestartHandler autoRestartHandler;
     private BukkitRunnable announcementTask;
     private CommandManager commandManager;
+    private PlayTimeManager playTimeManager;
     private ServerHandler serverHandler;
     private UserManager userManager;
     private WarpManager warpManager;
@@ -53,6 +63,8 @@ public class BasePlugin extends JavaPlugin {
         ConfigurationSerialization.registerClass(ConsoleUser.class);
         ConfigurationSerialization.registerClass(NameHistory.class);
         ConfigurationSerialization.registerClass(PersistableLocation.class);
+        ConfigurationSerialization.registerClass(Cuboid.class);
+        ConfigurationSerialization.registerClass(NamedCuboid.class);
 
         registerManagers();
         registerCommands();
@@ -74,6 +86,8 @@ public class BasePlugin extends JavaPlugin {
     public void onDisable() {
         super.onDisable();
 
+        BossBarManager.unhook();
+
         getServerHandler().saveServerData();
         getUserManager().saveParticipatorData();
         getWarpManager().saveWarpData();
@@ -86,10 +100,19 @@ public class BasePlugin extends JavaPlugin {
     }
 
     private void registerManagers() {
+        BossBarManager.hook();
         autoRestartHandler = new AutoRestartHandler(this);
+        playTimeManager = new PlayTimeManager(this);
         serverHandler = new ServerHandler(this);
         userManager = new UserManager(this);
         warpManager = new FlatFileWarpManager(this);
+
+        this.itemDb = new ItemDb(this);
+        try {
+            Lang.initialize("en_US");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void registerCommands() {
@@ -128,6 +151,14 @@ public class BasePlugin extends JavaPlugin {
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public ItemDb getItemDb() {
+        return itemDb;
+    }
+
+    public PlayTimeManager getPlayTimeManager() {
+        return playTimeManager;
     }
 
     public ServerHandler getServerHandler() {

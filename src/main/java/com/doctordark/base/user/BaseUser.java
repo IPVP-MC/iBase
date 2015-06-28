@@ -1,34 +1,29 @@
 package com.doctordark.base.user;
 
+import com.doctordark.base.BasePlugin;
 import com.doctordark.base.listener.VanishPriority;
-import com.doctordark.base.util.GenericUtils;
-import com.doctordark.base.util.PersistableLocation;
+import com.doctordark.util.GenericUtils;
+import com.doctordark.util.PersistableLocation;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.google.common.net.InetAddresses;
 import net.minecraft.server.v1_7_R4.DataWatcher;
-import net.minecraft.server.v1_7_R4.Item;
-import net.minecraft.server.v1_7_R4.Packet;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_7_R4.PlayerConnection;
-import net.minecraft.util.org.apache.commons.lang3.Validate;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Server;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftItem;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftEntityEquipment;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -39,7 +34,6 @@ public class BaseUser extends ServerParticipator {
     private final List<NameHistory> nameHistories = Lists.newArrayList();
 
     private Location backLocation;
-    private boolean hadEntityCollision;
     private boolean messagingSounds;
     private boolean vanished;
     private boolean glintEnabled = true;
@@ -58,12 +52,9 @@ public class BaseUser extends ServerParticipator {
     public BaseUser(Map<String, Object> map) {
         super(map);
 
-        if (map.containsKey("addressHistories")) {
-            this.addressHistories.addAll(GenericUtils.castList(map.get("addressHistories"), String.class));
-        }
-
+            this.addressHistories.addAll(GenericUtils.createList(map.get("addressHistories"), String.class));
         if (map.containsKey("nameHistories")) {
-            this.nameHistories.addAll(GenericUtils.castList(map.get("nameHistories"), NameHistory.class));
+            this.nameHistories.addAll(GenericUtils.createList(map.get("nameHistories"), NameHistory.class));
         }
 
         if (map.containsKey("backLocation")) {
@@ -119,6 +110,7 @@ public class BaseUser extends ServerParticipator {
     }
 
     public void tryLoggingName(Player player) {
+        Preconditions.checkNotNull(player, "Cannot log null player");
         String playerName = player.getName();
         for (NameHistory nameHistory : nameHistories) {
             if (nameHistory.getName().contains(playerName)) {
@@ -134,6 +126,7 @@ public class BaseUser extends ServerParticipator {
     }
 
     public void tryLoggingAddress(String address) {
+        Preconditions.checkNotNull(address, "Cannot log null address");
         if (!addressHistories.contains(address)) {
             Validate.isTrue(InetAddresses.isInetAddress(address), "Not an Inet address");
             addressHistories.add(address);
@@ -181,14 +174,8 @@ public class BaseUser extends ServerParticipator {
             return;
         }
 
-        if (vanished) {
-            this.hadEntityCollision = player.spigot().getCollidesWithEntities();
-        } else {
-            player.spigot().setCollidesWithEntities(this.hadEntityCollision);
-        }
-
         player.spigot().setCollidesWithEntities(!vanished);
-        player.setCanSeeInvisibles(vanished); // allow vanished players to see those invisible.
+        player.showInvisibles(vanished); // allow vanished players to see those invisible.
 
         VanishPriority playerPriority = VanishPriority.of(player);
         for (Player target : Bukkit.getServer().getOnlinePlayers()) {
@@ -261,7 +248,7 @@ public class BaseUser extends ServerParticipator {
 
                     ItemStack stack = inventory.getItemInHand();
                     if (stack != null && stack.getType() != Material.AIR) {
-                        connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, CraftEntityEquipment.WEAPON_SLOT, CraftItemStack.asNMSCopy(stack)));
+                        //TODO: connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, CraftEntityEquipment.WEAPON_SLOT, CraftItemStack.asNMSCopy(stack)));
                     }
                 }
             }
@@ -291,7 +278,6 @@ public class BaseUser extends ServerParticipator {
      * @return the converted {@link Player}
      */
     public Player toPlayer() {
-        Server server = Bukkit.getServer();
-        return server.getPlayer(getUniqueId());
+        return Bukkit.getPlayer(getUniqueId());
     }
 }

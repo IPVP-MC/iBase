@@ -17,7 +17,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.DoubleStream;
 
 /**
  * Command used to spawn skulls of players.

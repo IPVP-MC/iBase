@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class MessageCommand extends BaseCommand {
 

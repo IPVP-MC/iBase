@@ -11,8 +11,12 @@ import org.bukkit.inventory.ItemStack;
 
 public class Trans extends ChatMessage {
 
-    public Trans(String s, Object... objects) {
-        super(s, objects);
+    public Trans() {
+        super("");
+    }
+
+    public Trans(String string, Object... objects) {
+        super(string, objects);
     }
 
     public static Trans fromItemStack(ItemStack stack) {
@@ -22,6 +26,10 @@ public class Trans extends ChatMessage {
     @Override
     public IChatBaseComponent f() {
         return h();
+    }
+
+    public Trans append(Object object) {
+        return append(String.valueOf(object));
     }
 
     public Trans append(String text) {
@@ -36,11 +44,16 @@ public class Trans extends ChatMessage {
         for (IChatBaseComponent node : nodes) {
             addSibling(node);
         }
+
         return this;
     }
 
     public Trans appendItem(ItemStack stack) {
         return append(ChatUtil.fromItemStack(stack));
+    }
+
+    public Trans localText(ItemStack stack) {
+        return append(ChatUtil.localFromItem(stack));
     }
 
     public Trans setBold(boolean bold) {
@@ -85,6 +98,10 @@ public class Trans extends ChatMessage {
 
     public Trans setHoverText(String text) {
         return setHover(HoverAction.SHOW_TEXT, new Text(text));
+    }
+
+    public String toRawText() {
+        return this.c();
     }
 
     public void send(CommandSender sender) {

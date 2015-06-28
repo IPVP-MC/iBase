@@ -1,14 +1,11 @@
 package com.doctordark.base;
 
 import com.google.common.collect.Lists;
-import net.minecraft.server.v1_7_R4.PlayerList;
-import net.minecraft.util.org.apache.commons.lang3.Validate;
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_7_R4.CraftServer;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 public class ServerHandler {

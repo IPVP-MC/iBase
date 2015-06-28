@@ -95,6 +95,9 @@ commands:
   ping:
     aliases: [p]
     description: Checks the ping of a player.
+  playtime:
+    aliases: [bb, pt]
+    description: Track a players total playtime of the map.
   playertime:
     aliases: [ptime]
     description: Shows your player time.

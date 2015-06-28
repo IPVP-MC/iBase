@@ -37,7 +37,7 @@ public class AmivisCommand extends BaseCommand {
             target = (Player) sender;
         }
 
-        if ((target == null) || (!canSee(sender, target))) {
+        if (target == null || !canSee(sender, target)) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
             return true;
         }

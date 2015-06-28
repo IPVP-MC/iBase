@@ -26,8 +26,6 @@ public class JoinListener implements Listener {
 
         BaseUser baseUser = plugin.getUserManager().getUser(uuid);
         baseUser.tryLoggingName(player);
-
-        String ipAddress = player.getAddress().getHostString();
-        baseUser.tryLoggingAddress(ipAddress);
+        baseUser.tryLoggingAddress(player.getAddress().getHostString());
     }
 }

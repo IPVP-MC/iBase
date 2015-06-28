@@ -1,0 +1,60 @@
+package com.doctordark.base.command.module.essential;
+
+import com.doctordark.base.BasePlugin;
+import com.doctordark.base.command.BaseCommand;
+import org.apache.commons.lang.time.DurationFormatUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+/**
+ * Command used to track the play-time of a {@link Player}.
+ */
+public class PlayTimeCommand extends BaseCommand {
+
+    private final BasePlugin plugin;
+
+    public PlayTimeCommand(BasePlugin plugin) {
+        super("playtime", "Check the playtime of another player.", "base.command.playtime");
+        this.setAliases(new String[]{"pt", "bb"});
+        this.setUsage("/(command) [playerName]");
+        this.plugin = plugin;
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        final OfflinePlayer target;
+        if (args.length >= 1) {
+            target = Bukkit.getOfflinePlayer(args[0]);
+        } else if (sender instanceof Player) {
+            target = (Player) sender;
+        } else {
+            sender.sendMessage(ChatColor.RED + "Usage: /" + label + " [playerName]");
+            return true;
+        }
+
+        if (!target.hasPlayedBefore() && !target.isOnline()) {
+            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
+            return true;
+        }
+
+        UUID targetUUID = target.getUniqueId();
+        long playtime = plugin.getPlayTimeManager().getTotalPlayTime(targetUUID);
+        sender.sendMessage(ChatColor.YELLOW + target.getName() + " has been playing for " + ChatColor.GREEN +
+                DurationFormatUtils.formatDurationWords(playtime, true, true) + ChatColor.YELLOW + " this map.");
+
+        return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        return (args.length == 1) ? null : Collections.<String>emptyList();
+    }
+}

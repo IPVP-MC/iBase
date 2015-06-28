@@ -9,12 +9,10 @@ public class TextUtils {
 
     public static Text join(Collection<Text> textCollection, String delimiter) {
         Text result = new Text();
-        String prefix = null;
+        Text prefix = new Text();
         for (Text text : textCollection) {
             result.append(prefix).append(text);
-            if (prefix == null) {
-                prefix = delimiter;
-            }
+            prefix = new Text(", ");
         }
 
         return result;
@@ -22,11 +20,10 @@ public class TextUtils {
 
     public static Text joinItemList(Collection<ItemStack> collection, String delimiter, boolean showQuantity) {
         Text text = new Text();
-        String prefix = null;
         for (ItemStack stack : collection) {
             if (stack == null) continue;
 
-            text.append(prefix);
+            text.append(new Text(delimiter));
             if (showQuantity) {
                 text.append(new Text("[").setColor(ChatColor.YELLOW));
             }
@@ -34,10 +31,6 @@ public class TextUtils {
             text.appendItem(stack);
             if (showQuantity) {
                 text.append(new Text(" x" + stack.getAmount()).setColor(ChatColor.YELLOW)).append(new Text("]").setColor(ChatColor.YELLOW));
-            }
-
-            if (prefix == null) {
-                prefix = delimiter;
             }
         }
 

@@ -4,7 +4,6 @@ import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import me.confuser.banmanager.BanManager;
 import me.confuser.banmanager.bukkitutil.Message;
-import me.confuser.banmanager.commands.InfoCommand;
 import me.confuser.banmanager.data.PlayerData;
 import me.confuser.banmanager.util.IPUtils;
 import me.confuser.banmanager.util.UUIDUtils;
