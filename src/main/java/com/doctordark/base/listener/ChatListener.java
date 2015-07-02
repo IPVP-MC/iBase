@@ -78,6 +78,8 @@ public class ChatListener implements Listener {
                         BaseUser targetUser = plugin.getUserManager().getUser(targetPlayer.getUniqueId());
                         if (targetUser.isStaffChatVisible()) {
                             target.sendMessage(format);
+                        } else if (target.equals(player)) {
+                            target.sendMessage(ChatColor.RED + "Your message was sent, but you cannot see staff chat messages as your notifications are disabled: Use /togglesc.");
                         }
                     }
                 }
