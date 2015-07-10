@@ -26,6 +26,7 @@ import com.doctordark.base.command.module.essential.NearCommand;
 import com.doctordark.base.command.module.essential.PingCommand;
 import com.doctordark.base.command.module.essential.PlayTimeCommand;
 import com.doctordark.base.command.module.essential.PositionCommand;
+import com.doctordark.base.command.module.essential.ProxycommandCommand;
 import com.doctordark.base.command.module.essential.RemoveEntityCommand;
 import com.doctordark.base.command.module.essential.RenameCommand;
 import com.doctordark.base.command.module.essential.RepairCommand;
@@ -65,6 +66,7 @@ public class EssentialModule extends BaseCommandModule {
         commands.add(new PingCommand());
         commands.add(new PlayTimeCommand(plugin));
         commands.add(new PositionCommand());
+        commands.add(new ProxycommandCommand(plugin));
         commands.add(new RemoveEntityCommand());
         commands.add(new RenameCommand());
         commands.add(new RepairCommand());

@@ -106,6 +106,9 @@ commands:
     description: Shows your player time.
   position:
     description: Checks the position of a player.
+  proxycommand:
+    aliases: [proxycmd]
+    description: Used to execute a command from the proxy
   removeentity:
     description: Remove entities from the server.
   rename:
