@@ -24,7 +24,6 @@ public class TeleportCommand extends BaseCommand {
 
     public TeleportCommand() {
         super("teleport", "Teleport to a player or position.", "base.command.teleport");
-        this.setAliases(new String[]{});
         this.setUsage("/(command) (<playerName> [otherPlayerName]) | (x y z)");
     }
 
@@ -67,9 +66,9 @@ public class TeleportCommand extends BaseCommand {
             }
 
             if (targetA.teleport(targetB, PlayerTeleportEvent.TeleportCause.COMMAND)) {
-                Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Teleported " + targetA.getName() + " to " + targetB.getName() + ".");
+                Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Teleported " + targetA.getName() + " to " + targetB.getName() + '.');
             } else {
-                sender.sendMessage(ChatColor.RED + "Failed to teleport you to " + targetB.getName() + ".");
+                sender.sendMessage(ChatColor.RED + "Failed to teleport you to " + targetB.getName() + '.');
             }
         } else if (targetA.getWorld() != null) {
             Location targetALocation = targetA.getLocation();

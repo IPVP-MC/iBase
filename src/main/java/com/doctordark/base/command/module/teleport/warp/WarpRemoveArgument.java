@@ -1,9 +1,9 @@
 package com.doctordark.base.command.module.teleport.warp;
 
 import com.doctordark.base.BasePlugin;
-import com.doctordark.base.command.CommandArgument;
-import com.doctordark.base.command.CommandArgumentHandler;
 import com.doctordark.base.warp.Warp;
+import com.doctordark.util.BukkitUtils;
+import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.Lists;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -21,21 +21,13 @@ public class WarpRemoveArgument extends CommandArgument {
     public WarpRemoveArgument(BasePlugin plugin) {
         super("del", "Deletes a new server warp");
         this.plugin = plugin;
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"delete", "remove", "unset"};
+        this.aliases = new String[]{"delete", "remove", "unset"};
+        this.permission = "base.command.warp.argument." + getName();
     }
 
     @Override
     public String getUsage(String label) {
-        return "/" + label + " " + getName();
-    }
-
-    @Override
-    public String getPermission() {
-        return "base.command.warp.argument." + getName();
+        return '/' + label + ' ' + getName();
     }
 
     @Override
@@ -46,21 +38,21 @@ public class WarpRemoveArgument extends CommandArgument {
         }
 
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + getName() + " <warpName>");
+            sender.sendMessage(ChatColor.RED + "Usage: /" + label + ' ' + getName() + " <warpName>");
             return true;
         }
 
         Warp warp = plugin.getWarpManager().getWarp(args[1]);
 
         if (warp == null) {
-            sender.sendMessage(ChatColor.RED + "There is not a warp named " + args[1] + ".");
+            sender.sendMessage(ChatColor.RED + "There is not a warp named " + args[1] + '.');
             return true;
         }
 
         Collection<Warp> warps = plugin.getWarpManager().getWarps();
         warps.remove(warp);
 
-        sender.sendMessage(ChatColor.GRAY + "Removed global warp named " + warp.getName() + ".");
+        sender.sendMessage(ChatColor.GRAY + "Removed global warp named " + warp.getName() + '.');
         return true;
     }
 
@@ -70,11 +62,12 @@ public class WarpRemoveArgument extends CommandArgument {
             return Collections.emptyList();
         }
 
-        List<String> results = Lists.newArrayList();
-        for (Warp warp : plugin.getWarpManager().getWarps()) {
-            results.add(warp.getName());
+        Collection<Warp> warps = plugin.getWarpManager().getWarps();
+        List<String> warpNames = Lists.newArrayListWithCapacity(warps.size());
+        for (Warp warp : warps) {
+            warpNames.add(warp.getName());
         }
 
-        return CommandArgumentHandler.getCompletions(args, results);
+        return BukkitUtils.getCompletions(args, warpNames);
     }
 }

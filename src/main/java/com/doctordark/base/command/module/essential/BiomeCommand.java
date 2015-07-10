@@ -17,7 +17,6 @@ public class BiomeCommand extends BaseCommand {
 
     public BiomeCommand() {
         super("biome", "Checks a players biome.", "base.command.biome");
-        setAliases(new String[0]);
         setUsage("/(command) [playerName]");
     }
 

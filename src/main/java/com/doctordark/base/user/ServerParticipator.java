@@ -86,21 +86,21 @@ public abstract class ServerParticipator implements ConfigurationSerializable {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = Maps.newHashMap();
+        Map<String, Object> map = Maps.newHashMapWithExpectedSize(11);
         map.put("uniqueID", uniqueId.toString());
-        map.put("ignoring", Lists.newArrayList(getIgnoring()));
-        map.put("messageSpying", Lists.newArrayList(getMessageSpying()));
+        map.put("ignoring", Lists.newArrayList(ignoring));
+        map.put("messageSpying", Lists.newArrayList(messageSpying));
         if (lastRepliedTo != null) {
             map.put("lastRepliedTo", lastRepliedTo.toString());
         }
 
-        map.put("inStaffChat", isInStaffChat());
-        map.put("globalChatVisible", isGlobalChatVisible());
-        map.put("staffChatVisible", isStaffChatVisible());
-        map.put("messagesVisible", isMessagesVisible());
-        map.put("lastSpeakTimeMillis", Long.toString(getLastSpeakTimeMillis()));
-        map.put("lastReceivedMessageMillis", Long.toString(getLastReceivedMessageMillis()));
-        map.put("lastSentMessageMillis", Long.toString(getLastSentMessageMillis()));
+        map.put("inStaffChat", inStaffChat);
+        map.put("globalChatVisible", globalChatVisible);
+        map.put("staffChatVisible", staffChatVisible);
+        map.put("messagesVisible", messagesVisible);
+        map.put("lastSpeakTimeMillis", Long.toString(lastSpeakTimeMillis));
+        map.put("lastReceivedMessageMillis", Long.toString(lastReceivedMessageMillis));
+        map.put("lastSentMessageMillis", Long.toString(lastSentMessageMillis));
         return map;
     }
 

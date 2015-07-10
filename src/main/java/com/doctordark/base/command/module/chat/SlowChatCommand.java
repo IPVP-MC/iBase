@@ -26,24 +26,24 @@ public class SlowChatCommand extends BaseCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         long oldTicks = plugin.getServerHandler().getRemainingChatSlowedMillis();
-        long newTicks;
+        Long newTicks;
         if (oldTicks > 0L) {
             newTicks = 0L;
         } else if (args.length < 1) {
             newTicks = oldTicks > 0L ? 0L : DEFAULT_DELAY;
         } else {
-            StringBuilder builder = new StringBuilder();
-            for (String argument : args) {
-                builder.append(argument).append(" ");
+            newTicks = JavaUtils.parse(args[0]);
+            if (newTicks == null) {
+                sender.sendMessage(ChatColor.RED + "'" + args[0] + "' is an invalid time format.");
+                return true;
             }
-
-            newTicks = JavaUtils.parse(builder.toString());
         }
 
         plugin.getServerHandler().setChatSlowedMillis(newTicks);
         Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + "Global chat is " + (newTicks > 0L ?
                 ChatColor.GOLD + "now slowed for " + DurationFormatUtils.formatDurationWords(newTicks, true, true) :
-                ChatColor.RED + "no longer slowed") + ChatColor.YELLOW + ".");
+                ChatColor.RED + "no longer slowed") + ChatColor.YELLOW + '.');
+
         return true;
     }
 }

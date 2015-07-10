@@ -93,7 +93,7 @@ public class ChatListener implements Listener {
         if (remainingChatDisabled > 0L && !player.hasPermission(TOGGLED_CHAT_BYPASS)) {
             event.setCancelled(true);
             player.sendMessage(ChatColor.RED + "Global chat is currently disabled for another " + ChatColor.GOLD +
-                    DurationFormatUtils.formatDurationWords(remainingChatDisabled, true, true) + ChatColor.RED + ".");
+                    DurationFormatUtils.formatDurationWords(remainingChatDisabled, true, true) + ChatColor.RED + '.');
             return;
         }
 
@@ -111,7 +111,7 @@ public class ChatListener implements Listener {
                     DurationFormatUtils.formatDurationWords(delayMillis, true, true) + ChatColor.DARK_AQUA + " delay for another " + ChatColor.GRAY +
                     DurationFormatUtils.formatDurationWords(remainingChatSlowed, true, true) + ChatColor.DARK_AQUA + ". You spoke " + ChatColor.GRAY +
                     DurationFormatUtils.formatDurationWords(delayMillis - speakTimeRemaining, true, true) + ChatColor.DARK_AQUA + " ago, so you gotta wait another " + ChatColor.GRAY +
-                    DurationFormatUtils.formatDurationWords(speakTimeRemaining, true, true) + ChatColor.DARK_AQUA + ".");
+                    DurationFormatUtils.formatDurationWords(speakTimeRemaining, true, true) + ChatColor.DARK_AQUA + '.');
         }
     }
 
@@ -145,7 +145,7 @@ public class ChatListener implements Listener {
 
         if (BukkitUtils.getIdleTime(recipient) > AUTO_IDLE_TIME) {
             sender.sendMessage(ChatColor.RED + recipient.getName() + " may not respond as their idle time is over " +
-                    DurationFormatUtils.formatDurationWords(AUTO_IDLE_TIME, true, true) + ".");
+                    DurationFormatUtils.formatDurationWords(AUTO_IDLE_TIME, true, true) + '.');
         }
 
         UUID senderUUID = sender.getUniqueId();

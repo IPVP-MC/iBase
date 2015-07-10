@@ -1,7 +1,10 @@
 package com.doctordark.util.chat;
 
 import net.minecraft.server.v1_7_R4.ChatComponentText;
+import net.minecraft.server.v1_7_R4.ChatHoverable;
+import net.minecraft.server.v1_7_R4.ChatModifier;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_7_R4.EnumChatFormat;
 import net.minecraft.server.v1_7_R4.IChatBaseComponent;
 import net.minecraft.server.v1_7_R4.NBTTagCompound;
 import net.minecraft.server.v1_7_R4.PacketPlayOutChat;
@@ -57,6 +60,18 @@ public class ChatUtil {
         NBTTagCompound tag = new NBTTagCompound();
         nms.save(tag);
         return new Trans(getName(nms)).setColor(ChatColor.getByChar(nms.w().e.getChar())).setHover(HoverAction.SHOW_ITEM, new ChatComponentText(tag.toString()));
+    }
+
+    public static void reset(IChatBaseComponent text) {
+        ChatModifier modifier = text.getChatModifier();
+        modifier.a((ChatHoverable) null);
+        modifier.setChatClickable(null);
+        modifier.setBold(false);
+        modifier.setColor(EnumChatFormat.RESET);
+        modifier.setItalic(false);
+        modifier.setRandom(false);
+        modifier.setStrikethrough(false);
+        modifier.setUnderline(false);
     }
 
     public static void send(CommandSender sender, IChatBaseComponent text) {

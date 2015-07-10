@@ -87,16 +87,16 @@ public class BaseUser extends ServerParticipator {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = super.serialize();
-        map.put("addressHistories", getAddressHistories());
-        map.put("nameHistories", getNameHistories());
+        map.put("addressHistories", this.addressHistories);
+        map.put("nameHistories", this.nameHistories);
         if (backLocation != null && backLocation.getWorld() != null) { // the world may
             map.put("backLocation", new PersistableLocation(backLocation));
         }
 
-        map.put("messagingSounds", isMessagingSounds());
-        map.put("vanished", isVanished());
-        map.put("glintEnabled", isGlintEnabled());
-        map.put("lastGlintUse", Long.toString(getLastGlintUse()));
+        map.put("messagingSounds", messagingSounds);
+        map.put("vanished", vanished);
+        map.put("glintEnabled", glintEnabled);
+        map.put("lastGlintUse", Long.toString(lastGlintUse));
         return map;
     }
 

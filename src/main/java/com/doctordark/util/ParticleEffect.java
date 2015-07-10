@@ -174,7 +174,7 @@ public enum ParticleEffect {
 
     private PacketPlayOutWorldParticles createPacket(float x, float y, float z, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
         Validate.isTrue(amount > 0, "Cannot use less than one particle.");
-        return new PacketPlayOutWorldParticles(getName(), x, y, z, offsetX, offsetY, offsetZ, speed, amount);
+        return new PacketPlayOutWorldParticles(name, x, y, z, offsetX, offsetY, offsetZ, speed, amount);
     }
 
     private PacketPlayOutWorldParticles createPacket(Location location, float offsetX, float offsetY, float offsetZ, float speed, int amount) {

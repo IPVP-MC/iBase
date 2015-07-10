@@ -50,7 +50,7 @@ public class KillCommand extends BaseCommand {
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
-            sender.sendMessage(ChatColor.RED + "You cannot kill " + target.getName() + ".");
+            sender.sendMessage(ChatColor.RED + "You cannot kill " + target.getName() + '.');
             return true;
         }
 
@@ -62,7 +62,7 @@ public class KillCommand extends BaseCommand {
             return true;
         }
 
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Slain player " + target.getName() + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Slain player " + target.getName() + '.');
         return true;
     }
 

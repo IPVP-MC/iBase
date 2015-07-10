@@ -2,7 +2,12 @@ package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.base.command.CommandWrapper;
 import com.doctordark.util.JavaUtils;
+import com.doctordark.util.command.CommandArgument;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -13,23 +18,47 @@ import java.util.List;
 
 public class AutoRestartCommand extends BaseCommand {
 
-    private final BasePlugin plugin;
+    private final CommandWrapper handler;
 
     public AutoRestartCommand(BasePlugin plugin) {
         super("autore", "Allows management of server restarts.", "base.command.autore");
         setAliases(new String[]{"autorestart"});
         setUsage("/(command) <cancel|time|schedule>");
-        this.plugin = plugin;
+
+        List<CommandArgument> arguments = Lists.newArrayListWithExpectedSize(3);
+        arguments.add(new AutoRestartCancelArgument(plugin));
+        arguments.add(new AutoRestartScheduleArgument(plugin));
+        arguments.add(new AutoRestartTimeArgument(plugin));
+        Collections.sort(arguments, new CommandWrapper.ArgumentComparator());
+        handler = new CommandWrapper(arguments);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length < 1) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
-            return true;
+        return handler.onCommand(sender, command, label, args);
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        return handler.onTabComplete(sender, command, label, args);
+    }
+
+    private static class AutoRestartCancelArgument extends CommandArgument {
+
+        private final BasePlugin plugin;
+
+        public AutoRestartCancelArgument(BasePlugin plugin) {
+            super("cancel", "Cancels the current automatic restart.");
+            this.plugin = plugin;
         }
 
-        if (args[0].equalsIgnoreCase("cancel")) {
+        @Override
+        public String getUsage(String label) {
+            return '/' + label + ' ' + getName();
+        }
+
+        @Override
+        public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
             if (!plugin.getAutoRestartHandler().isPendingRestart()) {
                 sender.sendMessage(ChatColor.RED + "There is not a restart task pending.");
                 return true;
@@ -39,52 +68,78 @@ public class AutoRestartCommand extends BaseCommand {
             sender.sendMessage(ChatColor.YELLOW + "Automatic restart task cancelled.");
             return true;
         }
+    }
 
-        if (args[0].equalsIgnoreCase("time")) {
+    private static class AutoRestartScheduleArgument extends CommandArgument {
+
+        private final BasePlugin plugin;
+
+        public AutoRestartScheduleArgument(BasePlugin plugin) {
+            super("schedule", "Schedule an automatic restart.");
+            this.plugin = plugin;
+            this.aliases = new String[]{"reschedule"};
+        }
+
+        @Override
+        public String getUsage(String label) {
+            return '/' + label + ' ' + getName() + " <time> [reason]";
+        }
+
+        @Override
+        public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
             if (!plugin.getAutoRestartHandler().isPendingRestart()) {
                 sender.sendMessage(ChatColor.RED + "There is not a restart task pending.");
                 return true;
             }
 
-            long remaining = plugin.getAutoRestartHandler().getRemainingMillis();
-            String reason = plugin.getAutoRestartHandler().getReason();
-
-            sender.sendMessage(ChatColor.YELLOW + "Automatic restart task occurring in " +
-                    DurationFormatUtils.formatDurationWords(remaining, true, true) + ((reason == null) || (reason.isEmpty()) ? "" : " for " + reason) + ".");
-            return true;
-        }
-
-        if (args[0].equalsIgnoreCase("schedule")) {
             if (args.length < 2) {
-                sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + args[0].toLowerCase() + " <time> [reason]");
+                sender.sendMessage(ChatColor.RED + "Usage: /" + label + ' ' + args[0].toLowerCase() + " <time> [reason]");
                 return true;
             }
 
-            long ticks = JavaUtils.parse(args[1]);
-            if (ticks <= 0L) {
+            Long millis = JavaUtils.parse(args[1]);
+            if (millis == null) {
                 sender.sendMessage(ChatColor.RED + "Invalid duration, use the correct format: 10m1s");
                 return true;
             }
 
-            StringBuilder builder = new StringBuilder();
-            for (int i = 2; i < args.length; i++) {
-                builder.append(args[i]).append(" ");
-            }
-
-            String reason = builder.toString().trim();
-            plugin.getAutoRestartHandler().scheduleRestart((int) (ticks / 1000L), reason);
-
+            String reason = StringUtils.join(args, ' ', 2, args.length);
+            plugin.getAutoRestartHandler().scheduleRestart(millis, reason);
             Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Scheduled a restart to occur in " +
-                    DurationFormatUtils.formatDurationWords(ticks, true, true) + (reason.isEmpty() ? "" : " for " + reason) + ".");
+                    DurationFormatUtils.formatDurationWords(millis, true, true) + (reason.isEmpty() ? "" : " for " + reason) + '.');
+
             return true;
         }
-
-        sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
-        return true;
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return Collections.emptyList();
+    private static class AutoRestartTimeArgument extends CommandArgument {
+
+        private final BasePlugin plugin;
+
+        public AutoRestartTimeArgument(BasePlugin plugin) {
+            super("time", "Gets the remaining time until next restart.");
+            this.plugin = plugin;
+            this.aliases = new String[]{"remaining", "time"};
+        }
+
+        @Override
+        public String getUsage(String label) {
+            return '/' + label + ' ' + getName();
+        }
+
+        @Override
+        public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+            if (!plugin.getAutoRestartHandler().isPendingRestart()) {
+                sender.sendMessage(ChatColor.RED + "There is not a restart task pending.");
+                return true;
+            }
+
+            String reason = plugin.getAutoRestartHandler().getReason();
+            sender.sendMessage(ChatColor.YELLOW + "Automatic restart task occurring in " +
+                    DurationFormatUtils.formatDurationWords(plugin.getAutoRestartHandler().getRemainingMilliseconds(), true, true) +
+                    (Strings.nullToEmpty(reason).isEmpty() ? "" : " for " + reason) + '.');
+
+            return true;
+        }
     }
 }

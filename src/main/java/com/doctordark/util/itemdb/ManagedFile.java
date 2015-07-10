@@ -19,25 +19,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
-/**
- * @author Essentials project
- */
 public class ManagedFile {
 
     private static final int BUFFER_SIZE = 1024 * 8;
     private final transient File file;
 
     public ManagedFile(final String filename, final JavaPlugin plugin) {
-        File file = new File(plugin.getDataFolder(), filename);
-        this.file = file;
-
+        file = new File(plugin.getDataFolder(), filename);
         if (!file.exists()) {
             try {
-                copyResourceAscii("/" + filename, file);
+                copyResourceAscii('/' + filename, file);
             } catch (IOException ex) {
-                Bukkit.getLogger().log(Level.SEVERE, "Items.csv has not been loaded", ex);
+                Bukkit.getLogger().log(Level.SEVERE, "items.csv has not been loaded", ex);
             }
         }
+    }
+
+    public File getFile() {
+        return file;
     }
 
     public static void copyResourceAscii(final String resourceName, final File file) throws IOException {
@@ -54,6 +53,7 @@ public class ManagedFile {
                             break;
                         }
                     }
+
                     while (true);
                     writer.write("\n");
                     writer.flush();

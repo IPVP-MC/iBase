@@ -1,12 +1,12 @@
 package com.doctordark.util.command;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.permissions.Permission;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Represents an argument used for a Bukkit command.
@@ -14,116 +14,154 @@ import java.util.Optional;
 public abstract class CommandArgument {
 
     private final String name;
-    private final String description;
+    protected boolean isPlayerOnly = false;
+    protected String description;
+    protected String permission;
     protected String[] aliases;
 
     /**
-     * Creates a new command argument with a name and description.
+     * Constructs a new {@link CommandArgument} with a given name,
+     * description and set of aliases.
      *
-     * @param name        the name of argument
-     * @param description the description of the argument
+     * @param name        the name to construct with
+     * @param description the description to construct with
      */
     public CommandArgument(String name, String description) {
-        this(name, description, new String[]{});
+        this(name, description, (String) null);
     }
 
     /**
-     * Creates a new command argument with a name and description.
+     * Constructs a new {@link CommandArgument} with a given name,
+     * description and set of aliases.
      *
-     * @param name        the name of argument
-     * @param description the description of the argument
-     * @param aliases     the aliases of this argument
+     * @param name        the name to construct with
+     * @param description the description to construct with
+     * @param permission  the required permission node
+     */
+    public CommandArgument(String name, String description, String permission) {
+        this(name, description, permission, ArrayUtils.EMPTY_STRING_ARRAY);
+    }
+
+    /**
+     * Constructs a new {@link CommandArgument} with a given name,
+     * description and set of aliases.
+     *
+     * @param name        the name to construct with
+     * @param description the description to construct with
+     * @param aliases     array of aliases to construct with
      */
     public CommandArgument(String name, String description, String[] aliases) {
+        this(name, description, null, aliases);
+    }
+
+    /**
+     * Constructs a new {@link CommandArgument} with a given name, permission,
+     * description and set of aliases.
+     *
+     * @param name        the name to construct with
+     * @param description the description to construct with
+     * @param permission  the required permission node
+     * @param aliases     array of aliases to construct with
+     */
+    public CommandArgument(String name, String description, String permission, String[] aliases) {
         this.name = name;
         this.description = description;
+        this.permission = permission;
         this.aliases = aliases;
     }
 
     /**
-     * Gets the name for this command argument.
+     * Gets the name of this {@link CommandArgument}.
      *
-     * @return the name of this CommandArgument.
+     * @return the name
      */
     public final String getName() {
-        return name;
+        return this.name;
     }
 
     /**
-     * Checks if this {@link CommandArgument} can only be
-     * executed by {@link org.bukkit.entity.Player}s.
+     * Checks if this {@link CommandArgument} is only executable
+     * for players.
      *
-     * @return true if execution only by players
+     * @return the result
      */
     public boolean isPlayerOnly() {
-        return false;
+        return isPlayerOnly;
     }
 
     /**
-     * Gets the description for this {@link CommandArgument}.
+     * Gets the description of this {@link CommandArgument}.
      *
-     * @return the description of this argument
+     * @return the description
      */
     public final String getDescription() {
-        return description;
+        return this.description;
     }
 
     /**
-     * Gets the permission for this {@link CommandArgument}.
+     * Gets the permission of this {@link CommandArgument}.
      *
-     * @return the permission node, null if not permissible
+     * @return the permission
      */
-    public String getPermission() {
-        return null;
+    public final String getPermission() {
+        return this.permission;
     }
 
     /**
-     * Gets the optional {@link Permission} for this {@link CommandArgument}
+     * Gets the aliases used for this {@link CommandArgument}.
      *
-     * @return the optional {@link Permission} of this argument
+     * @return array of aliases
      */
-    public Optional<Permission> getBukkitPermission() {
-        return Optional.ofNullable(new Permission(getPermission()));
-    }
+    public final String[] getAliases() {
+        if (aliases == null) {
+            aliases = ArrayUtils.EMPTY_STRING_ARRAY;
+        }
 
-    /**
-     * Gets the aliases for this {@link CommandArgument}.
-     *
-     * @return array of argument aliases
-     */
-    public String[] getAliases() {
         return aliases;
     }
 
     /**
      * Gets the usage for this {@link CommandArgument}.
      *
-     * @param label the label of command
-     * @return usage with the label
+     * @param label the label to check for
+     * @return the usage message
      */
     public abstract String getUsage(String label);
 
     /**
-     * Handles the command execution for this {@link CommandArgument}.
-     *
-     * @param sender  the executor of command
-     * @param command the command being executed
-     * @param label   the label of executed command
-     * @param args    the arguments for executed command
-     * @return true if command was successfully completed
+     * @see org.bukkit.command.CommandExecutor#onCommand(CommandSender, Command, String, String[])
      */
     public abstract boolean onCommand(CommandSender sender, Command command, String label, String[] args);
 
     /**
-     * Handles the command tab completion for this {@link CommandArgument}.
-     *
-     * @param sender  the executor of command
-     * @param command the command being executed
-     * @param label   the label of executed command
-     * @param args    the arguments for executed command
-     * @return true if command was successfully completed
+     * @see org.bukkit.command.TabCompleter#onTabComplete(CommandSender, Command, String, String[])
      */
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         return Collections.emptyList();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CommandArgument)) return false;
+
+        CommandArgument that = (CommandArgument) o;
+
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
+        if (permission != null ? !permission.equals(that.permission) : that.permission != null) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(aliases, that.aliases)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (permission != null ? permission.hashCode() : 0);
+        result = 31 * result + (aliases != null ? Arrays.hashCode(aliases) : 0);
+        return result;
     }
 }

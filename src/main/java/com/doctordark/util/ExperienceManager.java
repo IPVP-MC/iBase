@@ -257,7 +257,7 @@ public class ExperienceManager {
      * @throws IllegalArgumentException if the level is less than 0 or greater than the current hard maximum
      */
     public int getXpForLevel(int level) {
-        Validate.isTrue(level >= 0 && level <= hardMaxLevel, "Invalid level " + level + "(must be in range 0.." + hardMaxLevel + ")");
+        Validate.isTrue(level >= 0 && level <= hardMaxLevel, "Invalid level " + level + "(must be in range 0.." + hardMaxLevel + ')');
         if (level >= xpTotalToReachLevel.length) {
             initLookupTables(level * 2);
         }

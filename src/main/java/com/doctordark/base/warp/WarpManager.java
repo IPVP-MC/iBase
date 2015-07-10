@@ -18,7 +18,7 @@ public interface WarpManager {
 
     int getNearbyPlayerRadiusCancel();
 
-    void reloadData();
+    void reloadWarpData();
 
     void saveWarpData();
 }

@@ -4,6 +4,7 @@ import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.user.ServerParticipator;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -45,12 +46,7 @@ public class StaffChatCommand extends BaseCommand {
         } else {
             Player targetPlayer = Bukkit.getPlayerExact(args[0]);
             if (targetPlayer == null || !canSee(sender, targetPlayer) || !sender.hasPermission(getPermission() + ".others")) {
-                StringBuilder builder = new StringBuilder();
-                for (String argument : args) {
-                    builder.append(argument).append(" ");
-                }
-
-                String message = builder.toString();
+                String message = StringUtils.join(args, ' ');
                 String format = ChatColor.AQUA + String.format(Locale.ENGLISH, "%1$s: %2$s", sender.getName(), message);
 
                 Bukkit.getServer().getConsoleSender().sendMessage(format);
@@ -70,7 +66,7 @@ public class StaffChatCommand extends BaseCommand {
         boolean newStaffChat = !target.isInStaffChat() || (args.length >= 2 && Boolean.parseBoolean(args[1]));
         target.setInStaffChat(newStaffChat);
 
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Staff chat mode of " + target.getName() + " set to " + newStaffChat + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Staff chat mode of " + target.getName() + " set to " + newStaffChat + '.');
         return true;
     }
 

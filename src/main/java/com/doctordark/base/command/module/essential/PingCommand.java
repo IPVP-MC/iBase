@@ -17,7 +17,6 @@ public class PingCommand extends BaseCommand {
 
     public PingCommand() {
         super("ping", "Checks the ping of a player.", "base.command.ping");
-        this.setAliases(new String[]{});
         this.setUsage("/(command) <playerName>");
     }
 

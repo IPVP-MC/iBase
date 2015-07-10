@@ -2,6 +2,7 @@ package com.doctordark.base.command.module.chat;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -27,12 +28,7 @@ public class BroadcastCommand extends BaseCommand {
             return true;
         }
 
-        StringBuilder builder = new StringBuilder(args[0]);
-        for (int i = 1; i < args.length; i++) {
-            builder.append(" ").append(args[i]);
-        }
-
-        String message = builder.toString();
+        String message = StringUtils.join(args, ' ', 0, args.length);
 
         if (message.length() < 6) {
             sender.sendMessage(ChatColor.RED + "Broadcasts must be at least 6 characters.");

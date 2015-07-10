@@ -1,6 +1,7 @@
 package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -16,7 +17,6 @@ public class RenameCommand extends BaseCommand {
 
     public RenameCommand() {
         super("rename", "Rename your held item.", "base.command.near");
-        setAliases(new String[0]);
         setUsage("/(command) <newItemName>");
     }
 
@@ -46,15 +46,11 @@ public class RenameCommand extends BaseCommand {
         }
 
         String newName;
-        if ((args[0].equalsIgnoreCase("none")) || (args[0].equalsIgnoreCase("null"))) {
+        if (args[0].equalsIgnoreCase("none") || args[0].equalsIgnoreCase("null")) {
             newName = null;
         } else {
-            StringBuilder builder = new StringBuilder();
-            for (String argument : args) {
-                builder.append(argument).append(" ");
-            }
-
-            newName = ChatColor.translateAlternateColorCodes('&', builder.toString()).trim();
+            newName = StringUtils.join(args, ' ', 0, args.length);
+            newName = ChatColor.translateAlternateColorCodes('&', newName).trim();
         }
 
         if (oldName == null && newName == null) {
@@ -71,11 +67,11 @@ public class RenameCommand extends BaseCommand {
         stack.setItemMeta(meta);
 
         if (newName == null) {
-            sender.sendMessage(ChatColor.YELLOW + "Removed name of held item from " + oldName + ".");
+            sender.sendMessage(ChatColor.YELLOW + "Removed name of held item from " + oldName + '.');
             return true;
         }
 
-        sender.sendMessage(ChatColor.YELLOW + "Renamed held item from " + (oldName == null ? "no name" : oldName) + " to " + newName + ".");
+        sender.sendMessage(ChatColor.YELLOW + "Renamed held item from " + (oldName == null ? "no name" : oldName) + " to " + newName + '.');
         return true;
     }
 

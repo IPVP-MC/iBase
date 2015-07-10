@@ -168,12 +168,12 @@ public class ServerHandler {
 
     public void saveServerData() {
         config.set("use-protocol-lib", useProtocolLib);
-        config.set("chat.disabled.millis", Long.valueOf(getChatDisabledMillis()));
-        config.set("chat.slowed.millis", Long.valueOf(getChatSlowedMillis()));
-        config.set("chat.slowed-delay", getChatSlowedDelay());
-        config.set("announcements.delay", getAnnouncementDelay());
-        config.set("max-players", getMaxPlayers());
-        config.set("decreased-lag-mode", isDecreasedLagMode());
+        config.set("chat.disabled.millis", Long.valueOf(this.chatDisabledMillis));
+        config.set("chat.slowed.millis", Long.valueOf(this.chatSlowedMillis));
+        config.set("chat.slowed-delay", this.chatSlowedDelay);
+        config.set("announcements.delay", this.announcementDelay);
+        config.set("max-players", this.maxPlayers);
+        config.set("decreased-lag-mode", decreasedLagMode);
         plugin.saveConfig();
     }
 }

@@ -15,15 +15,9 @@ import java.util.regex.Pattern;
  */
 public final class JavaUtils {
 
-    private static final TimeReader TIME_READER;
     private static final Pattern UUID_PATTERN;
 
     static {
-        TIME_READER = new TimeReader().
-                addUnit(TimeUnit.DAYS.toMillis(1L), "DAY", "DAYS", "D").
-                addUnit(TimeUnit.HOURS.toMillis(1L), "HOUR", "HOURS", "H").
-                addUnit(TimeUnit.MINUTES.toMillis(1L), "MIN", "MINS", "MINUTE", "MINUTES", "M").
-                addUnit(TimeUnit.SECONDS.toMillis(1L), "SEC", "SECS", "SECOND", "SECONDS", "S");
         UUID_PATTERN = Pattern.compile("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[34][0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}");
     }
 
@@ -47,7 +41,7 @@ public final class JavaUtils {
      * @return true if it is alphanumeric
      */
     public static boolean isAlphanumeric(String string) {
-        return CharMatcher.JAVA_LETTER_OR_DIGIT.or(CharMatcher.WHITESPACE).or(CharMatcher.anyOf("_.-")).matchesAllOf(string);
+        return CharMatcher.JAVA_LETTER_OR_DIGIT.or(CharMatcher.WHITESPACE).matchesAllOf(string);
     }
 
     /**
@@ -124,7 +118,37 @@ public final class JavaUtils {
      * @param string the string to parse
      * @return the parsed time in milliseconds
      */
-    public static long parse(String string) {
-        return TIME_READER.parse(string);
+    public static Long parse(String input) {
+        Long result = null;
+        String number = "";
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (Character.isDigit(c)) {
+                number += c;
+            } else if (Character.isLetter(c) && !number.isEmpty()) {
+                if (result == null) result = 0L;
+                result += convert(Integer.parseInt(number), c);
+                number = "";
+            }
+        }
+
+        return result;
+    }
+
+    private static Long convert(int value, char unit) {
+        switch (unit) {
+            case 'M':
+                return value * TimeUnit.DAYS.toMillis(30L);
+            case 'd' | 'D':
+                return value * TimeUnit.DAYS.toMillis(1L);
+            case 'h' | 'H':
+                return value * TimeUnit.HOURS.toMillis(1L);
+            case 'm':
+                return value * TimeUnit.MINUTES.toMillis(1L);
+            case 's' | 'S':
+                return value * TimeUnit.SECONDS.toMillis(1L);
+            default:
+                return null;
+        }
     }
 }

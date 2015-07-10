@@ -3,6 +3,7 @@ package com.doctordark.base.command.module.chat;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.util.JavaUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,18 +33,14 @@ public class DisableChatCommand extends BaseCommand {
         } else if (args.length < 1) {
             newTicks = oldTicks > 0L ? 0L : DEFAULT_DELAY;
         } else {
-            StringBuilder builder = new StringBuilder();
-            for (String argument : args) {
-                builder.append(argument).append(" ");
-            }
-
-            newTicks = JavaUtils.parse(builder.toString());
+            newTicks = JavaUtils.parse(StringUtils.join(args, ' ', 0, args.length));
         }
 
         plugin.getServerHandler().setChatDisabledMillis(newTicks);
         Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + "Global chat is " + (newTicks > 0L ?
                 ChatColor.GOLD + "now disabled for " + DurationFormatUtils.formatDurationWords(newTicks, true, true) :
-                ChatColor.RED + "no longer disabled") + ChatColor.YELLOW + ".");
+                ChatColor.RED + "no longer disabled") + ChatColor.YELLOW + '.');
+
         return true;
     }
 }

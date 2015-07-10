@@ -22,7 +22,6 @@ public class NameHistoryCommand extends BaseCommand {
 
     public NameHistoryCommand(BasePlugin plugin) {
         super("namehistory", "Checks name change histories of players.", "base.command.namehistory");
-        setAliases(new String[0]);
         setUsage("/(command) <player>");
         this.plugin = plugin;
     }
@@ -45,7 +44,7 @@ public class NameHistoryCommand extends BaseCommand {
             List<NameHistory> nameHistories = baseUser.getNameHistories();
             for (NameHistory nameHistory : nameHistories) {
                 if (nameHistory.getName().equalsIgnoreCase(args[0])) {
-                    messages.add(ChatColor.GRAY + nameHistory.getName() + " (" + FORMAT.format(nameHistory.getMillis()) + ")");
+                    messages.add(ChatColor.GRAY + nameHistory.getName() + " (" + FORMAT.format(nameHistory.getMillis()) + ')');
                     targetUser = baseUser;
                     break;
                 }

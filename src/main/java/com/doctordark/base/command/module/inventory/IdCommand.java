@@ -9,7 +9,6 @@ public class IdCommand extends BaseCommand {
 
     public IdCommand() {
         super("id", "Checks the ID/name of an item.", "base.command.id");
-        setAliases(new String[0]);
         setUsage("/(command) [itemName]");
     }
 

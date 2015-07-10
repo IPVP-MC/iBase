@@ -12,7 +12,6 @@ public class UptimeCommand extends BaseCommand {
 
     public UptimeCommand() {
         super("uptime", "Check the uptime of the server.", "base.command.uptime");
-        setAliases(new String[0]);
         setUsage("/(command)");
     }
 
@@ -22,7 +21,7 @@ public class UptimeCommand extends BaseCommand {
         long after = System.currentTimeMillis();
 
         String upTime = DurationFormatUtils.formatDurationWords(after - begin, true, true);
-        sender.sendMessage(ChatColor.GREEN + "Server up-time: " + ChatColor.LIGHT_PURPLE + upTime + ChatColor.GREEN + ".");
+        sender.sendMessage(ChatColor.GREEN + "Server up-time: " + ChatColor.LIGHT_PURPLE + upTime + ChatColor.GREEN + '.');
         return true;
     }
 }

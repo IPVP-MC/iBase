@@ -16,7 +16,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -31,17 +30,18 @@ public class ReflectionCommandManager implements CommandManager {
         final Server server = Bukkit.getServer();
 
         server.getScheduler().runTaskLater(plugin, new Runnable() {
+            @Override
             public void run() {
                 Optional<CommandMap> optionalCommandMap = getCommandMap(server);
                 if (!optionalCommandMap.isPresent()) {
-                    console.sendMessage("[" + plugin.getDescription().getFullName() + "] Command map not found");
+                    console.sendMessage('[' + plugin.getDescription().getFullName() + "] Command map not found");
                     return;
                 }
 
                 CommandMap bukkitCommandMap = optionalCommandMap.get();
                 for (BaseCommand command : commandMap.values()) {
-                    String cmdName = command.getName();
-                    Optional<PluginCommand> optional = getPluginCommand(cmdName, plugin);
+                    String commandName = command.getName();
+                    Optional<PluginCommand> optional = getPluginCommand(commandName, plugin);
                     if (optional.isPresent()) {
                         PluginCommand pluginCommand = optional.get();
                         pluginCommand.setAliases(Arrays.asList(command.getAliases()));
@@ -53,15 +53,11 @@ public class ReflectionCommandManager implements CommandManager {
                         pluginCommand.setPermissionMessage(ReflectionCommandManager.PERMISSION_MESSAGE);
                         bukkitCommandMap.register(plugin.getDescription().getName(), pluginCommand);
                     } else {
-                        console.sendMessage("[" + plugin.getName() + "] " + ChatColor.YELLOW + "Failed to register command '" + cmdName + "'.");
+                        console.sendMessage('[' + plugin.getName() + "] " + ChatColor.YELLOW + "Failed to register command '" + commandName + "'.");
                     }
                 }
             }
         }, 1L);
-    }
-
-    public List<String> getCompletions(String[] args, List<String> input) {
-        return CommandArgumentHandler.getCompletions(args, input);
     }
 
     @Override
@@ -98,7 +94,7 @@ public class ReflectionCommandManager implements CommandManager {
 
     @Override
     public BaseCommand getCommand(String id) {
-        return commandMap.containsKey(id) ? commandMap.get(id) : null;
+        return commandMap.get(id);
     }
 
     /**

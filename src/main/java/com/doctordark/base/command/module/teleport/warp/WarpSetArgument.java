@@ -1,8 +1,8 @@
 package com.doctordark.base.command.module.teleport.warp;
 
 import com.doctordark.base.BasePlugin;
-import com.doctordark.base.command.CommandArgument;
 import com.doctordark.base.warp.Warp;
+import com.doctordark.util.command.CommandArgument;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -18,23 +18,15 @@ public class WarpSetArgument extends CommandArgument {
     private final BasePlugin plugin;
 
     public WarpSetArgument(BasePlugin plugin) {
-        super("set", "Sets a new server warps");
+        super("set", "Sets a new server warps", "base.command.warp.argument.set");
         this.plugin = plugin;
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"create", "make"};
+        this.aliases = new String[]{"create", "make"};
+        this.permission = "base.command.warp.argument." + getName();
     }
 
     @Override
     public String getUsage(String label) {
-        return "/" + label + " " + getName();
-    }
-
-    @Override
-    public String getPermission() {
-        return "base.command.warp.argument." + getName();
+        return '/' + label + ' ' + getName();
     }
 
     @Override
@@ -45,12 +37,12 @@ public class WarpSetArgument extends CommandArgument {
         }
 
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + getName() + " <warpName>");
+            sender.sendMessage(ChatColor.RED + "Usage: /" + label + ' ' + getName() + " <warpName>");
             return true;
         }
 
         if (plugin.getWarpManager().getWarp(args[1]) != null) {
-            sender.sendMessage(ChatColor.RED + "There is already a warp named " + args[1] + ".");
+            sender.sendMessage(ChatColor.RED + "There is already a warp named " + args[1] + '.');
             return true;
         }
 
@@ -62,7 +54,7 @@ public class WarpSetArgument extends CommandArgument {
         Warp warp = new Warp(args[1], location);
         warps.add(warp);
 
-        sender.sendMessage(ChatColor.GRAY + "Created a global warp named " + warp.getName() + ".");
+        sender.sendMessage(ChatColor.GRAY + "Created a global warp named " + warp.getName() + '.');
         return true;
     }
 

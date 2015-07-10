@@ -30,7 +30,7 @@ public class TeleportHereCommand extends BaseCommand {
         }
 
         Player player = (Player) sender;
-        player.performCommand("tp " + args[0] + " " + sender.getName());
+        player.performCommand("tp " + args[0] + ' ' + sender.getName());
         return true;
     }
 

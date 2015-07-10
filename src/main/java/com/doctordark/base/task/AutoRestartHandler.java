@@ -5,93 +5,106 @@ import net.minecraft.util.com.google.common.primitives.Ints;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.concurrent.TimeUnit;
 
 public class AutoRestartHandler {
 
-    private static final int[] ALERT_SECONDS = {
-            600, 300, 270, 240,
-            210, 180, 150, 120,
-            90, 60, 30, 15, 10,
-            5, 4, 3, 2, 1
-    };
+    private static final int[] ALERT_SECONDS = {600, 300, 270, 240, 210, 180, 150, 120, 90, 60, 30, 15, 10, 5, 4, 3, 2, 1};
 
-    private String reason;
-    private int remainingSeconds;
-    private BukkitRunnable runnable;
     private final BasePlugin plugin;
+    private long current = Long.MIN_VALUE;
+    private String reason;
+    private BukkitTask task;
 
     public AutoRestartHandler(BasePlugin plugin) {
         this.plugin = plugin;
-        scheduleRestart((int) TimeUnit.HOURS.toSeconds(20L));
+        this.scheduleRestart(TimeUnit.HOURS.toMicros(20L));
     }
 
+    /**
+     * Gets the reason for the current restart schedule.
+     *
+     * @return the reason
+     */
     public String getReason() {
         return this.reason;
     }
 
+    /**
+     * Sets the reason for the current restart schedule.
+     *
+     * @param reason the reason to set
+     */
     public void setReason(String reason) {
         this.reason = reason;
     }
 
+    /**
+     * Checks if there is a pending restart.
+     *
+     * @return true if there is a pending restart
+     */
     public boolean isPendingRestart() {
-        return this.runnable != null;
+        return this.task != null;
     }
 
-    public int getRemainingSeconds() {
-        return this.remainingSeconds;
-    }
-
-    public void setRemainingSeconds(int remainingSeconds) {
-        this.remainingSeconds = remainingSeconds;
-    }
-
-    public long getRemainingMillis() {
-        return this.remainingSeconds * 1000L;
-    }
-
+    /**
+     * Cancels the pending restart if any.
+     */
     public void cancelRestart() {
         if (isPendingRestart()) {
-            this.runnable.cancel();
-            this.runnable = null;
-            this.remainingSeconds = 0;
+            this.task.cancel();
+            this.task = null;
+            this.current = 0L;
         }
     }
 
-    public void scheduleRestart(int seconds) {
-        scheduleRestart(seconds, null);
+    /**
+     * Gets the remaining milliseconds until the pending
+     * restart applies.
+     *
+     * @return time in milliseconds
+     */
+    public long getRemainingMilliseconds() {
+        return current - System.currentTimeMillis();
     }
 
-    public void scheduleRestart(int seconds, final String reason) {
-        final Server server = Bukkit.getServer();
-        cancelRestart();
+    /**
+     * Schedules a restart without a reason in a given amount of milliseconds.
+     *
+     * @param milliseconds the milliseconds to schedule in
+     */
+    public void scheduleRestart(long milliseconds) {
+        this.scheduleRestart(milliseconds, null);
+    }
 
+    /**
+     * Schedules a restart with a reason in a given amount of milliseconds.
+     *
+     * @param milliseconds the milliseconds to schedule in
+     * @param reason       the reason for restarting
+     */
+    public void scheduleRestart(final long millis, final String reason) {
+        this.cancelRestart();
         this.reason = reason;
-        this.remainingSeconds = seconds;
-        this.runnable = new BukkitRunnable() {
+        this.task = new BukkitRunnable() {
+            @Override
             public void run() {
-                if (remainingSeconds == 0) {
-                    if (reason != null && !reason.isEmpty()) {
-                        for (Player player : server.getOnlinePlayers()) {
-                            player.kickPlayer(ChatColor.RED + "Server restarting.. Back up momentarily!" + ChatColor.GOLD + "\n\n" + reason);
-                        }
-                    }
+                if (current == 0L) cancel(); // this restart was cancelled.
 
-                    server.shutdown();
-                } else if (Ints.contains(AutoRestartHandler.ALERT_SECONDS, remainingSeconds)) {
-                    server.broadcastMessage(ChatColor.RED + "Server restarting in " + ChatColor.GOLD +
-                            DurationFormatUtils.formatDurationWords(remainingSeconds * 1000L, true, true) + ChatColor.RED + ((reason == null) ||
+                long remainingMillis = getRemainingMilliseconds();
+                if (remainingMillis <= 0) {
+                    Bukkit.shutdown(ChatColor.RED + "Server restarting.. Back up momentarily!" + (reason == null ? "" : ChatColor.GOLD + "\n\n" + reason));
+                } else if (Ints.contains(AutoRestartHandler.ALERT_SECONDS, ((int) (remainingMillis / 1000L)))) {
+                    Bukkit.broadcastMessage(ChatColor.RED + "Server restarting in " + ChatColor.GOLD +
+                            DurationFormatUtils.formatDurationWords(remainingMillis, true, true) + ChatColor.RED + ((reason == null) ||
                             (reason.isEmpty()) ? "." : " [" + ChatColor.GRAY + reason + ChatColor.RED + "]."));
                 }
-
-                remainingSeconds--;
             }
-        };
-
-        runnable.runTaskTimer(plugin, 20L, 20L);
+        }.runTaskTimer(plugin, 20L, 20L);
+        this.current = System.currentTimeMillis() + millis;
     }
 }

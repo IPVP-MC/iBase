@@ -19,7 +19,6 @@ public class EnchantCommand extends BaseCommand {
 
     public EnchantCommand() {
         super("enchant", "Unsafely enchant an item.", "base.command.enchant");
-        this.setAliases(new String[]{});
         this.setUsage("/(command) <playerName> <enchantment> <level>");
     }
 
@@ -75,7 +74,7 @@ public class EnchantCommand extends BaseCommand {
             itemName = stack.getType().name();
         }
 
-        Command.broadcastCommandMessage(sender, "Applied " + enchantment.getName() + " at level " + level + " onto " + itemName + " of " + target.getName() + ".");
+        Command.broadcastCommandMessage(sender, "Applied " + enchantment.getName() + " at level " + level + " onto " + itemName + " of " + target.getName() + '.');
         return true;
     }
 

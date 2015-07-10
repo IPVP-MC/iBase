@@ -1,7 +1,6 @@
 package com.doctordark.util.bossbar;
 
 import com.doctordark.base.BasePlugin;
-import com.doctordark.util.bossbar.BossBarEntry;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import net.minecraft.server.v1_7_R4.PlayerConnection;

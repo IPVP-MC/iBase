@@ -3,6 +3,7 @@ package com.doctordark.util;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.minecraft.server.v1_7_R4.MinecraftServer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
@@ -49,7 +50,7 @@ public final class BukkitUtils {
         STRAIGHT_LINE_TEMPLATE = ChatColor.STRIKETHROUGH.toString() + StringUtils.repeat("-", 256);
         STRAIGHT_LINE_DEFAULT = STRAIGHT_LINE_TEMPLATE.substring(0, ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH);
 
-        CHAT_DYE_COLOUR_MAP = ImmutableMap.<ChatColor, DyeColor>builder().
+        CHAT_DYE_COLOUR_MAP = Maps.immutableEnumMap(ImmutableMap.<ChatColor, DyeColor>builder().
                 put(ChatColor.AQUA, DyeColor.LIGHT_BLUE).
                 put(ChatColor.BLACK, DyeColor.BLACK).
                 put(ChatColor.BLUE, DyeColor.LIGHT_BLUE).
@@ -65,7 +66,7 @@ public final class BukkitUtils {
                 put(ChatColor.LIGHT_PURPLE, DyeColor.MAGENTA).
                 put(ChatColor.RED, DyeColor.RED).
                 put(ChatColor.WHITE, DyeColor.WHITE).
-                put(ChatColor.YELLOW, DyeColor.YELLOW).build();
+                put(ChatColor.YELLOW, DyeColor.YELLOW).build());
 
         DEBUFF_TYPES = ImmutableSet.<PotionEffectType>builder().
                 add(PotionEffectType.BLINDNESS).
@@ -84,8 +85,9 @@ public final class BukkitUtils {
         List<ChatColor> found = Lists.newArrayList();
 
         int count = 0;
-        List<Character> charList = Lists.newArrayList();
-        for (ChatColor colour : ChatColor.values()) {
+        ChatColor[] values = ChatColor.values();
+        List<Character> charList = Lists.newArrayListWithExpectedSize(values.length);
+        for (ChatColor colour : values) {
             charList.add(colour.getChar());
         }
 
@@ -104,9 +106,15 @@ public final class BukkitUtils {
         return count;
     }
 
+    private static final int COMPLETION_LIMIT = 80;
+
     public static List<String> getCompletions(String[] args, List<String> input) {
+        return getCompletions(args, input, COMPLETION_LIMIT);
+    }
+
+    public static List<String> getCompletions(String[] args, List<String> input, int limit) {
         String argument = args[(args.length - 1)];
-        return input.stream().filter(string -> string.regionMatches(true, 0, argument, 0, argument.length())).collect(Collectors.toList());
+        return input.stream().filter(string -> string.regionMatches(true, 0, argument, 0, argument.length())).limit(limit).collect(Collectors.toList());
     }
 
     /**
@@ -211,11 +219,7 @@ public final class BukkitUtils {
             return false;
         }
 
-        double x1 = location1.getX();
-        double x2 = location2.getX();
-        double z1 = location1.getZ();
-        double z2 = location2.getZ();
-        return ((Math.abs(x2 - x1) <= distance) && (Math.abs(z2 - z1) <= distance));
+        return ((Math.abs(location2.getX() - location1.getX()) <= distance) && (Math.abs(location2.getZ() - location1.getZ()) <= distance));
     }
 
     /**

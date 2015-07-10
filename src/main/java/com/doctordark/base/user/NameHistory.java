@@ -37,9 +37,9 @@ public class NameHistory implements ConfigurationSerializable {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("name", getName());
-        map.put("millis", Long.toString(getMillis()));
+        Map<String, Object> map = Maps.newHashMapWithExpectedSize(2);
+        map.put("name", name);
+        map.put("millis", Long.toString(millis));
         return map;
     }
 

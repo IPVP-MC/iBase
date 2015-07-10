@@ -24,6 +24,7 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
 
     public PersistableLocation(Location location) {
         Preconditions.checkNotNull(location, "Location cannot be null");
+        Preconditions.checkNotNull(location.getWorld(), "Locations' world cannot be null");
 
         this.world = location.getWorld();
         this.worldName = world.getName();
@@ -54,16 +55,26 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
     public PersistableLocation(Map<String, Object> map) {
         this.worldName = (String) map.get("worldName");
         this.worldUID = UUID.fromString((String) map.get("worldUID"));
-        this.x = (Double) map.get("x");
-        this.y = (Double) map.get("y");
-        this.z = (Double) map.get("z");
+
+        if (map.get("x") instanceof String) {
+            this.x = Double.parseDouble((String) map.get("x"));
+        } else this.x = (Double) map.get("x");
+
+        if (map.get("y") instanceof String) {
+            this.y = Double.parseDouble((String) map.get("y"));
+        } else this.y = (Double) map.get("y");
+
+        if (map.get("z") instanceof String) {
+            this.z = Double.parseDouble((String) map.get("z"));
+        } else this.z = (Double) map.get("z");
+
         this.yaw = Float.parseFloat((String) map.get("yaw"));
         this.pitch = Float.parseFloat((String) map.get("pitch"));
     }
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = Maps.newHashMap();
+        Map<String, Object> map = Maps.newHashMapWithExpectedSize(7);
         map.put("worldName", worldName);
         map.put("worldUID", worldUID.toString());
         map.put("x", x);
@@ -111,8 +122,8 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
      * @param world the world to set
      */
     public void setWorld(World world) {
-        setWorldName(world.getName());
-        setWorldUID(world.getUID());
+        this.worldName = world.getName();
+        this.worldUID = world.getUID();
         this.world = world;
     }
 
@@ -230,7 +241,7 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
      * @return the location instance
      */
     public Location getLocation() {
-        return new Location(getWorld(), getX(), getY(), getZ(), getYaw(), getPitch());
+        return new Location(getWorld(), this.x, this.y, this.z, this.yaw, this.pitch);
     }
 
     @Override
@@ -246,7 +257,7 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
     @Override
     public String toString() {
         return "PersistableLocation [worldName=" + this.worldName + ", worldUID=" + this.worldUID +
-                ", x=" + this.x + ", y=" + this.y + ", z=" + this.z + ", yaw=" + this.yaw + ", pitch=" + this.pitch + "]";
+                ", x=" + this.x + ", y=" + this.y + ", z=" + this.z + ", yaw=" + this.yaw + ", pitch=" + this.pitch + ']';
     }
 
     @Override

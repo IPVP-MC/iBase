@@ -13,7 +13,6 @@ public class MoreCommand extends BaseCommand {
 
     public MoreCommand() {
         super("more", "Sets your item to its maximum amount.", "base.command.more");
-        setAliases(new String[0]);
         setUsage("/(command)");
     }
 
@@ -53,7 +52,7 @@ public class MoreCommand extends BaseCommand {
             int curAmount = stack.getAmount();
             amount = stack.getMaxStackSize();
             if (curAmount >= amount) {
-                sender.sendMessage(ChatColor.RED + "You already have the maximum amount: " + amount + ".");
+                sender.sendMessage(ChatColor.RED + "You already have the maximum amount: " + amount + '.');
                 return true;
             }
         }

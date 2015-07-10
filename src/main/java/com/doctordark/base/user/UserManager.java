@@ -8,24 +8,30 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class UserManager {
 
     private final ConsoleUser console;
-    private final Map<UUID, ServerParticipator> participators;
-    private final Config userConfig;
+    private final JavaPlugin plugin;
+
+    private Config userConfig;
+    private Map<UUID, ServerParticipator> participators;
 
     public UserManager(BasePlugin plugin) {
+        this.plugin = plugin;
         this.participators = Maps.newHashMap();
-        this.userConfig = new Config(plugin, "participators");
         this.reloadParticipatorData();
 
         // Load the ConsoleUser data here.
-        if (this.participators.containsKey(ConsoleUser.CONSOLE_UUID)) {
-            this.console = (ConsoleUser) this.participators.get(ConsoleUser.CONSOLE_UUID);
+        ServerParticipator participator = participators.get(ConsoleUser.CONSOLE_UUID);
+        if (participator != null) {
+            this.console = (ConsoleUser) participator;
         } else {
             this.participators.put(ConsoleUser.CONSOLE_UUID, this.console = new ConsoleUser());
         }
@@ -99,14 +105,16 @@ public class UserManager {
      * Reloads the {@link ServerParticipator} data from storage.
      */
     public void reloadParticipatorData() {
-        this.participators.clear();
-
-        Object object = this.userConfig.get("participators");
-        if (object != null && object instanceof MemorySection) {
+        userConfig = new Config(plugin, "participators");
+        Object object = userConfig.get("participators");
+        if (object == null || !(object instanceof MemorySection)) {
+            this.participators = new HashMap<>();
+        } else {
             MemorySection section = (MemorySection) object;
-            for (String id : section.getKeys(false)) {
-                ServerParticipator participator = (ServerParticipator) userConfig.get("participators." + id);
-                this.participators.put(UUID.fromString(id), participator);
+            Set<String> keys = section.getKeys(false);
+            this.participators = Maps.newHashMapWithExpectedSize(keys.size());
+            for (String id : keys) {
+                this.participators.put(UUID.fromString(id), (ServerParticipator) userConfig.get("participators." + id));
             }
         }
     }
@@ -116,8 +124,7 @@ public class UserManager {
      */
     public void saveParticipatorData() {
         for (Map.Entry<UUID, ServerParticipator> entry : participators.entrySet()) {
-            String id = entry.getValue().getUniqueId().toString();
-            userConfig.set("participators." + id, entry.getValue());
+            userConfig.set("participators." + entry.getValue().getUniqueId().toString(), entry.getValue());
         }
 
         userConfig.save();

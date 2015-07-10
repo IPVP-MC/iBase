@@ -18,7 +18,6 @@ public class HealCommand extends BaseCommand {
 
     public HealCommand() {
         super("heal", "Heals a player.", "base.command.heal");
-        this.setAliases(new String[]{});
         this.setUsage("/(command) <playerName>");
     }
 
@@ -59,7 +58,7 @@ public class HealCommand extends BaseCommand {
 
         target.setHealth(maxHealth);
 
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Healed player " + target.getName() + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Healed player " + target.getName() + '.');
         return true;
     }
 

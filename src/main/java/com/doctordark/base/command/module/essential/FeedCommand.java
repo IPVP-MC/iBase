@@ -20,7 +20,6 @@ public class FeedCommand extends BaseCommand {
 
     public FeedCommand() {
         super("feed", "Feeds a player.", "base.command.feed");
-        this.setAliases(new String[]{});
         this.setUsage("/(command) <playerName>");
     }
 
@@ -63,7 +62,7 @@ public class FeedCommand extends BaseCommand {
 
         target.setFoodLevel(MAX_HUNGER);
 
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Fed player " + target.getName() + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Fed player " + target.getName() + '.');
         return true;
     }
 

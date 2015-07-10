@@ -5,6 +5,7 @@ import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.command.module.chat.event.PlayerMessageEvent;
 import com.doctordark.base.user.BaseUser;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -44,7 +45,7 @@ public class ReplyCommand extends BaseCommand {
         if (args.length < 1) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             if (lastReplied != null && canSee(sender, target)) {
-                sender.sendMessage(ChatColor.RED + "You are in a conversation with " + target.getName() + ".");
+                sender.sendMessage(ChatColor.RED + "You are in a conversation with " + target.getName() + '.');
             }
 
             return true;
@@ -56,12 +57,7 @@ public class ReplyCommand extends BaseCommand {
             return true;
         }
 
-        StringBuilder builder = new StringBuilder();
-        for (String argument : args) {
-            builder.append(argument).append(" ");
-        }
-
-        String message = builder.toString();
+        String message = StringUtils.join(args, ' ', 0, args.length);
         Set<Player> recipients = Sets.newHashSet(target);
 
         PlayerMessageEvent playerMessageEvent = new PlayerMessageEvent(player, recipients, message, false);

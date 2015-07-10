@@ -29,7 +29,7 @@ public class ToggleStaffChatCommand extends BaseCommand {
         boolean newChatToggled = !participator.isStaffChatVisible();
         participator.setStaffChatVisible(newChatToggled);
 
-        sender.sendMessage(ChatColor.YELLOW + "You have toggled staff chat visibility " + (newChatToggled ? ChatColor.GREEN + "on" : ChatColor.RED + "off") + ChatColor.YELLOW + ".");
+        sender.sendMessage(ChatColor.YELLOW + "You have toggled staff chat visibility " + (newChatToggled ? ChatColor.GREEN + "on" : ChatColor.RED + "off") + ChatColor.YELLOW + '.');
         return true;
     }
 }

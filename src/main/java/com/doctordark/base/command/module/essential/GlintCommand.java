@@ -15,7 +15,6 @@ public class GlintCommand extends BaseCommand {
 
     public GlintCommand(BasePlugin plugin) {
         super("glint", "Toggles enchantment glints.", "base.command.glint");
-        setAliases(new String[0]);
         setUsage("/(command)");
         this.plugin = plugin;
     }
@@ -34,7 +33,7 @@ public class GlintCommand extends BaseCommand {
         long difference = baseUser.getLastGlintUse() - millis;
 
         if (difference > 0L) {
-            sender.sendMessage(ChatColor.RED + "You cannot use this command for another " + DurationFormatUtils.formatDurationWords(difference, true, true) + ".");
+            sender.sendMessage(ChatColor.RED + "You cannot use this command for another " + DurationFormatUtils.formatDurationWords(difference, true, true) + '.');
             return true;
         }
 

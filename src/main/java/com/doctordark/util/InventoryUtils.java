@@ -5,8 +5,10 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.Map;
+import java.util.Set;
 
 public final class InventoryUtils {
 
@@ -21,62 +23,41 @@ public final class InventoryUtils {
      * @param stack     the stack to be removed
      * @param quantity  the amount to be removed
      */
-    public static void removeItem(Inventory inventory, ItemStack stack, int quantity) {
-        Material material = stack.getType();
+    public static void removeItem(Inventory inventory, Material type, short data, int quantity) {
         ItemStack[] contents = inventory.getContents();
+        boolean compareDamage = type.getMaxDurability() == 0;
 
-        short durability = stack.getDurability();
-        boolean compareDamage = material.getMaxDurability() == 0;
-        for (int i = 0; i < quantity; i++) {
-            for (ItemStack item : contents) {
-                if (item == null || item.getType() != material) continue;
-                if (compareDamage && item.getDurability() != durability) continue;
+        for (int i = quantity; i > 0; i--) {
+            for (ItemStack content : contents) {
+                if (content == null || content.getType() != type) continue;
+                if (compareDamage && content.getData().getData() != data) continue;
 
-                int amount = item.getAmount();
-                if (amount == 1) {
-                    int first = inventory.first(item);
-                    if (inventory.first(item) != -1) {
-                        inventory.clear(first);
-                    }
+                if (content.getAmount() <= 1) {
+                    inventory.removeItem(content);
                 } else {
-                    item.setAmount(amount - 1);
+                    content.setAmount(content.getAmount() - 1);
                 }
-
                 break;
             }
         }
-    }
-
-    public static int countAmount(Inventory inventory, ItemStack stack) {
-        int count = 0;
-        for (ItemStack item : inventory.getContents()) {
-            if (item != null && item.getDurability() == stack.getDurability() && item.getType() == stack.getType()) {
-                count += item.getAmount();
-            }
-        }
-
-        return count;
     }
 
     /**
      * Counts how much of an item an inventory contains.
      *
      * @param inventory the inventory to count for
-     * @param material  the material to count for
+     * @param type      the material to count for
      * @param data      the data value to count for
      * @return amount of the item inventory contains
      */
-    public static int countAmount(Inventory inventory, Material material, int data) {
+    public static int countAmount(Inventory inventory, Material type, short data) {
         ItemStack[] contents = inventory.getContents();
-
-        short durability = (short) data;
-        boolean compareDamage = material.getMaxDurability() == 0;
+        boolean compareDamage = type.getMaxDurability() == 0;
 
         int counter = 0;
         for (ItemStack item : contents) {
-            if (item == null) continue;
-            if (item.getType() != material) continue;
-            if (compareDamage && (item.getDurability() != durability)) continue;
+            if (item == null || item.getType() != type) continue;
+            if (compareDamage && item.getData().getData() != data) continue;
 
             counter += item.getAmount();
         }
@@ -85,11 +66,27 @@ public final class InventoryUtils {
     }
 
     public static boolean isEmpty(Inventory inventory) {
+        return isEmpty(inventory, false);
+    }
+
+    public static boolean isEmpty(Inventory inventory, boolean checkArmour) {
         boolean result = true;
-        for (ItemStack stack : inventory.getContents()) {
-            if (stack != null && stack.getType() != Material.AIR) {
+        ItemStack[] contents = inventory.getContents();
+        for (ItemStack content : contents) {
+            if (content != null && content.getType() != Material.AIR) {
                 result = false;
                 break;
+            }
+        }
+
+        if (result) return true;
+        if (inventory instanceof PlayerInventory) {
+            contents = ((PlayerInventory) inventory).getContents();
+            for (ItemStack content : contents) {
+                if (content != null && content.getType() != Material.AIR) {
+                    result = false;
+                    break;
+                }
             }
         }
 
@@ -98,13 +95,16 @@ public final class InventoryUtils {
 
     public static boolean clickedTopInventory(InventoryDragEvent event) {
         InventoryView view = event.getView();
-        if (view.getTopInventory() == null) {
+        Inventory topInventory = view.getTopInventory();
+        if (topInventory == null) {
             return false;
         }
 
         boolean result = false;
-        for (Map.Entry<Integer, ItemStack> entry : event.getNewItems().entrySet()) {
-            if (entry.getKey() < event.getView().getTopInventory().getSize()) {
+        Set<Map.Entry<Integer, ItemStack>> entrySet = event.getNewItems().entrySet();
+        int size = topInventory.getSize();
+        for (Map.Entry<Integer, ItemStack> entry : entrySet) {
+            if (entry.getKey() < size) {
                 result = true;
                 break;
             }

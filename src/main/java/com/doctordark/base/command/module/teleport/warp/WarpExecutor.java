@@ -2,9 +2,10 @@ package com.doctordark.base.command.module.teleport.warp;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.base.command.CommandArgument;
-import com.doctordark.base.command.CommandArgumentHandler;
+import com.doctordark.base.command.CommandWrapper;
 import com.doctordark.base.warp.Warp;
+import com.doctordark.util.BukkitUtils;
+import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.time.DurationFormatUtils;
@@ -45,12 +46,12 @@ public class WarpExecutor extends BaseCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length < 1) {
-            CommandArgumentHandler.printUsage(sender, label, arguments);
+            CommandWrapper.printUsage(sender, label, arguments);
             sender.sendMessage(ChatColor.GRAY + "/" + label + " <warpName> - Teleport to a server warp.");
             return true;
         }
 
-        CommandArgument argument = CommandArgumentHandler.getArgument(args[0], sender, arguments);
+        CommandArgument argument = CommandWrapper.matchArgument(args[0], sender, arguments);
 
         if (argument == null) {
             handleWarp(sender, args);
@@ -68,12 +69,12 @@ public class WarpExecutor extends BaseCommand {
 
         List<String> results;
         if (args.length == 1) {
-            results = CommandArgumentHandler.getArgumentList(sender, arguments);
+            results = CommandWrapper.getAccessibleArgumentNames(sender, arguments);
             for (Warp warp : plugin.getWarpManager().getWarps()) {
                 results.add(warp.getName());
             }
         } else {
-            CommandArgument argument = CommandArgumentHandler.getArgument(args[0], sender, arguments);
+            CommandArgument argument = CommandWrapper.matchArgument(args[0], sender, arguments);
             if (argument == null) {
                 return Collections.emptyList();
             } else {
@@ -82,7 +83,7 @@ public class WarpExecutor extends BaseCommand {
         }
 
         if (results == null) return null;
-        return CommandArgumentHandler.getCompletions(args, results);
+        return BukkitUtils.getCompletions(args, results);
     }
 
     private boolean handleWarp(CommandSender sender, String[] args) {
@@ -121,6 +122,7 @@ public class WarpExecutor extends BaseCommand {
         }
 
         BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
             public void run() {
                 warpPlayer(player, warp);
             }
@@ -129,7 +131,7 @@ public class WarpExecutor extends BaseCommand {
         runnable.runTaskLater(plugin, 20L * delay);
         taskMap.put(player.getUniqueId(), runnable);
 
-        sender.sendMessage(ChatColor.GRAY + "Players are nearby. Please wait " + DurationFormatUtils.formatDurationWords(delay * 1000, true, true) + ".");
+        sender.sendMessage(ChatColor.GRAY + "Players are nearby. Please wait " + DurationFormatUtils.formatDurationWords(delay * 1000, true, true) + '.');
         return true;
     }
 
@@ -143,6 +145,6 @@ public class WarpExecutor extends BaseCommand {
 
         Location location = warp.getLocation();
         player.teleport(location, PlayerTeleportEvent.TeleportCause.COMMAND);
-        player.sendMessage(ChatColor.GRAY + "Warped to " + warp.getName() + ".");
+        player.sendMessage(ChatColor.GRAY + "Warped to " + warp.getName() + '.');
     }
 }

@@ -13,7 +13,6 @@ public class TopCommand extends BaseCommand {
 
     public TopCommand() {
         super("top", "Teleports to the highest safe spot.", "base.command.top");
-        setAliases(new String[0]);
         setUsage("/(command)");
     }
 

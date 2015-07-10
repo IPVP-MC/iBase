@@ -16,20 +16,21 @@ import com.doctordark.base.listener.PlayerLimitListener;
 import com.doctordark.base.listener.VanishListener;
 import com.doctordark.base.task.AnnouncementHandler;
 import com.doctordark.base.task.AutoRestartHandler;
-import com.doctordark.util.PersistableLocation;
-import com.doctordark.base.warp.FlatFileWarpManager;
-import com.doctordark.base.warp.Warp;
-import com.doctordark.base.warp.WarpManager;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.user.ConsoleUser;
 import com.doctordark.base.user.NameHistory;
 import com.doctordark.base.user.ServerParticipator;
 import com.doctordark.base.user.UserManager;
+import com.doctordark.base.warp.FlatFileWarpManager;
+import com.doctordark.base.warp.Warp;
+import com.doctordark.base.warp.WarpManager;
+import com.doctordark.util.PersistableLocation;
 import com.doctordark.util.bossbar.BossBarManager;
 import com.doctordark.util.chat.Lang;
 import com.doctordark.util.cuboid.Cuboid;
 import com.doctordark.util.cuboid.NamedCuboid;
 import com.doctordark.util.itemdb.ItemDb;
+import com.doctordark.util.itemdb.SimpleItemDb;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
@@ -88,9 +89,9 @@ public class BasePlugin extends JavaPlugin {
 
         BossBarManager.unhook();
 
-        getServerHandler().saveServerData();
-        getUserManager().saveParticipatorData();
-        getWarpManager().saveWarpData();
+        serverHandler.saveServerData();
+        userManager.saveParticipatorData();
+        warpManager.saveWarpData();
 
         BasePlugin.plugin = null;
     }
@@ -102,12 +103,11 @@ public class BasePlugin extends JavaPlugin {
     private void registerManagers() {
         BossBarManager.hook();
         autoRestartHandler = new AutoRestartHandler(this);
-        playTimeManager = new PlayTimeManager(this);
         serverHandler = new ServerHandler(this);
         userManager = new UserManager(this);
         warpManager = new FlatFileWarpManager(this);
 
-        this.itemDb = new ItemDb(this);
+        this.itemDb = new SimpleItemDb(this);
         try {
             Lang.initialize("en_US");
         } catch (IOException ex) {
@@ -131,6 +131,7 @@ public class BasePlugin extends JavaPlugin {
         manager.registerEvents(new JoinListener(this), this);
         manager.registerEvents(new NameVerifyListener(), this);
         manager.registerEvents(new PingListener(), this);
+        manager.registerEvents(playTimeManager = new PlayTimeManager(this), this);
         manager.registerEvents(new PlayerLimitListener(this), this);
         manager.registerEvents(new VanishListener(this), this);
     }

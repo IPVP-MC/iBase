@@ -25,7 +25,6 @@ public class BackCommand extends BaseCommand implements Listener {
 
     public BackCommand(BasePlugin plugin) {
         super("back", "Go to a players last known location.", "base.command.back");
-        setAliases(new String[0]);
         setUsage("/(command) [playerName]");
         Bukkit.getServer().getPluginManager().registerEvents(this, this.plugin = plugin);
     }
@@ -55,7 +54,7 @@ public class BackCommand extends BaseCommand implements Listener {
         Player player = (Player) sender;
         player.teleport(previous);
 
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Teleported to back location of " + target.getName() + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Teleported to back location of " + target.getName() + '.');
         return true;
     }
 

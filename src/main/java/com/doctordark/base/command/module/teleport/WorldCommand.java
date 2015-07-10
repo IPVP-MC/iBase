@@ -65,7 +65,7 @@ public class WorldCommand extends BaseCommand {
         String worldName = world.getName();
         String environmentName = WordUtils.capitalizeFully(world.getEnvironment().name().replace('_', ' '));
 
-        sender.sendMessage(ChatColor.AQUA + "Switched world to '" + worldName + ChatColor.YELLOW + " [" + environmentName + "]" + ChatColor.AQUA + "'.");
+        sender.sendMessage(ChatColor.AQUA + "Switched world to '" + worldName + ChatColor.YELLOW + " [" + environmentName + ']' + ChatColor.AQUA + "'.");
         return true;
     }
 

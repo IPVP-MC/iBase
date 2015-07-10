@@ -1,4 +1,4 @@
- package com.doctordark.base;
+package com.doctordark.base;
 
 import com.doctordark.util.Config;
 import com.google.common.collect.Maps;
@@ -13,6 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -32,16 +33,12 @@ public class PlayTimeManager implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        sessionTimestamps.put(uuid, System.currentTimeMillis());
+        sessionTimestamps.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-
+        UUID uuid = event.getPlayer().getUniqueId();
         totalPlaytimeMap.put(uuid, getTotalPlayTime(uuid));
         sessionTimestamps.remove(uuid);
     }
@@ -60,8 +57,8 @@ public class PlayTimeManager implements Listener {
         }
 
         long millis = System.currentTimeMillis();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            sessionTimestamps.put(player.getUniqueId(), millis);
+        for (Player target : Bukkit.getOnlinePlayers()) {
+            sessionTimestamps.put(target.getUniqueId(), millis);
         }
     }
 
@@ -73,12 +70,11 @@ public class PlayTimeManager implements Listener {
             totalPlaytimeMap.put(player.getUniqueId(), getTotalPlayTime(player.getUniqueId()));
         }
 
-        Map<String, Long> saveMap = Maps.newHashMap();
-        for (Map.Entry<UUID, Long> entry : totalPlaytimeMap.entrySet()) {
-            saveMap.put(entry.getKey().toString(), entry.getValue());
+        Set<Map.Entry<UUID, Long>> entrySet = totalPlaytimeMap.entrySet();
+        for (Map.Entry<UUID, Long> entry : entrySet) {
+            config.set("playing-times." + entry.getKey().toString(), entry.getValue());
         }
 
-        config.set("playing-times", saveMap);
         config.save();
     }
 
@@ -89,11 +85,8 @@ public class PlayTimeManager implements Listener {
      * @return the session playing time in millis
      */
     public long getSessionPlayTime(UUID uuid) {
-        if (sessionTimestamps.containsKey(uuid)) {
-            return System.currentTimeMillis() - sessionTimestamps.get(uuid);
-        } else {
-            return 0L;
-        }
+        Long session = sessionTimestamps.get(uuid);
+        return session != null ? System.currentTimeMillis() - session : 0L;
     }
 
     /**
@@ -103,11 +96,7 @@ public class PlayTimeManager implements Listener {
      * @return the previous sessions play time in milliseconds
      */
     public long getPreviousPlayTime(UUID uuid) {
-        if (totalPlaytimeMap.containsKey(uuid)) {
-            return totalPlaytimeMap.get(uuid);
-        } else {
-            return 0L;
-        }
+        return totalPlaytimeMap.getOrDefault(uuid, 0L);
     }
 
     /**

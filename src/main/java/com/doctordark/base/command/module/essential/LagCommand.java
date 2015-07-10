@@ -21,7 +21,6 @@ public class LagCommand extends BaseCommand {
 
     public LagCommand() {
         super("lag", "Checks the lag of the server.", "base.command.lag");
-        setAliases(new String[0]);
         setUsage("/(command)");
     }
 
@@ -40,8 +39,8 @@ public class LagCommand extends BaseCommand {
         }
 
         Runtime runtime = Runtime.getRuntime();
-        sender.sendMessage(colour + "Server tps is currently at " + format(tps) + ".");
-        sender.sendMessage(colour + "Server lag is currently at " + format(lag) + "%");
+        sender.sendMessage(colour + "Server tps is currently at " + format(tps) + '.');
+        sender.sendMessage(colour + "Server lag is currently at " + format(lag) + '%');
 
         if (sender.hasPermission(getPermission() + ".memory")) {
             sender.sendMessage(colour + "Max Memory: " + runtime.maxMemory() / 1024L / 1024L);

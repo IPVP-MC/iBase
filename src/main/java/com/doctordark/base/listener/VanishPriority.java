@@ -31,7 +31,7 @@ public enum VanishPriority {
      * @return true if this {@link VanishPriority} is more than the other
      */
     public boolean isMoreThan(VanishPriority other) {
-        return getPriorityLevel() > other.getPriorityLevel();
+        return this.priorityLevel > other.priorityLevel;
     }
 
     /**
@@ -42,7 +42,7 @@ public enum VanishPriority {
      */
     public static VanishPriority of(int level) {
         for (VanishPriority vanishPriority : VanishPriority.values()) {
-            if (vanishPriority.getPriorityLevel() == level) {
+            if (vanishPriority.priorityLevel == level) {
                 return vanishPriority;
             }
         }
@@ -57,7 +57,7 @@ public enum VanishPriority {
      * @return the {@link VanishPriority} of {@link Player}, or {@code NONE}
      */
     public static VanishPriority of(Player player) {
-        for (int i = HIGHEST.getPriorityLevel(); i > NONE.getPriorityLevel(); i--) {
+        for (int i = HIGHEST.priorityLevel; i > NONE.priorityLevel; i--) {
             if (player.hasPermission("base.vanishpriority." + i)) {
                 return of(i);
             }

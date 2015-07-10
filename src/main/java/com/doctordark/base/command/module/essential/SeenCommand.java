@@ -76,7 +76,7 @@ public class SeenCommand extends BaseCommand {
                 String lastSeen = format.format(playerData.getLastSeen() * 1000L);
                 sender.sendMessage(ChatColor.GOLD + target.getName() + ChatColor.GREEN + " was last seen at " + ChatColor.GOLD + lastSeen +
                         ChatColor.GREEN + (sender.hasPermission(command.getPermission() + ".ip") ? " using the address " +
-                        ChatColor.GOLD + IPUtils.toString(playerData.getIp()) + ChatColor.GREEN : "") + ".");
+                        ChatColor.GOLD + IPUtils.toString(playerData.getIp()) + ChatColor.GREEN : "") + '.');
             }
         }.runTaskAsynchronously(plugin);
         return true;

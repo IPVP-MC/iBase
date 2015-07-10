@@ -68,6 +68,6 @@ public class NamedCuboid extends Cuboid {
 
     @Override
     public String toString() {
-        return "NamedCuboid: " + worldName + "," + x1 + "," + y1 + "," + z1 + "=>" + x2 + "," + y2 + "," + z2 + ":" + name;
+        return "NamedCuboid: " + worldName + ',' + x1 + ',' + y1 + ',' + z1 + "=>" + x2 + ',' + y2 + ',' + z2 + ':' + name;
     }
 }

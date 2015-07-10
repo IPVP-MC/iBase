@@ -22,7 +22,6 @@ public class RepairCommand extends BaseCommand {
 
     public RepairCommand() {
         super("repair", "Allows repairing of damaged tools for a player.", "base.command.repair");
-        this.setAliases(new String[]{});
         this.setUsage("/(command) <playerName> [all]");
     }
 
@@ -38,7 +37,7 @@ public class RepairCommand extends BaseCommand {
             target = (Player) sender;
         }
 
-        if ((target == null) || (!canSee(sender, target))) {
+        if (target == null || !canSee(sender, target)) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
             return true;
         }
@@ -56,7 +55,7 @@ public class RepairCommand extends BaseCommand {
             stack.setDurability((short) 0);
         });
 
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Repaired " + (toRepair.size() > 1 ? "inventory" : "held item") + " of " + target.getName() + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Repaired " + (toRepair.size() > 1 ? "inventory" : "held item") + " of " + target.getName() + '.');
         return true;
     }
 

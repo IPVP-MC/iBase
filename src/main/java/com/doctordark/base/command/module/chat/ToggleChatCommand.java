@@ -35,7 +35,7 @@ public class ToggleChatCommand extends BaseCommand {
         boolean newChatToggled = !baseUser.isGlobalChatVisible();
         baseUser.setGlobalChatVisible(newChatToggled);
 
-        sender.sendMessage(ChatColor.YELLOW + "You have toggled global chat visibility " + (newChatToggled ? ChatColor.GREEN + "on" : ChatColor.RED + "off") + ChatColor.YELLOW + ".");
+        sender.sendMessage(ChatColor.YELLOW + "You have toggled global chat visibility " + (newChatToggled ? ChatColor.GREEN + "on" : ChatColor.RED + "off") + ChatColor.YELLOW + '.');
         return true;
     }
 }

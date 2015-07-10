@@ -13,7 +13,6 @@ public class RulesCommand extends BaseCommand {
 
     public RulesCommand(BasePlugin plugin) {
         super("rules", "Shows the server rules.", "base.command.rules");
-        setAliases(new String[0]);
         setUsage("/(command)");
         this.plugin = plugin;
     }

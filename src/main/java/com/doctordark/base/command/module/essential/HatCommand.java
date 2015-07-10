@@ -13,7 +13,6 @@ public class HatCommand extends BaseCommand {
 
     public HatCommand() {
         super("hat", "Wear something on your head.", "base.command.hat");
-        setAliases(new String[0]);
         setUsage("/(command)");
     }
 

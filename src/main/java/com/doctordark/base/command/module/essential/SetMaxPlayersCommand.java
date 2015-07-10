@@ -34,7 +34,7 @@ public class SetMaxPlayersCommand extends BaseCommand {
 
         plugin.getServerHandler().setMaxPlayers(amount);
 
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Set the maximum players to " + amount + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Set the maximum players to " + amount + '.');
         return true;
     }
 }

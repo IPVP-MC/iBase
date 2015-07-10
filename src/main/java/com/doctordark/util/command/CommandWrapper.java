@@ -1,5 +1,7 @@
 package com.doctordark.base.command;
 
+import com.doctordark.util.BukkitUtils;
+import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
@@ -12,29 +14,25 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-public class CommandArgumentHandler implements CommandExecutor, TabCompleter {
+public class CommandWrapper implements CommandExecutor, TabCompleter {
 
     private final Collection<CommandArgument> arguments;
 
-    public CommandArgumentHandler(Collection<CommandArgument> arguments) {
+    public CommandWrapper(Collection<CommandArgument> arguments) {
         this.arguments = arguments;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command is only executable for players.");
-            return true;
-        }
-
         if (args.length < 1) {
             printUsage(sender, label, arguments);
             return true;
         }
 
-        CommandArgument argument = getArgument(args[0], sender, arguments);
+        CommandArgument argument = matchArgument(args[0], sender, arguments);
 
         if (argument == null) {
             printUsage(sender, label, arguments);
@@ -52,21 +50,17 @@ public class CommandArgumentHandler implements CommandExecutor, TabCompleter {
 
         List<String> results;
         if (args.length == 1) {
-            results = getArgumentList(sender, arguments);
+            results = getAccessibleArgumentNames(sender, arguments);
         } else {
-            CommandArgument argument = getArgument(args[0], sender, arguments);
-            if (argument == null) {
-                return Collections.emptyList();
-            } else {
-                results = argument.onTabComplete(sender, command, label, args);
-            }
+            CommandArgument argument = matchArgument(args[0], sender, arguments);
+            if (argument == null) return Collections.emptyList();
+
+            // If a plugin sets the results to null, let Bukkit handle player name completion
+            results = argument.onTabComplete(sender, command, label, args);
+            if (results == null) return null;
         }
 
-        if (results == null) {
-            return null;
-        }
-
-        return getCompletions(args, results);
+        return BukkitUtils.getCompletions(args, results);
     }
 
     public static void printUsage(CommandSender sender, String label, Collection<CommandArgument> arguments) {
@@ -79,16 +73,11 @@ public class CommandArgumentHandler implements CommandExecutor, TabCompleter {
         }
     }
 
-    public static CommandArgument getArgument(String id, CommandSender sender, Collection<CommandArgument> arguments) {
+    public static CommandArgument matchArgument(String id, CommandSender sender, Collection<CommandArgument> arguments) {
         for (CommandArgument argument : arguments) {
             String permission = argument.getPermission();
-            if ((permission == null) || (sender.hasPermission(permission))) {
-                if (argument.getName().equalsIgnoreCase(id)) {
-                    return argument;
-                }
-
-                List<String> aliases = Arrays.asList(argument.getAliases());
-                if (aliases.contains(id)) {
+            if (permission == null || sender.hasPermission(permission)) {
+                if (argument.getName().equalsIgnoreCase(id) || Arrays.asList(argument.getAliases()).contains(id)) {
                     return argument;
                 }
             }
@@ -97,11 +86,11 @@ public class CommandArgumentHandler implements CommandExecutor, TabCompleter {
         return null;
     }
 
-    public static List<String> getArgumentList(CommandSender sender, Collection<CommandArgument> arguments) {
+    public static List<String> getAccessibleArgumentNames(CommandSender sender, Collection<CommandArgument> arguments) {
         List<String> results = Lists.newArrayList();
         for (CommandArgument argument : arguments) {
             String permission = argument.getPermission();
-            if ((permission == null) || (sender.hasPermission(permission))) {
+            if (permission == null || sender.hasPermission(permission)) {
                 results.add(argument.getName());
             }
         }
@@ -109,15 +98,11 @@ public class CommandArgumentHandler implements CommandExecutor, TabCompleter {
         return results;
     }
 
-    public static List<String> getCompletions(String[] args, List<String> input) {
-        List<String> results = Lists.newArrayList();
-        String argument = args[(args.length - 1)];
-        for (String string : input) {
-            if (string.regionMatches(true, 0, argument, 0, argument.length())) {
-                results.add(string);
-            }
-        }
+    public static class ArgumentComparator implements Comparator<CommandArgument> {
 
-        return results;
+        @Override
+        public int compare(CommandArgument primaryArgument, CommandArgument secondaryArgument) {
+            return secondaryArgument.getName().compareTo(primaryArgument.getName());
+        }
     }
 }

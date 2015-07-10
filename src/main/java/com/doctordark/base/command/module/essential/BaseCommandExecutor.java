@@ -5,6 +5,7 @@ import com.doctordark.base.command.BaseCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class BaseCommandExecutor extends BaseCommand {
 
@@ -27,10 +28,16 @@ public class BaseCommandExecutor extends BaseCommand {
         }
 
         if (args[0].equalsIgnoreCase("reload")) {
-            plugin.getServerHandler().reloadServerData();
-            plugin.getUserManager().reloadParticipatorData();
-            plugin.reloadSchedulers();
-            sender.sendMessage(ChatColor.GOLD + "Reloaded the schedulers, server and user data of " + ChatColor.RED + plugin.getDescription().getFullName() + ChatColor.GOLD + "..");
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    plugin.getServerHandler().reloadServerData();
+                    plugin.getUserManager().reloadParticipatorData();
+                    plugin.reloadSchedulers();
+                    sender.sendMessage(ChatColor.GOLD + "Reloaded the schedulers and data of " + ChatColor.RED + plugin.getDescription().getFullName() + ChatColor.GOLD + "..");
+                }
+            }.runTaskAsynchronously(plugin);
+            return true;
         }
 
         if (args[0].equalsIgnoreCase("toggleprotocollib")) {

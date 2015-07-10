@@ -18,7 +18,6 @@ public class PositionCommand extends BaseCommand {
 
     public PositionCommand() {
         super("position", "Checks the position of a player.", "base.command.position");
-        this.setAliases(new String[]{});
         this.setUsage("/(command) <playerName>");
     }
 

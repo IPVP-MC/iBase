@@ -20,7 +20,6 @@ public class AmivisCommand extends BaseCommand {
 
     public AmivisCommand(BasePlugin plugin) {
         super("amivis", "Check if a player is visible.", "base.command.amivis");
-        this.setAliases(new String[]{});
         this.setUsage("/(command) <playerName> [targetName]");
         this.plugin = plugin;
     }
@@ -44,7 +43,7 @@ public class AmivisCommand extends BaseCommand {
 
         boolean vanished = plugin.getUserManager().getUser(target.getUniqueId()).isVanished();
 
-        sender.sendMessage(ChatColor.YELLOW + target.getName() + " is " + (vanished ? "in vanish" : "not in vanish") + ".");
+        sender.sendMessage(ChatColor.YELLOW + target.getName() + " is " + (vanished ? "in vanish" : "not in vanish") + '.');
         return true;
     }
 

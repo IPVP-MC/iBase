@@ -22,7 +22,6 @@ public class RemoveEntityCommand extends BaseCommand {
 
     public RemoveEntityCommand() {
         super("removeentity", "Removes all of a specific entity.", "base.command.removeentity");
-        setAliases(new String[0]);
         setUsage("/(command) <worldName> <entityType> [radius] [removeCustomNamed]");
     }
 
@@ -86,7 +85,7 @@ public class RemoveEntityCommand extends BaseCommand {
                 }
             }
         }
-        sender.sendMessage(ChatColor.YELLOW + "Removed " + removed + " of " + entityType.name() + ".");
+        sender.sendMessage(ChatColor.YELLOW + "Removed " + removed + " of " + entityType.name() + '.');
         return true;
     }
 

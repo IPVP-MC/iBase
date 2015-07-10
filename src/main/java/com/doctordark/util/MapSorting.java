@@ -14,6 +14,7 @@ public class MapSorting {
 
     // Building block - extract key from entry
     private static final Function EXTRACT_KEY = new Function<Entry<Object, Object>, Object>() {
+        @Override
         public Object apply(Entry<Object, Object> input) {
             return input.getKey();
         }
@@ -21,6 +22,7 @@ public class MapSorting {
 
     // Same as above, only we extract the value
     private static final Function EXTRACT_VALUE = new Function<Entry<Object, Object>, Object>() {
+        @Override
         public Object apply(Entry<Object, Object> input) {
             return input.getValue();
         }

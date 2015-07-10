@@ -2,6 +2,7 @@ package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -15,7 +16,6 @@ public class SudoCommand extends BaseCommand {
 
     public SudoCommand() {
         super("sudo", "Forces a player to run command.", "base.command.sudo");
-        setAliases(new String[0]);
         setUsage("/(command) <force> <all|playerName> <command args...> \n[Warning!] Forcing will give player temporary OP until executed.");
     }
 
@@ -34,18 +34,13 @@ public class SudoCommand extends BaseCommand {
             return true;
         }
 
-        StringBuilder builder = new StringBuilder();
-        for (int i = 2; i < args.length; i++) {
-            builder.append(args[i]).append(" ");
-        }
-
-        String executingCommand = builder.toString();
+        String executingCommand = StringUtils.join(args, ' ', 2, args.length);
         if (args[1].equalsIgnoreCase("all")) {
             for (Player target : Bukkit.getServer().getOnlinePlayers()) {
                 executeCommand(target, executingCommand, force);
             }
 
-            sender.sendMessage(ChatColor.RED + "Forcing all players to run " + executingCommand + (force ? "with permission bypasses" : "") + ".");
+            sender.sendMessage(ChatColor.RED + "Forcing all players to run " + executingCommand + (force ? " with permission bypasses" : "") + '.');
             return true;
         }
 
@@ -57,7 +52,7 @@ public class SudoCommand extends BaseCommand {
         }
 
         executeCommand(target, executingCommand, force);
-        sender.sendMessage(ChatColor.RED + "Making " + target.getName() + " to run " + executingCommand + (force ? "with permission bypasses" : "") + ".");
+        sender.sendMessage(ChatColor.RED + "Making " + target.getName() + " to run " + executingCommand + (force ? "with permission bypasses" : "") + '.');
         return true;
     }
 
@@ -68,12 +63,12 @@ public class SudoCommand extends BaseCommand {
         }
 
         List<String> results = Lists.newArrayList();
-        if (args.length == 0) {
+        if (args.length == 1) {
             results.add("true");
             results.add("false");
-        } else if (args.length == 1) {
+        } else if (args.length == 2) {
             results.add("ALL");
-            for (Player target : Bukkit.getServer().getOnlinePlayers()) {
+            for (Player target : Bukkit.getOnlinePlayers()) {
                 if ((!(sender instanceof Player)) || ((Player) sender).canSee(target)) {
                     results.add(target.getName());
                 }

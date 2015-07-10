@@ -35,7 +35,7 @@ public class ToggleMessagesCommand extends BaseCommand {
         boolean newToggled = !baseUser.isMessagesVisible();
         baseUser.setMessagesVisible(newToggled);
 
-        sender.sendMessage(ChatColor.YELLOW + "You have toggled private messages " + (newToggled ? ChatColor.GREEN + "on" : ChatColor.RED + "off") + ChatColor.YELLOW + ".");
+        sender.sendMessage(ChatColor.YELLOW + "You have toggled private messages " + (newToggled ? ChatColor.GREEN + "on" : ChatColor.RED + "off") + ChatColor.YELLOW + '.');
         return true;
     }
 }

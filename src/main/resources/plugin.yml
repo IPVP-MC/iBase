@@ -33,6 +33,9 @@ commands:
   clearinv:
     aliases: [ci, clear, cpinv]
     description: Clears a player inventory.
+  copyinv:
+    aliases: [cloneinv, cloneinventory, copyinventory, invcopy, inventorycopy, invclone, inventoryclone]
+    description: Clone another players' inventory.
   craft:
     aliases: [wbench, workbench]
     description: Opens a workbench inventory.

@@ -2,7 +2,6 @@ package com.doctordark.base.warp;
 
 import com.doctordark.util.Config;
 import com.doctordark.util.GenericUtils;
-import com.google.common.collect.Lists;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -13,14 +12,12 @@ public class FlatFileWarpManager implements WarpManager {
     private int nearbyPlayerRadiusCancel;
 
     private final JavaPlugin plugin;
-    private final List<Warp> warps;
-    private final Config config;
+    private List<Warp> warps;
+    private Config config;
 
     public FlatFileWarpManager(JavaPlugin plugin) {
-        this.config = new Config(plugin, "warps");
         this.plugin = plugin;
-        this.warps = Lists.newArrayList();
-        this.reloadData();
+        this.reloadWarpData();
     }
 
     @Override
@@ -65,9 +62,9 @@ public class FlatFileWarpManager implements WarpManager {
     }
 
     @Override
-    public void reloadData() {
-        warps.clear();
-        warps.addAll(GenericUtils.createList(config.get("warps"), Warp.class));
+    public void reloadWarpData() {
+        config = new Config(plugin, "warps");
+        warps = GenericUtils.createList(config.get("warps"), Warp.class);
 
         warpDelaySeconds = plugin.getConfig().getInt("warp-delay-seconds", 0);
         nearbyPlayerRadiusCancel = plugin.getConfig().getInt("nearby-player-radius-cancel", 0);
@@ -75,11 +72,11 @@ public class FlatFileWarpManager implements WarpManager {
 
     @Override
     public void saveWarpData() {
-        plugin.getConfig().set("warp-delay-seconds", getWarpDelaySeconds());
-        plugin.getConfig().set("nearby-player-radius-cancel", getNearbyPlayerRadiusCancel());
+        plugin.getConfig().set("warp-delay-seconds", warpDelaySeconds);
+        plugin.getConfig().set("nearby-player-radius-cancel", nearbyPlayerRadiusCancel);
         plugin.saveConfig();
 
-        config.set("warps", getWarps());
+        config.set("warps", warps);
         config.save();
     }
 }

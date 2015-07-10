@@ -54,13 +54,13 @@ public class GamemodeCommand extends BaseCommand {
         }
 
         if (target.getGameMode() == mode) {
-            sender.sendMessage(ChatColor.RED + "Gamemode of " + target.getName() + " is already " + mode.name() + ".");
+            sender.sendMessage(ChatColor.RED + "Gamemode of " + target.getName() + " is already " + mode.name() + '.');
             return true;
         }
 
         target.setGameMode(mode);
 
-        Command.broadcastCommandMessage(sender, ChatColor.GOLD + "Set gamemode of " + target.getName() + ChatColor.GOLD + " to " + ChatColor.WHITE + mode.name() + ChatColor.GOLD + ".");
+        Command.broadcastCommandMessage(sender, ChatColor.GOLD + "Set gamemode of " + target.getName() + ChatColor.GOLD + " to " + ChatColor.WHITE + mode.name() + ChatColor.GOLD + '.');
         return true;
     }
 

@@ -17,7 +17,6 @@ public class EntitiesCommand extends BaseCommand {
 
     public EntitiesCommand() {
         super("entities", "Checks the entity count in environments.", "base.command.entities");
-        setAliases(new String[0]);
         setUsage("/(command) <playerName>");
     }
 
@@ -26,15 +25,10 @@ public class EntitiesCommand extends BaseCommand {
         Collection<World> worlds = Bukkit.getServer().getWorlds();
         for (World world : worlds) {
             sender.sendMessage(ChatColor.GRAY + world.getEnvironment().name());
-            for (EntityType entityType : EntityType.values()) {
-                Collection<? extends Entity> entities;
 
-                try {
-                    entities = world.getEntitiesByClass(entityType.getEntityClass());
-                } catch (Exception ex) {
-                    continue;
-                }
-
+            EntityType[] types = EntityType.values();
+            for (EntityType entityType : types) {
+                Collection<? extends Entity> entities = world.getEntitiesByClass(entityType.getEntityClass());
                 if (entities.size() >= 20) {
                     sender.sendMessage(ChatColor.YELLOW + " " + entityType.name() + " with " + entities.size());
                 }

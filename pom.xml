@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.doctordark.essentials</groupId>
     <artifactId>base</artifactId>
-    <version>3.0</version>
+    <version>3.1</version>
     <name>Base</name>
     <description>Base brings general commands to Minecraft servers.</description>
 
@@ -16,26 +16,11 @@
         </license>
     </licenses>
 
-    <scm>
-        <connection>scm:git:git@bitbucket.org:DoctorDark/base.git</connection>
-        <developerConnection>scm:ssh:git@bitbucket.org:DoctorDark/base.git</developerConnection>
-        <url>https://DoctorDark@bitbucket.org/DoctorDark/base.git</url>
-    </scm>
-
     <repositories>
-        <!-- ProtocolLib -->
         <repository>
             <id>comphenix-repo</id>
             <url>http://repo.comphenix.net/content/groups/public/</url>
         </repository>
-
-        <!-- Spigot -->
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/</url>
-        </repository>
-
-        <!-- BanManager -->
         <repository>
             <id>confuser-repo</id>
             <url>http://ci.frostcast.net/plugin/repository/everything</url>
@@ -43,41 +28,12 @@
     </repositories>
 
     <dependencies>
-        <!-- ProtocolLib -->
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>LATEST</version>
             <type>jar</type>
         </dependency>
-
-        <!-- Bukkit -->
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.7.10-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.7.10-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.7.10-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.7.10-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-
-        <!-- BanManager -->
         <dependency>
             <groupId>me.confuser</groupId>
             <artifactId>BanManager</artifactId>

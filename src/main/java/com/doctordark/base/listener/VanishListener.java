@@ -284,7 +284,7 @@ public class VanishListener implements Listener {
         }
     }
 
-    public void handleFakeChest(Player player, Chest chest, boolean open) {
+    public static void handleFakeChest(Player player, Chest chest, boolean open) {
         Inventory chestInventory = chest.getInventory();
         if (chestInventory instanceof DoubleChestInventory) {
             DoubleChestInventory doubleChestInventory = (DoubleChestInventory) chestInventory;

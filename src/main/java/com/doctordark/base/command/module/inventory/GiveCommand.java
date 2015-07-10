@@ -9,7 +9,6 @@ public class GiveCommand extends BaseCommand {
 
     public GiveCommand() {
         super("give", "Gives an item to a player.", "base.command.give");
-        setAliases(new String[0]);
         setUsage("/(command) <playerName> <itemName> [quantity]");
     }
 

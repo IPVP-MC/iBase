@@ -15,7 +15,6 @@ public class NearCommand extends BaseCommand {
 
     public NearCommand() {
         super("near", "Count entities near a player.", "base.command.near");
-        setAliases(new String[0]);
         setUsage("/(command) <playerName> <radius>");
     }
 
@@ -42,7 +41,7 @@ public class NearCommand extends BaseCommand {
 
         int entityCount = target.getNearbyEntities(radius, Math.max(radius.intValue(), 256), radius).size();
 
-        sender.sendMessage(ChatColor.YELLOW.toString() + entityCount + " entities are near " + target.getName() + " with a radius of " + radius + ".");
+        sender.sendMessage(ChatColor.YELLOW.toString() + entityCount + " entities are near " + target.getName() + " with a radius of " + radius + '.');
         return true;
     }
 

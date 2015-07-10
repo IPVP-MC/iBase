@@ -60,7 +60,7 @@ public class IpHistoryCommand extends BaseCommand {
 
         if (args[0].equalsIgnoreCase("player")) {
             if (args.length < 2) {
-                sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + args[0].toLowerCase() + " <playerName>");
+                sender.sendMessage(ChatColor.RED + "Usage: /" + label + ' ' + args[0].toLowerCase() + " <playerName>");
                 return true;
             }
 
@@ -77,7 +77,7 @@ public class IpHistoryCommand extends BaseCommand {
             Collection<String> ipList = baseUser.getAddressHistories();
 
             for (String address : ipList) {
-                sender.sendMessage(ChatColor.GRAY + "  " + address + ChatColor.YELLOW + ": [" + StringUtils.join(getSharingPlayerNames(address), ", ") + "]");
+                sender.sendMessage(ChatColor.GRAY + "  " + address + ChatColor.YELLOW + ": [" + StringUtils.join(getSharingPlayerNames(address), ", ") + ']');
             }
 
             return true;
@@ -85,7 +85,7 @@ public class IpHistoryCommand extends BaseCommand {
 
         if (args[0].equalsIgnoreCase("address")) {
             if (args.length < 2) {
-                sender.sendMessage(ChatColor.RED + "Usage: /" + label + " " + args[0].toLowerCase() + " <address>");
+                sender.sendMessage(ChatColor.RED + "Usage: /" + label + ' ' + args[0].toLowerCase() + " <address>");
                 return true;
             }
 

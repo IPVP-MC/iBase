@@ -18,7 +18,6 @@ public class SpeedCommand extends BaseCommand {
 
     public SpeedCommand() {
         super("speed", "Sets the fly/walk speed of a player.", "base.command.speed");
-        setAliases(new String[0]);
         setUsage("/(command) <fly|walk> <speedMultiplier|reset> [playerName]");
     }
 
@@ -70,7 +69,7 @@ public class SpeedCommand extends BaseCommand {
 
             try {
                 target.setFlySpeed(flySpeed);
-                Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Flight speed of " + target.getName() + " has been set to " + multiplier + ".");
+                Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Flight speed of " + target.getName() + " has been set to " + multiplier + '.');
             } catch (IllegalArgumentException ex) {
                 if (flySpeed < 0.1F) {
                     sender.sendMessage(ChatColor.RED + "Speed multiplier too low: " + multiplier);
@@ -83,7 +82,7 @@ public class SpeedCommand extends BaseCommand {
 
             try {
                 target.setWalkSpeed(walkSpeed);
-                Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Walking speed of " + target.getName() + " has been set to " + multiplier + ".");
+                Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Walking speed of " + target.getName() + " has been set to " + multiplier + '.');
             } catch (IllegalArgumentException ex) {
                 if (walkSpeed < 0.2F) {
                     sender.sendMessage(ChatColor.RED + "Speed multiplier too low: " + multiplier);

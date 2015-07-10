@@ -100,6 +100,11 @@ public class Trans extends ChatMessage {
         return setHover(HoverAction.SHOW_TEXT, new Text(text));
     }
 
+    public Trans reset() {
+        ChatUtil.reset(this);
+        return this;
+    }
+
     public String toRawText() {
         return this.c();
     }

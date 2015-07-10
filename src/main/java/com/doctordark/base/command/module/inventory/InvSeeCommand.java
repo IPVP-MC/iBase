@@ -1,19 +1,23 @@
 package com.doctordark.base.command.module.inventory;
 
+import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
-public class InvSeeCommand extends BaseCommand {
+public class InvSeeCommand extends BaseCommand implements Listener {
 
     private final InventoryType[] types = {
             InventoryType.BREWING, InventoryType.CHEST, InventoryType.DISPENSER,
@@ -21,10 +25,13 @@ public class InvSeeCommand extends BaseCommand {
             InventoryType.PLAYER, InventoryType.WORKBENCH
     };
 
+    private final Map<InventoryType, Inventory> inventories = new EnumMap<>(InventoryType.class);
+
     public InvSeeCommand() {
         super("invsee", "View the inventory of a player.", "base.command.invsee");
         setAliases(new String[]{"inventorysee", "inventory", "inv"});
         setUsage("/(command) <inventoryType|playerName>");
+        Bukkit.getPluginManager().registerEvents(this, BasePlugin.getPlugin());
     }
 
     @Override
@@ -48,7 +55,11 @@ public class InvSeeCommand extends BaseCommand {
         Inventory inventory = null;
         for (InventoryType type : this.types) {
             if (type.name().equalsIgnoreCase(args[0])) {
-                inventory = Bukkit.createInventory(player, type);
+                inventory = inventories.get(type);
+                if (inventory == null) {
+                    inventories.put(type, inventory = Bukkit.createInventory(player, type));
+                }
+                break;
             }
         }
 
@@ -78,7 +89,7 @@ public class InvSeeCommand extends BaseCommand {
             return Collections.emptyList();
         }
 
-        List<String> results = new ArrayList<>();
+        List<String> results = new ArrayList<>(types.length);
         for (InventoryType type : types) {
             results.add(type.name());
         }

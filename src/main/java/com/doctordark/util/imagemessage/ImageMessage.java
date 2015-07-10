@@ -1,5 +1,6 @@
 package com.doctordark.util.imagemessage;
 
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.util.ChatPaginator;
@@ -83,7 +84,7 @@ public class ImageMessage {
     public ImageMessage appendText(String... text) {
         for (int y = 0; y < lines.length; y++) {
             if (text.length > y) {
-                lines[y] += " " + text[y];
+                lines[y] += ' ' + text[y];
             }
         }
         return this;
@@ -124,13 +125,13 @@ public class ImageMessage {
     private String[] toImgMessage(ChatColor[][] colors, char imgChar) {
         String[] lines = new String[colors[0].length];
         for (int y = 0; y < colors[0].length; y++) {
-            String line = "";
+            StringBuilder line = new StringBuilder();
             for (ChatColor[] color1 : colors) {
                 ChatColor color = color1[y];
-                line += (color != null) ? color1[y].toString() + imgChar : TRANSPARENT_CHAR;
+                line.append((color != null) ? color1[y].toString() + imgChar : TRANSPARENT_CHAR);
             }
 
-            lines[y] = line + ChatColor.RESET;
+            lines[y] = line.toString() + ChatColor.RESET;
         }
 
         return lines;
@@ -191,12 +192,7 @@ public class ImageMessage {
             return s;
         } else {
             int leftPadding = (length - s.length()) / 2;
-            StringBuilder leftBuilder = new StringBuilder();
-            for (int i = 0; i < leftPadding; i++) {
-                leftBuilder.append(" ");
-            }
-
-            return leftBuilder.toString() + s;
+            return StringUtils.repeat(" ", leftPadding) + s;
         }
     }
 

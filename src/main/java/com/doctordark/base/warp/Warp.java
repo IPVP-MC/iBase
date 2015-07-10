@@ -22,19 +22,14 @@ public class Warp implements ConfigurationSerializable {
     }
 
     public Warp(Map<String, Object> map) {
-        if (map.containsKey("name")) {
-            this.name = ((String) map.get("name"));
-        }
-
-        if (map.containsKey("location")) {
-            this.location = ((PersistableLocation) map.get("location")).getLocation();
-        }
+        this.name = ((String) map.get("name"));
+        this.location = ((PersistableLocation) map.get("location")).getLocation();
     }
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = Maps.newHashMap();
-        map.put("name", getName());
+        Map<String, Object> map = Maps.newHashMapWithExpectedSize(2);
+        map.put("name", this.name);
         map.put("location", new PersistableLocation(location));
         return map;
     }

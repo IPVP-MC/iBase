@@ -1,6 +1,10 @@
 package com.doctordark.util.chat;
 
-import net.minecraft.server.v1_7_R4.*;
+import net.minecraft.server.v1_7_R4.ChatClickable;
+import net.minecraft.server.v1_7_R4.ChatComponentText;
+import net.minecraft.server.v1_7_R4.ChatHoverable;
+import net.minecraft.server.v1_7_R4.EnumChatFormat;
+import net.minecraft.server.v1_7_R4.IChatBaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -94,6 +98,11 @@ public class Text extends ChatComponentText {
 
     public Text setHoverText(String text) {
         return setHover(HoverAction.SHOW_TEXT, new Text(text));
+    }
+
+    public Text reset() {
+        ChatUtil.reset(this);
+        return this;
     }
 
     @Override

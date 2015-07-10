@@ -26,7 +26,6 @@ public class WhoisCommand extends BaseCommand {
     public WhoisCommand(BasePlugin plugin) {
         super("whois", "Check information about a player.", "base.command.whois");
         this.plugin = plugin;
-        this.setAliases(new String[]{});
         this.setUsage("/(command) [playerName]");
     }
 
@@ -53,14 +52,14 @@ public class WhoisCommand extends BaseCommand {
 
         BaseUser baseUser = plugin.getUserManager().getUser(uuid);
         sender.sendMessage(ChatColor.GRAY + BukkitUtils.STRAIGHT_LINE_DEFAULT);
-        sender.sendMessage(ChatColor.GREEN + " [" + target.getDisplayName() + ChatColor.GREEN + "]");
-        sender.sendMessage(ChatColor.YELLOW + "  Health: " + ChatColor.GOLD + target.getHealth() + "/" + target.getMaxHealth());
-        sender.sendMessage(ChatColor.YELLOW + "  Hunger: " + ChatColor.GOLD + target.getFoodLevel() + "/" + 20 + " (" + target.getSaturation() + " saturation)");
-        sender.sendMessage(ChatColor.YELLOW + "  Exp/Level: " + ChatColor.GOLD + target.getExp() + "/" + target.getLevel());
-        sender.sendMessage(ChatColor.YELLOW + "  Location: " + ChatColor.GOLD + world.getName() + " " +
-                ChatColor.GRAY + "[" + WordUtils.capitalizeFully(world.getEnvironment().name().replace('_', ' ')) + "] " +
-                ChatColor.GOLD + "(" + x + ", " + y + ", " + z + ")");
-        sender.sendMessage(ChatColor.YELLOW + "  Vanished: " + ChatColor.GOLD + baseUser.isVanished() + " (priority=" + VanishPriority.of(target).getPriorityLevel() + ")");
+        sender.sendMessage(ChatColor.GREEN + " [" + target.getDisplayName() + ChatColor.GREEN + ']');
+        sender.sendMessage(ChatColor.YELLOW + "  Health: " + ChatColor.GOLD + target.getHealth() + '/' + target.getMaxHealth());
+        sender.sendMessage(ChatColor.YELLOW + "  Hunger: " + ChatColor.GOLD + target.getFoodLevel() + '/' + 20 + " (" + target.getSaturation() + " saturation)");
+        sender.sendMessage(ChatColor.YELLOW + "  Exp/Level: " + ChatColor.GOLD + target.getExp() + '/' + target.getLevel());
+        sender.sendMessage(ChatColor.YELLOW + "  Location: " + ChatColor.GOLD + world.getName() + ' ' +
+                ChatColor.GRAY + '[' + WordUtils.capitalizeFully(world.getEnvironment().name().replace('_', ' ')) + "] " +
+                ChatColor.GOLD + '(' + x + ", " + y + ", " + z + ')');
+        sender.sendMessage(ChatColor.YELLOW + "  Vanished: " + ChatColor.GOLD + baseUser.isVanished() + " (priority=" + VanishPriority.of(target).getPriorityLevel() + ')');
         sender.sendMessage(ChatColor.YELLOW + "  Staff Chat: " + ChatColor.GOLD + baseUser.isInStaffChat());
         sender.sendMessage(ChatColor.YELLOW + "  Operator: " + ChatColor.GOLD + target.isOp());
         sender.sendMessage(ChatColor.YELLOW + "  Game Mode: " + ChatColor.GOLD + WordUtils.capitalizeFully(target.getGameMode().name().replace('_', ' ')));

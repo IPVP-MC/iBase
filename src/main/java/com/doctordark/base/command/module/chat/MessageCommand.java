@@ -4,6 +4,7 @@ import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.command.module.chat.event.PlayerMessageEvent;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -41,12 +42,7 @@ public class MessageCommand extends BaseCommand {
             return true;
         }
 
-        StringBuilder builder = new StringBuilder();
-        for (int i = 1; i < args.length; i++) {
-            builder.append(args[i]).append(" ");
-        }
-
-        String message = builder.toString();
+        String message = StringUtils.join(args, ' ', 1, args.length);
         Set<Player> recipients = Sets.newHashSet(target);
 
         PlayerMessageEvent playerMessageEvent = new PlayerMessageEvent(player, recipients, message, false);

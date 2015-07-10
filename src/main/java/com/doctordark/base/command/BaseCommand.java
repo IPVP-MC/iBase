@@ -1,6 +1,7 @@
 package com.doctordark.base.command;
 
 import com.doctordark.util.BukkitUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -13,11 +14,14 @@ import org.bukkit.permissions.Permission;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Represents a {@link BaseCommand} for a {@link org.bukkit.plugin.Plugin}.
  */
 public abstract class BaseCommand implements CommandExecutor, TabCompleter {
+
+    private static final Pattern USAGE_REPLACER_PATTERN = Pattern.compile("(command)", Pattern.LITERAL);
 
     private final String name;
     private final String description;
@@ -57,7 +61,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @param input the current completion list
      * @return the completions based on given arguments
      */
-    public List<String> getCompletions(String[] args, List<String> input) {
+    public final List<String> getCompletions(String[] args, List<String> input) {
         return BukkitUtils.getCompletions(args, input);
     }
 
@@ -103,7 +107,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @return the {@link Permission} node
      */
     public Permission getBukkitPermission() {
-        return new Permission(getPermission());
+        return new Permission(permission);
     }
 
     /**
@@ -112,7 +116,9 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @return the usage
      */
     public String getUsage() {
-        return usage;
+        // Safe-check for broken commands.
+        if (usage == null) usage = "";
+        return USAGE_REPLACER_PATTERN.matcher(usage).replaceAll(name);
     }
 
     /**
@@ -122,17 +128,16 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @return the usage for given label
      */
     public String getUsage(String label) {
-        String usage = getUsage();
-        return usage.replace(getName(), label);
+        return USAGE_REPLACER_PATTERN.matcher(usage).replaceAll(label);
     }
 
     /**
      * Sets the usage for this {@link BaseCommand}.
      *
-     * @param usage the usage message to set
+     * @param usage the usage to set
      */
-    protected void setUsage(String usage) {
-        this.usage = usage.replace("(command)", getName());
+    public void setUsage(String usage) {
+        this.usage = usage;
     }
 
     /**
@@ -142,7 +147,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      */
     public String[] getAliases() {
         if (aliases == null) {
-            aliases = new String[0];
+            aliases = ArrayUtils.EMPTY_STRING_ARRAY;
         }
 
         return aliases;
@@ -165,7 +170,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @param id     the id of the player that may be null
      * @return true if player was null
      */
-    public boolean validateNullPlayer(CommandSender sender, String id) {
+    public static final boolean validateNullPlayer(CommandSender sender, String id) {
         sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + id + ChatColor.GOLD + "' not found.");
         return true;
     }
@@ -177,7 +182,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @param id     the id to search for
      * @return player with given name, null if is not visible to sender
      */
-    public Player findPlayer(CommandSender sender, String id) {
+    public static final Player findPlayer(CommandSender sender, String id) {
         Player player = Bukkit.getServer().getPlayer(id);
         return (canSee(sender, player)) ? player : null;
     }
@@ -189,7 +194,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @param target the {@link Player} to check against
      * @return true if {@link CommandSender} is not a {@link Player} or can see
      */
-    public boolean canSee(CommandSender sender, Player target) {
+    public static final boolean canSee(CommandSender sender, Player target) {
         return target != null && (!(sender instanceof Player) || ((Player) sender).canSee(target));
     }
 

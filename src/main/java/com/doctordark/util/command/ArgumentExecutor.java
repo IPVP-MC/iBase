@@ -98,7 +98,7 @@ public abstract class ArgumentExecutor implements CommandExecutor, TabCompleter 
             for (CommandArgument argument : arguments) {
                 String permission = argument.getPermission();
                 if (permission == null || sender.hasPermission(permission)) {
-                    sender.sendMessage(ChatColor.GRAY + argument.getUsage(label) + " - " + argument.getDescription() + ".");
+                    sender.sendMessage(ChatColor.GRAY + argument.getUsage(label) + " - " + argument.getDescription() + '.');
                 }
             }
 

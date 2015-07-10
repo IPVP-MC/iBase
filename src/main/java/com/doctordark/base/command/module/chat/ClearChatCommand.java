@@ -11,7 +11,8 @@ public class ClearChatCommand extends BaseCommand {
 
     public ClearChatCommand() {
         super("clearchat", "Clears the server chat for players.", "base.command.clearchat");
-        setAliases(new String[]{"cc"});
+        this.setAliases(new String[]{"cc"});
+        this.setUsage("/(command)");
     }
 
     @Override

@@ -1,12 +1,14 @@
 package com.doctordark.base.command;
 
 import com.doctordark.base.BasePlugin;
-import com.google.common.collect.Maps;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,21 +19,22 @@ public class SimpleCommandManager implements CommandManager {
 
     private static final String PERMISSION_MESSAGE = ChatColor.RED + "You do not have permission to execute this command.";
 
-    private final Map<String, BaseCommand> commandMap = Maps.newHashMap();
+    private final Map<String, BaseCommand> commandMap = new HashMap<>();
 
     public SimpleCommandManager(final BasePlugin plugin) {
         final ConsoleCommandSender console = plugin.getServer().getConsoleSender();
 
         // Load all the modules first.
-        plugin.getServer().getScheduler().runTask(plugin, new Runnable() {
+        new BukkitRunnable() {
             @Override
             public void run() {
-                for (BaseCommand command : commandMap.values()) {
+                Collection<BaseCommand> commands = commandMap.values();
+                for (BaseCommand command : commands) {
                     String commandName = command.getName();
                     PluginCommand pluginCommand = plugin.getCommand(commandName);
                     if (pluginCommand == null) {
-                        console.sendMessage("[" + plugin.getName() + "] " + ChatColor.YELLOW + "Failed to register command '" + commandName + "'.");
-                        console.sendMessage("[" + plugin.getName() + "] " + ChatColor.YELLOW + "Reason: Undefined in plugin.yml.");
+                        console.sendMessage('[' + plugin.getName() + "] " + ChatColor.YELLOW + "Failed to register command '" + commandName + "'.");
+                        console.sendMessage('[' + plugin.getName() + "] " + ChatColor.YELLOW + "Reason: Undefined in plugin.yml.");
                         continue;
                     }
 
@@ -44,7 +47,7 @@ public class SimpleCommandManager implements CommandManager {
                     pluginCommand.setPermissionMessage(PERMISSION_MESSAGE);
                 }
             }
-        });
+        }.runTask(plugin);
     }
 
     @Override
