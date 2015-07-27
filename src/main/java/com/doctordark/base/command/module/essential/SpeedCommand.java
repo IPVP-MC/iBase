@@ -98,7 +98,7 @@ public class SpeedCommand extends BaseCommand {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        switch (args.length){
+        switch (args.length) {
             case 1:
                 return getCompletions(args, COMPLETIONS_FIRST);
             case 2:

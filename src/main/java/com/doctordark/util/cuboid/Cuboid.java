@@ -858,7 +858,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
     }
 
     @Override
-    public Cuboid clone()  {
+    public Cuboid clone() {
         try {
             return (Cuboid) super.clone();
         } catch (Exception ex) {

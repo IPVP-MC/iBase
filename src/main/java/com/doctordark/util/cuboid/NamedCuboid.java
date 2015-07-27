@@ -61,7 +61,7 @@ public class NamedCuboid extends Cuboid {
     }
 
     @Override
-    public NamedCuboid clone()  {
+    public NamedCuboid clone() {
         try {
             return (NamedCuboid) super.clone();
         } catch (Exception ex) {

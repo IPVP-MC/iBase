@@ -12,7 +12,7 @@ import org.bukkit.inventory.PlayerInventory;
 import java.util.Collections;
 import java.util.List;
 
-public class CopyInvCommand  extends BaseCommand {
+public class CopyInvCommand extends BaseCommand {
 
     public CopyInvCommand() {
         super("copyinv", "Clears a players inventory.", "base.command.copyinv");

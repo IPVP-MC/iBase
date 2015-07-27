@@ -52,7 +52,7 @@ public class BaseUser extends ServerParticipator {
     public BaseUser(Map<String, Object> map) {
         super(map);
 
-            this.addressHistories.addAll(GenericUtils.createList(map.get("addressHistories"), String.class));
+        this.addressHistories.addAll(GenericUtils.createList(map.get("addressHistories"), String.class));
         if (map.containsKey("nameHistories")) {
             this.nameHistories.addAll(GenericUtils.createList(map.get("nameHistories"), NameHistory.class));
         }
