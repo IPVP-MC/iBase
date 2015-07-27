@@ -13,7 +13,10 @@ import java.util.UUID;
 
 public class PersistableLocation implements ConfigurationSerializable, Cloneable {
 
-    private World world; // Lazy load this
+    // Lazy loaded
+    private Location location;
+    private World world;
+
     private String worldName;
     private UUID worldUID;
     private double x;
@@ -241,7 +244,11 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
      * @return the location instance
      */
     public Location getLocation() {
-        return new Location(getWorld(), this.x, this.y, this.z, this.yaw, this.pitch);
+        if (location == null) {
+            location = new Location(getWorld(), this.x, this.y, this.z, this.yaw, this.pitch);
+        }
+
+        return location;
     }
 
     @Override

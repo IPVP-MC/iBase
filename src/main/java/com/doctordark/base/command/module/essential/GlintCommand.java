@@ -9,7 +9,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.concurrent.TimeUnit;
+
 public class GlintCommand extends BaseCommand {
+
+    private static final long GLINT_COOLDOWN = TimeUnit.SECONDS.toMillis(15L);
 
     private final BasePlugin plugin;
 
@@ -39,7 +43,7 @@ public class GlintCommand extends BaseCommand {
 
         boolean newEnabled = !baseUser.isGlintEnabled();
         baseUser.setGlintEnabled(newEnabled);
-        baseUser.setLastGlintUse(millis + 15000L);
+        baseUser.setLastGlintUse(millis + GLINT_COOLDOWN);
 
         sender.sendMessage(ChatColor.AQUA + "Enchantment glint " + (newEnabled ? ChatColor.GREEN + "now" : ChatColor.RED + "no longer") + ChatColor.AQUA + " enabled.");
         return true;

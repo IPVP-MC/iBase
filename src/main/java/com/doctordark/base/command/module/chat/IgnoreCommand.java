@@ -76,7 +76,7 @@ public class IgnoreCommand extends BaseCommand {
             BaseUser baseUser = plugin.getUserManager().getUser(uuid);
             Set<String> ignoring = baseUser.getIgnoring();
 
-            Player target = Bukkit.getServer().getPlayer(args[1]);
+            Player target = Bukkit.getPlayer(args[1]);
 
             if (target == null || !canSee(sender, target)) {
                 sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");

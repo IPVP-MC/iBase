@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -98,7 +99,7 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
         return results;
     }
 
-    public static class ArgumentComparator implements Comparator<CommandArgument> {
+    public static class ArgumentComparator implements Comparator<CommandArgument>, Serializable {
 
         @Override
         public int compare(CommandArgument primaryArgument, CommandArgument secondaryArgument) {

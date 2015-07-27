@@ -25,7 +25,7 @@ public class PositionCommand extends BaseCommand {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final Player target;
         if (args.length > 0) {
-            target = Bukkit.getServer().getPlayer(args[0]);
+            target = Bukkit.getPlayer(args[0]);
         } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -44,6 +44,7 @@ public class PositionCommand extends BaseCommand {
         sender.sendMessage(ChatColor.YELLOW + String.format("Location: (%.3f, %.3f, %.3f)", pos.getX(), pos.getY(), pos.getZ()));
         sender.sendMessage(ChatColor.YELLOW + "Depth: " + (int) Math.floor(pos.getY()));
         //sender.sendMessage(ChatColor.YELLOW + String.format("Direction: %s", getCardinalDirection(player)));
+
         return true;
     }
 

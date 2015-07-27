@@ -136,12 +136,8 @@ public class WarpExecutor extends BaseCommand {
     }
 
     private void warpPlayer(Player player, Warp warp) {
-        UUID uuid = player.getUniqueId();
-        if (taskMap.containsKey(uuid)) {
-            BukkitRunnable runnable = taskMap.get(uuid);
-            if (runnable != null) runnable.cancel();
-            taskMap.remove(uuid);
-        }
+        BukkitRunnable runnable = taskMap.remove(player.getUniqueId());
+        if (runnable != null) runnable.cancel();
 
         Location location = warp.getLocation();
         player.teleport(location, PlayerTeleportEvent.TeleportCause.COMMAND);

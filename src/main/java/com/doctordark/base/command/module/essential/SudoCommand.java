@@ -36,7 +36,7 @@ public class SudoCommand extends BaseCommand {
 
         String executingCommand = StringUtils.join(args, ' ', 2, args.length);
         if (args[1].equalsIgnoreCase("all")) {
-            for (Player target : Bukkit.getServer().getOnlinePlayers()) {
+            for (Player target : Bukkit.getOnlinePlayers()) {
                 executeCommand(target, executingCommand, force);
             }
 
@@ -44,7 +44,7 @@ public class SudoCommand extends BaseCommand {
             return true;
         }
 
-        Player target = Bukkit.getServer().getPlayer(args[1]);
+        Player target = Bukkit.getPlayer(args[1]);
 
         if ((target == null) || (!canSee(sender, target))) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
@@ -68,8 +68,10 @@ public class SudoCommand extends BaseCommand {
             results.add("false");
         } else if (args.length == 2) {
             results.add("ALL");
+
+            Player senderPlayer = sender instanceof Player ? ((Player) sender) : null;
             for (Player target : Bukkit.getOnlinePlayers()) {
-                if ((!(sender instanceof Player)) || ((Player) sender).canSee(target)) {
+                if (senderPlayer == null || senderPlayer.canSee(target)) {
                     results.add(target.getName());
                 }
             }
@@ -79,9 +81,9 @@ public class SudoCommand extends BaseCommand {
     }
 
     /**
-     * Makes a player execute a command, optionally bypassing permissions.
+     * Makes a {@link Player} execute a command, optionally bypassing permissions.
      *
-     * @param target           the player to force
+     * @param target           the {@link Player} to force
      * @param executingCommand the command to execute
      * @param force            if the player is bypassing permissions
      * @return true if the command could be executed
@@ -91,6 +93,8 @@ public class SudoCommand extends BaseCommand {
             force = false;
         }
 
+        // We try catch this in-case the command causes an error
+        // and the player still retains operator.
         try {
             if (force) {
                 target.setOp(true);

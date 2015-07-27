@@ -178,7 +178,7 @@ public class BaseUser extends ServerParticipator {
         player.showInvisibles(vanished); // allow vanished players to see those invisible.
 
         VanishPriority playerPriority = VanishPriority.of(player);
-        for (Player target : Bukkit.getServer().getOnlinePlayers()) {
+        for (Player target : Bukkit.getOnlinePlayers()) {
             if (player.equals(target)) continue;
             if (vanished && playerPriority.isMoreThan(VanishPriority.of(target))) {
                 target.hidePlayer(player);

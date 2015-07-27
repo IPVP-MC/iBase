@@ -24,13 +24,14 @@ public class StopLagCommand extends BaseCommand {
         plugin.getServerHandler().setDecreasedLagMode(newMode);
 
         String newModeString = Boolean.toString(newMode);
-        for (World world : Bukkit.getServer().getWorlds()) {
+        for (World world : Bukkit.getWorlds()) {
             world.setGameRuleValue("doDaylightCycle", newModeString);
         }
 
         Command.broadcastCommandMessage(sender, ChatColor.LIGHT_PURPLE + "Server is " + (newMode ? ChatColor.RED + "no longer" : ChatColor.GREEN + "now") + ChatColor.LIGHT_PURPLE +
                 " allowing intensive activity." + (newMode ? "" : " Blocks won't burn, have physics, form, spread, travel, or be ignited. " +
                 "Natural entities won't spawn or explode. Daylight cycle game-rule will be disabled."));
+
         return true;
     }
 }

@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 public class VanishCommand extends BaseCommand {
 
@@ -28,7 +27,7 @@ public class VanishCommand extends BaseCommand {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final Player target;
         if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
-            target = Bukkit.getServer().getPlayer(args[0]);
+            target = Bukkit.getPlayer(args[0]);
         } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -36,14 +35,12 @@ public class VanishCommand extends BaseCommand {
             target = (Player) sender;
         }
 
-        if ((target == null) || (((sender instanceof Player)) && (!((Player) sender).canSee(target)))) {
+        if (target == null || (sender instanceof Player && !((Player) sender).canSee(target))) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
             return true;
         }
 
-        UUID uuid = target.getUniqueId();
-        BaseUser baseUser = this.plugin.getUserManager().getUser(uuid);
-
+        BaseUser baseUser = plugin.getUserManager().getUser(target.getUniqueId());
         boolean newVanished = !baseUser.isVanished() || (args.length >= 2 && Boolean.parseBoolean(args[1]));
         baseUser.setVanished(newVanished, true);
 

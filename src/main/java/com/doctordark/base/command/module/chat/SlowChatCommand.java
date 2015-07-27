@@ -30,7 +30,7 @@ public class SlowChatCommand extends BaseCommand {
         if (oldTicks > 0L) {
             newTicks = 0L;
         } else if (args.length < 1) {
-            newTicks = oldTicks > 0L ? 0L : DEFAULT_DELAY;
+            newTicks = DEFAULT_DELAY;
         } else {
             newTicks = JavaUtils.parse(args[0]);
             if (newTicks == null) {
@@ -40,7 +40,7 @@ public class SlowChatCommand extends BaseCommand {
         }
 
         plugin.getServerHandler().setChatSlowedMillis(newTicks);
-        Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + "Global chat is " + (newTicks > 0L ?
+        Bukkit.broadcastMessage(ChatColor.YELLOW + "Global chat is " + (newTicks > 0L ?
                 ChatColor.GOLD + "now slowed for " + DurationFormatUtils.formatDurationWords(newTicks, true, true) :
                 ChatColor.RED + "no longer slowed") + ChatColor.YELLOW + '.');
 

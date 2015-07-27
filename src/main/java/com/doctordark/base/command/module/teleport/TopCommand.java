@@ -29,16 +29,15 @@ public class TopCommand extends BaseCommand {
         }
 
         Player player = (Player) sender;
-        Location location = player.getLocation().clone();
-        location.setY(location.getBlockY());
+        Location origin = player.getLocation().clone();
 
-        Location highestLocation = BukkitUtils.getHighestLocation(location);
-        if (highestLocation == null || highestLocation.equals(location)) {
+        Location highestLocation = BukkitUtils.getHighestLocation(origin.clone());
+        if (highestLocation == null || highestLocation.equals(origin)) {
             sender.sendMessage(ChatColor.RED + "No highest location found.");
             return true;
         }
 
-        player.teleport(highestLocation.add(0, 2, 0), PlayerTeleportEvent.TeleportCause.COMMAND);
+        player.teleport(highestLocation.add(0, 1, 0), PlayerTeleportEvent.TeleportCause.COMMAND);
         sender.sendMessage(ChatColor.GOLD + "Teleported to highest location.");
         return true;
     }

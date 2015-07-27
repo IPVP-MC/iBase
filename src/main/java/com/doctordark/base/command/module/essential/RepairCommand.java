@@ -1,7 +1,6 @@
 package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
-import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,7 +12,9 @@ import org.bukkit.inventory.PlayerInventory;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Command used for flight toggling of players.
@@ -29,7 +30,7 @@ public class RepairCommand extends BaseCommand {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final Player target;
         if (args.length > 0) {
-            target = Bukkit.getServer().getPlayer(args[0]);
+            target = Bukkit.getPlayer(args[0]);
         } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -42,7 +43,7 @@ public class RepairCommand extends BaseCommand {
             return true;
         }
 
-        List<ItemStack> toRepair = Lists.newArrayList();
+        Set<ItemStack> toRepair = new HashSet<>();
         if (args.length >= 2 && args[1].equalsIgnoreCase("all")) {
             PlayerInventory targetInventory = target.getInventory();
             toRepair.addAll(Arrays.asList(targetInventory.getContents()));

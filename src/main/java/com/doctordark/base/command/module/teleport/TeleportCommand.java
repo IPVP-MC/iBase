@@ -44,7 +44,7 @@ public class TeleportCommand extends BaseCommand {
                 return true;
             }
         } else {
-            targetA = Bukkit.getServer().getPlayer(args[0]);
+            targetA = Bukkit.getPlayer(args[0]);
         }
 
         if ((targetA == null) || (!canSee(sender, targetA))) {
@@ -53,7 +53,7 @@ public class TeleportCommand extends BaseCommand {
         }
 
         if (args.length < 3) {
-            Player targetB = Bukkit.getServer().getPlayer(args[args.length - 1]);
+            Player targetB = Bukkit.getPlayer(args[args.length - 1]);
 
             if ((targetB == null) || (!canSee(sender, targetB))) {
                 sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[args.length - 1] + ChatColor.GOLD + "' not found.");

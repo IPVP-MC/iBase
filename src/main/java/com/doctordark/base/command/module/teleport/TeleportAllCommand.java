@@ -30,7 +30,7 @@ public class TeleportAllCommand extends BaseCommand {
         }
 
         Player player = (Player) sender;
-        for (Player target : Bukkit.getServer().getOnlinePlayers()) {
+        for (Player target : Bukkit.getOnlinePlayers()) {
             if (!target.equals(player) && player.canSee(target)) {
                 target.teleport(player, PlayerTeleportEvent.TeleportCause.COMMAND);
             }

@@ -47,7 +47,7 @@ public class LagCommand extends BaseCommand {
             sender.sendMessage(colour + "Total Memory: " + runtime.totalMemory() / 1024L / 1024L);
             sender.sendMessage(colour + "Free Memory: " + runtime.freeMemory() / 1024L / 1024L);
 
-            Collection<World> worlds = Bukkit.getServer().getWorlds();
+            Collection<World> worlds = Bukkit.getWorlds();
             for (World world : worlds) {
                 World.Environment environment = world.getEnvironment();
                 String environmentName = WordUtils.capitalizeFully(environment.name().replace('_', ' '));

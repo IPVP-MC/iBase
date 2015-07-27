@@ -24,7 +24,7 @@ public class FlyCommand extends BaseCommand {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final Player target;
         if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
-            target = Bukkit.getServer().getPlayer(args[0]);
+            target = Bukkit.getPlayer(args[0]);
         } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -39,7 +39,6 @@ public class FlyCommand extends BaseCommand {
 
         boolean newFlight = !target.getAllowFlight();
         target.setAllowFlight(newFlight);
-
         if (newFlight) {
             target.setFlying(true);
         }

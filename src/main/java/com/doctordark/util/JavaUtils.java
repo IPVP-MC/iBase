@@ -34,6 +34,12 @@ public final class JavaUtils {
         return UUID_PATTERN.matcher(input).find();
     }
 
+    private static final CharMatcher CHAR_MATCHER_ASCII = CharMatcher.inRange('0', '9').
+            or(CharMatcher.inRange('a', 'z')).
+            or(CharMatcher.inRange('A', 'Z')).
+            or(CharMatcher.WHITESPACE).
+            precomputed();
+
     /**
      * Returns the given string if it is alphanumeric.
      *
@@ -41,7 +47,7 @@ public final class JavaUtils {
      * @return true if it is alphanumeric
      */
     public static boolean isAlphanumeric(String string) {
-        return CharMatcher.JAVA_LETTER_OR_DIGIT.or(CharMatcher.WHITESPACE).matchesAllOf(string);
+        return CHAR_MATCHER_ASCII.matchesAllOf(string);
     }
 
     /**

@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 
 /**
  * Represents a image that uses ASCII characters to send a message for a player.
@@ -185,19 +186,18 @@ public class ImageMessage {
         return ChatColor.values()[index];
     }
 
-    private String center(String s, int length) {
-        if (s.length() > length) {
-            return s.substring(0, length);
-        } else if (s.length() == length) {
-            return s;
+    private String center(String string, int length) {
+        if (string.length() > length) {
+            return string.substring(0, length);
+        } else if (string.length() == length) {
+            return string;
         } else {
-            int leftPadding = (length - s.length()) / 2;
-            return StringUtils.repeat(" ", leftPadding) + s;
+            return StringUtils.repeat(" ", (length - string.length()) / 2) + string;
         }
     }
 
     public String[] getLines() {
-        return lines;
+        return Arrays.copyOf(lines, lines.length);
     }
 
     public void sendToPlayer(Player player) {

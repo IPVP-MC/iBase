@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 public class PlayerLimitListener implements Listener {
 
     private static final String BYPASS_FULL_JOIN = "base.serverfull.bypass";
+
     private final BasePlugin plugin;
 
     public PlayerLimitListener(BasePlugin plugin) {

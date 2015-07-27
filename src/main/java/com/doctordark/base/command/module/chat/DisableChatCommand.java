@@ -31,13 +31,13 @@ public class DisableChatCommand extends BaseCommand {
         if (oldTicks > 0L) {
             newTicks = 0L;
         } else if (args.length < 1) {
-            newTicks = oldTicks > 0L ? 0L : DEFAULT_DELAY;
+            newTicks = DEFAULT_DELAY;
         } else {
             newTicks = JavaUtils.parse(StringUtils.join(args, ' ', 0, args.length));
         }
 
         plugin.getServerHandler().setChatDisabledMillis(newTicks);
-        Bukkit.getServer().broadcastMessage(ChatColor.YELLOW + "Global chat is " + (newTicks > 0L ?
+        Bukkit.broadcastMessage(ChatColor.YELLOW + "Global chat is " + (newTicks > 0L ?
                 ChatColor.GOLD + "now disabled for " + DurationFormatUtils.formatDurationWords(newTicks, true, true) :
                 ChatColor.RED + "no longer disabled") + ChatColor.YELLOW + '.');
 

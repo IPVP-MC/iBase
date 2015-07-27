@@ -1,7 +1,7 @@
 package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Floats;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
 import java.util.List;
 
 public class SpeedCommand extends BaseCommand {
@@ -30,7 +31,7 @@ public class SpeedCommand extends BaseCommand {
 
         final Player target;
         if (args.length > 2 && sender.hasPermission(command.getPermission() + ".others")) {
-            target = Bukkit.getServer().getPlayer(args[2]);
+            target = Bukkit.getPlayer(args[2]);
         } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -91,21 +92,24 @@ public class SpeedCommand extends BaseCommand {
                 }
             }
         }
+
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        List<String> results = Lists.newArrayList();
-        if (args.length == 1) {
-            results.add("fly");
-            results.add("walk");
-        } else if (args.length == 2) {
-            results.add("reset");
-        } else if (args.length == 3) {
-            return null;
+        switch (args.length){
+            case 1:
+                return getCompletions(args, COMPLETIONS_FIRST);
+            case 2:
+                return getCompletions(args, COMPLETIONS_SECOND);
+            case 3:
+                return null;
+            default:
+                return Collections.emptyList();
         }
-
-        return getCompletions(args, results);
     }
+
+    private static final ImmutableList<String> COMPLETIONS_FIRST = ImmutableList.of("fly", "walk");
+    private static final ImmutableList<String> COMPLETIONS_SECOND = ImmutableList.of("reset");
 }

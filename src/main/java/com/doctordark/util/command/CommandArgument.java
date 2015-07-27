@@ -67,7 +67,7 @@ public abstract class CommandArgument {
         this.name = name;
         this.description = description;
         this.permission = permission;
-        this.aliases = aliases;
+        this.aliases = Arrays.copyOf(aliases, aliases.length);
     }
 
     /**
@@ -117,7 +117,7 @@ public abstract class CommandArgument {
             aliases = ArrayUtils.EMPTY_STRING_ARRAY;
         }
 
-        return aliases;
+        return Arrays.copyOf(aliases, aliases.length);
     }
 
     /**

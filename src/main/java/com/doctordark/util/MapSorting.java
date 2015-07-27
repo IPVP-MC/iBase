@@ -16,7 +16,7 @@ public class MapSorting {
     private static final Function EXTRACT_KEY = new Function<Entry<Object, Object>, Object>() {
         @Override
         public Object apply(Entry<Object, Object> input) {
-            return input.getKey();
+            return input == null ? null : input.getKey();
         }
     };
 
@@ -24,7 +24,7 @@ public class MapSorting {
     private static final Function EXTRACT_VALUE = new Function<Entry<Object, Object>, Object>() {
         @Override
         public Object apply(Entry<Object, Object> input) {
-            return input.getValue();
+            return input == null ? null : input.getValue();
         }
     };
 

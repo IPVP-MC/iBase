@@ -21,7 +21,7 @@ public class AnnouncementHandler extends BukkitRunnable {
         List<String> announcements = this.plugin.getServerHandler().getAnnouncements();
         if (!announcements.isEmpty()) {
             String next = announcements.get(0);
-            Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', next));
+            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', next));
             Collections.rotate(announcements, -1);
         }
     }

@@ -3,7 +3,6 @@ package com.doctordark.base.listener;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.util.BukkitUtils;
-import com.google.common.collect.Maps;
 import net.minecraft.server.v1_7_R4.Blocks;
 import net.minecraft.server.v1_7_R4.PacketPlayOutBlockAction;
 import org.bukkit.Bukkit;
@@ -14,15 +13,14 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
-import org.bukkit.block.DoubleChest;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -32,7 +30,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -43,35 +40,36 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class VanishListener implements Listener {
 
+    private static final String CHEST_INTERACT_PERMISSION = "base.vanish.chestinteract";
+    private static final String INVENTORY_INTERACT_PERMISSION = "base.vanish.inventorysee";
     private static final String FAKE_CHEST_PREFIX = "[F] ";
-    private final Map<UUID, Location> fakeChestLocationMap;
+
+    private final Map<UUID, Location> fakeChestLocationMap = new HashMap<>();
     private final BasePlugin plugin;
 
     public VanishListener(BasePlugin plugin) {
         this.plugin = plugin;
-        this.fakeChestLocationMap = Maps.newHashMap();
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        final Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
+        Player player = event.getPlayer();
 
-        final BaseUser baseUser = plugin.getUserManager().getUser(uuid);
+        BaseUser baseUser = plugin.getUserManager().getUser(player.getUniqueId());
         if (baseUser.isVanished()) {
             player.sendMessage(ChatColor.GOLD + "You have joined vanished.");
             baseUser.updateVanishedState(true);
         }
 
         VanishPriority userPriority = VanishPriority.of(player);
-        for (Player target : Bukkit.getServer().getOnlinePlayers()) {
-            BaseUser baseTarget = plugin.getUserManager().getUser(target.getUniqueId());
-            if (baseTarget.isVanished() && VanishPriority.of(target).isMoreThan(userPriority)) {
+        for (Player target : Bukkit.getOnlinePlayers()) {
+            if (plugin.getUserManager().getUser(target.getUniqueId()).isVanished() && VanishPriority.of(target).isMoreThan(userPriority)) {
                 player.hidePlayer(target);
             }
         }
@@ -79,73 +77,41 @@ public class VanishListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-        if (baseUser.isVanished()) {
+        if (plugin.getUserManager().getUser(event.getPlayer().getUniqueId()).isVanished()) {
             event.setQuitMessage(null);
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
-    public void onPlayerDropItem(PlayerInteractEntityEvent event) {
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
         if (entity instanceof Player) {
             Player player = event.getPlayer();
-            if (!player.isOp()) {
-                return;
-            }
-
-            UUID uuid = player.getUniqueId();
-            BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-            if (baseUser.isVanished()) {
-                Player clicked = (Player) entity;
-                player.openInventory(clicked.getInventory());
+            if (!player.isSneaking() && player.hasPermission(INVENTORY_INTERACT_PERMISSION) && plugin.getUserManager().getUser(player.getUniqueId()).isVanished()) {
+                player.openInventory(((Player) entity).getInventory());
                 event.setCancelled(true);
             }
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
-    public void onPlayerDropItem(PlayerDropItemEvent event) {
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-        if (baseUser.isVanished()) {
-            event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "You cannot drop items whilst vanished.");
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onEntityTarget(EntityTargetEvent event) {
         Entity target = event.getTarget();
-        if (target instanceof Player) {
-            Player player = (Player) target;
-            UUID uuid = player.getUniqueId();
-            BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-            if (baseUser.isVanished()) {
-                event.setCancelled(true);
-            }
+        if (event.getEntity() instanceof LivingEntity && target instanceof Player && plugin.getUserManager().getUser(target.getUniqueId()).isVanished()) {
+            event.setCancelled(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-        if (baseUser.isVanished()) {
+        if (plugin.getUserManager().getUser(event.getPlayer().getUniqueId()).isVanished()) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = event.getEntity();
-        UUID uuid = player.getUniqueId();
-        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-        if (baseUser.isVanished()) {
+        if (plugin.getUserManager().getUser(event.getEntity().getUniqueId()).isVanished()) {
             event.setDeathMessage(null);
         }
     }
@@ -172,12 +138,9 @@ public class VanishListener implements Listener {
                 return;
             }
 
-            if (attacker != null) {
-                BaseUser attackerUser = plugin.getUserManager().getUser(attacker.getUniqueId());
-                if (attackerUser.isVanished()) {
-                    attacker.sendMessage(ChatColor.RED + "You cannot attack players whilst vanished.");
-                    event.setCancelled(true);
-                }
+            if (attacker != null && plugin.getUserManager().getUser(attacker.getUniqueId()).isVanished()) {
+                attacker.sendMessage(ChatColor.RED + "You cannot attack players whilst vanished.");
+                event.setCancelled(true);
             }
         }
     }
@@ -185,98 +148,91 @@ public class VanishListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-        if (baseUser.isVanished()) {
+        BaseUser baseUser = plugin.getUserManager().getUser(player.getUniqueId());
+        if (baseUser.isVanished() && !player.hasPermission("base.vanish.build")) {
             event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "You cannot break blocks whilst vanished.");
+            player.sendMessage(ChatColor.RED + "You cannot build whilst vanished.");
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-        if (baseUser.isVanished()) {
+        BaseUser baseUser = plugin.getUserManager().getUser(player.getUniqueId());
+        if (baseUser.isVanished() && !player.hasPermission("base.vanish.build")) {
             event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "You cannot place blocks whilst vanished.");
+            player.sendMessage(ChatColor.RED + "You cannot build whilst vanished.");
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onBucketEmpty(PlayerBucketEmptyEvent event) {
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-        if (baseUser.isVanished()) {
+        BaseUser baseUser = plugin.getUserManager().getUser(player.getUniqueId());
+        if (baseUser.isVanished() && !player.hasPermission("base.vanish.build")) {
             event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "You cannot empty buckets whilst vanished.");
+            player.sendMessage(ChatColor.RED + "You cannot build whilst vanished.");
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Action action = event.getAction();
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
-        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-        if ((action == Action.PHYSICAL) && (baseUser.isVanished())) {
-            event.setCancelled(true);
-            return;
-        }
 
-        if (action == Action.RIGHT_CLICK_BLOCK) {
-            Block block = event.getClickedBlock();
-            BlockState state = block.getState();
-            if ((baseUser.isVanished()) && ((state instanceof InventoryHolder))) {
-                InventoryHolder holder = (InventoryHolder) block.getState();
-                Inventory inventory = holder.getInventory();
-                InventoryType type = inventory.getType();
-                if (type == InventoryType.CHEST) {
+        switch (event.getAction()) {
+            case PHYSICAL:
+                if (plugin.getUserManager().getUser(uuid).isVanished()) {
+                    event.setCancelled(true);
+                }
+                break;
+            case RIGHT_CLICK_BLOCK:
+                Block block = event.getClickedBlock();
+                BlockState state = block.getState();
+                if (state instanceof InventoryHolder && plugin.getUserManager().getUser(uuid).isVanished()) {
+                    InventoryHolder holder = (InventoryHolder) state;
+                    InventoryType type = holder.getInventory().getType();
+
                     Chest chest = (Chest) state;
                     Location chestLocation = chest.getLocation();
+                    if (type == InventoryType.CHEST && fakeChestLocationMap.putIfAbsent(uuid, chestLocation) == null) {
+                        ItemStack[] contents = chest.getInventory().getContents();
+                        Inventory fakeInventory = Bukkit.createInventory(null, contents.length, FAKE_CHEST_PREFIX + type.getDefaultTitle());
+                        fakeInventory.setContents(contents);
 
-                    Inventory chestInventory = chest.getInventory();
-                    Inventory fakeInventory = Bukkit.getServer().createInventory(null, chestInventory.getContents().length, FAKE_CHEST_PREFIX + type.getDefaultTitle());
-                    fakeInventory.setContents(chestInventory.getContents());
+                        event.setCancelled(true);
+                        player.openInventory(fakeInventory);
 
-                    event.setCancelled(true);
-                    player.openInventory(fakeInventory);
-
-                    handleFakeChest(player, chest, true);
-                    fakeChestLocationMap.put(uuid, chestLocation);
+                        handleFakeChest(player, chest, true);
+                        fakeChestLocationMap.put(uuid, chestLocation);
+                    }
                 }
-            }
+                break;
+            default:
+                break;
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onInventoryClose(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        if (fakeChestLocationMap.containsKey(uuid)) {
-            Location chestLocation = fakeChestLocationMap.get(uuid);
-            Block block = chestLocation.getBlock();
-            BlockState blockState = block.getState();
+        Location chestLocation;
+        if ((chestLocation = fakeChestLocationMap.remove(player.getUniqueId())) != null) {
+            BlockState blockState = chestLocation.getBlock().getState();
             if (blockState instanceof Chest) {
-                Chest chest = (Chest) blockState;
-                handleFakeChest(player, chest, false);
+                handleFakeChest(player, (Chest) blockState, false);
             }
-
-            fakeChestLocationMap.remove(uuid);
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onInventoryClick(InventoryClickEvent event) {
         HumanEntity humanEntity = event.getWhoClicked();
-        if ((humanEntity instanceof Player)) {
+        if (humanEntity instanceof Player) {
             Player player = (Player) humanEntity;
-            UUID uuid = player.getUniqueId();
-            if (fakeChestLocationMap.containsKey(uuid)) {
+            if (fakeChestLocationMap.containsKey(player.getUniqueId())) {
                 ItemStack stack = event.getCurrentItem();
-                if ((stack != null) && (stack.getType() != Material.AIR) && (!player.isOp())) {
+                if (stack != null && stack.getType() != Material.AIR && !player.hasPermission(CHEST_INTERACT_PERMISSION)) {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "You cannot interact with fake chest inventories.");
                 }
@@ -287,19 +243,11 @@ public class VanishListener implements Listener {
     public static void handleFakeChest(Player player, Chest chest, boolean open) {
         Inventory chestInventory = chest.getInventory();
         if (chestInventory instanceof DoubleChestInventory) {
-            DoubleChestInventory doubleChestInventory = (DoubleChestInventory) chestInventory;
-            DoubleChest doubleChest = doubleChestInventory.getHolder();
-            chest = (Chest) doubleChest.getLeftSide();
+            chest = (Chest) ((DoubleChestInventory) chestInventory).getHolder().getLeftSide();
         }
 
-        final int chestX = chest.getX();
-        final int chestY = chest.getY();
-        final int chestZ = chest.getZ();
-
-        PacketPlayOutBlockAction packet = new PacketPlayOutBlockAction(chestX, chestY, chestZ, Blocks.CHEST, 1, open ? 1 : 0);
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-
-        Location chestLocation = chest.getLocation();
-        player.playSound(chestLocation, open ? Sound.CHEST_OPEN : Sound.CHEST_CLOSE, 1.0F, 1.0F);
+        // Fake the chest open.
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayOutBlockAction(chest.getX(), chest.getY(), chest.getZ(), Blocks.CHEST, 1, (open ? 1 : 0)));
+        player.playSound(chest.getLocation(), open ? Sound.CHEST_OPEN : Sound.CHEST_CLOSE, 1.0F, 1.0F);
     }
 }

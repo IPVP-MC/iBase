@@ -123,12 +123,12 @@ public class Text extends ChatComponentText {
     }
 
     public void broadcast(String permission) {
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             if (permission == null || player.hasPermission(permission)) {
                 send(player);
             }
         }
 
-        send(Bukkit.getServer().getConsoleSender());
+        send(Bukkit.getConsoleSender());
     }
 }

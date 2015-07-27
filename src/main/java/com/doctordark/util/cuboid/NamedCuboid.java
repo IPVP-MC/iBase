@@ -60,10 +60,13 @@ public class NamedCuboid extends Cuboid {
         this.name = name;
     }
 
-    @SuppressWarnings("CloneDoesntCallSuperClone")
     @Override
-    public NamedCuboid clone() throws CloneNotSupportedException {
-        return new NamedCuboid(this);
+    public NamedCuboid clone()  {
+        try {
+            return (NamedCuboid) super.clone();
+        } catch (Exception ex) {
+            throw new AssertionError("Could not clone NamedCuboid");
+        }
     }
 
     @Override

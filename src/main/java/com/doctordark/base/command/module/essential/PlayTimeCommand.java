@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Command used to track the play-time of a {@link Player}.
@@ -40,15 +39,14 @@ public class PlayTimeCommand extends BaseCommand {
             return true;
         }
 
-        if (!target.hasPlayedBefore() && !target.isOnline()) {
+        Player onlineTarget;
+        if ((!target.hasPlayedBefore() || !target.isOnline()) || (sender instanceof Player && (onlineTarget = target.getPlayer()) != null && !((Player) sender).canSee(onlineTarget))) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
             return true;
         }
 
-        UUID targetUUID = target.getUniqueId();
-        long playtime = plugin.getPlayTimeManager().getTotalPlayTime(targetUUID);
         sender.sendMessage(ChatColor.YELLOW + target.getName() + " has been playing for " + ChatColor.GREEN +
-                DurationFormatUtils.formatDurationWords(playtime, true, true) + ChatColor.YELLOW + " this map.");
+                DurationFormatUtils.formatDurationWords(plugin.getPlayTimeManager().getTotalPlayTime(target.getUniqueId()), true, true) + ChatColor.YELLOW + " this map.");
 
         return true;
     }

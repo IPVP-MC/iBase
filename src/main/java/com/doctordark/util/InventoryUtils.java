@@ -20,7 +20,8 @@ public final class InventoryUtils {
      * from an inventory ignoring any ItemMeta.
      *
      * @param inventory the inventory to remove for
-     * @param stack     the stack to be removed
+     * @param type      the material to remove
+     * @param data      the data value to remove
      * @param quantity  the amount to be removed
      */
     public static void removeItem(Inventory inventory, Material type, short data, int quantity) {

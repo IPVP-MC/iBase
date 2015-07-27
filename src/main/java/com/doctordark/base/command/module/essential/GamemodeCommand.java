@@ -40,7 +40,7 @@ public class GamemodeCommand extends BaseCommand {
 
         final Player target;
         if (args.length > 1) {
-            target = Bukkit.getServer().getPlayer(args[1]);
+            target = Bukkit.getPlayer(args[1]);
         } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -48,7 +48,7 @@ public class GamemodeCommand extends BaseCommand {
             target = (Player) sender;
         }
 
-        if ((target == null) || (!canSee(sender, target))) {
+        if (target == null || !canSee(sender, target)) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
             return true;
         }
@@ -70,8 +70,9 @@ public class GamemodeCommand extends BaseCommand {
             return Collections.emptyList();
         }
 
-        List<String> results = Lists.newArrayList();
-        for (GameMode mode : GameMode.values()) {
+        GameMode[] gameModes = GameMode.values();
+        List<String> results = Lists.newArrayListWithExpectedSize(gameModes.length);
+        for (GameMode mode : gameModes) {
             results.add(mode.name());
         }
 

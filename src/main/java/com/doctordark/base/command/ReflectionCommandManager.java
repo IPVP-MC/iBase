@@ -26,7 +26,7 @@ public class ReflectionCommandManager implements CommandManager {
     private final Map<String, BaseCommand> commandMap = Maps.newHashMap();
 
     public ReflectionCommandManager(final BasePlugin plugin) {
-        final ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+        final ConsoleCommandSender console = Bukkit.getConsoleSender();
         final Server server = Bukkit.getServer();
 
         server.getScheduler().runTaskLater(plugin, new Runnable() {

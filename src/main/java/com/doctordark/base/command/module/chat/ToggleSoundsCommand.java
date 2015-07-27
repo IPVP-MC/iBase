@@ -32,8 +32,8 @@ public class ToggleSoundsCommand extends BaseCommand implements Listener {
         }
 
         Player player = (Player) sender;
-        BaseUser baseUser = plugin.getUserManager().getUser(player.getUniqueId());
 
+        BaseUser baseUser = plugin.getUserManager().getUser(player.getUniqueId());
         boolean newMessagingSounds = !baseUser.isMessagingSounds() || (args.length >= 2 && Boolean.parseBoolean(args[1]));
         baseUser.setMessagingSounds(newMessagingSounds);
 

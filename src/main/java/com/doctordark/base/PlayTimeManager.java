@@ -66,7 +66,7 @@ public class PlayTimeManager implements Listener {
      * Saves the play time data to storage.
      */
     public void savePlaytimeData() {
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             totalPlaytimeMap.put(player.getUniqueId(), getTotalPlayTime(player.getUniqueId()));
         }
 

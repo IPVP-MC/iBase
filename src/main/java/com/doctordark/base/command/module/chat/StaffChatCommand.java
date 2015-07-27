@@ -49,8 +49,8 @@ public class StaffChatCommand extends BaseCommand {
                 String message = StringUtils.join(args, ' ');
                 String format = ChatColor.AQUA + String.format(Locale.ENGLISH, "%1$s: %2$s", sender.getName(), message);
 
-                Bukkit.getServer().getConsoleSender().sendMessage(format);
-                for (Player other : Bukkit.getServer().getOnlinePlayers()) {
+                Bukkit.getConsoleSender().sendMessage(format);
+                for (Player other : Bukkit.getOnlinePlayers()) {
                     BaseUser otherUser = plugin.getUserManager().getUser(other.getUniqueId());
                     if (otherUser.isStaffChatVisible() && other.hasPermission("base.command.staffchat")) {
                         other.sendMessage(format);

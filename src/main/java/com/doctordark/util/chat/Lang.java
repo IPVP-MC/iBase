@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,20 +46,27 @@ public class Lang {
         }
 
         if (!lang.equals(language)) {
-            language = lang;
-            String resourcePath = "/assets/minecraft/lang/" + language + ".lang";
-            InputStream fis = Item.class.getResourceAsStream(resourcePath);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-            String line;
-            Matcher matcher;
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-                if (line.contains("=")) {
-                    matcher = PAT.matcher(line);
-                    if (matcher.matches()) {
-                        translations.put(matcher.group(1), matcher.group(2));
+            InputStream stream = null;
+            BufferedReader reader = null;
+            try {
+                language = lang;
+                String resourcePath = "/assets/minecraft/lang/" + language + ".lang";
+                stream = Item.class.getResourceAsStream(resourcePath);
+
+                reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    line = line.trim();
+                    if (line.contains("=")) {
+                        Matcher matcher = PAT.matcher(line);
+                        if (matcher.matches()) {
+                            translations.put(matcher.group(1), matcher.group(2));
+                        }
                     }
                 }
+            } finally {
+                if (stream != null) stream.close();
+                if (reader != null) reader.close();
             }
         }
     }

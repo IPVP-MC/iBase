@@ -30,14 +30,14 @@ public class BroadcastCommand extends BaseCommand {
 
         String message = StringUtils.join(args, ' ', 0, args.length);
 
-        if (message.length() < 6) {
-            sender.sendMessage(ChatColor.RED + "Broadcasts must be at least 6 characters.");
+        if (message.length() < 3) {
+            sender.sendMessage(ChatColor.RED + "Broadcasts must be at least 3 characters.");
             return true;
         }
 
         String format = plugin.getServerHandler().getBroadcastFormat();
 
-        Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', String.format(Locale.ENGLISH, format, message)));
+        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', String.format(Locale.ENGLISH, format, message)));
         return true;
     }
 }

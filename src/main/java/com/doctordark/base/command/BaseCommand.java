@@ -150,7 +150,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
             aliases = ArrayUtils.EMPTY_STRING_ARRAY;
         }
 
-        return aliases;
+        return Arrays.copyOf(aliases, aliases.length);
     }
 
     /**
@@ -170,7 +170,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @param id     the id of the player that may be null
      * @return true if player was null
      */
-    public static final boolean validateNullPlayer(CommandSender sender, String id) {
+    public static boolean validateNullPlayer(CommandSender sender, String id) {
         sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + id + ChatColor.GOLD + "' not found.");
         return true;
     }
@@ -182,8 +182,8 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @param id     the id to search for
      * @return player with given name, null if is not visible to sender
      */
-    public static final Player findPlayer(CommandSender sender, String id) {
-        Player player = Bukkit.getServer().getPlayer(id);
+    public static Player findPlayer(CommandSender sender, String id) {
+        Player player = Bukkit.getPlayer(id);
         return (canSee(sender, player)) ? player : null;
     }
 
@@ -194,7 +194,7 @@ public abstract class BaseCommand implements CommandExecutor, TabCompleter {
      * @param target the {@link Player} to check against
      * @return true if {@link CommandSender} is not a {@link Player} or can see
      */
-    public static final boolean canSee(CommandSender sender, Player target) {
+    public static boolean canSee(CommandSender sender, Player target) {
         return target != null && (!(sender instanceof Player) || ((Player) sender).canSee(target));
     }
 

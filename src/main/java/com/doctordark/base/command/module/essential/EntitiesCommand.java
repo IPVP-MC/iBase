@@ -6,7 +6,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import java.util.Collection;
@@ -22,15 +21,20 @@ public class EntitiesCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Collection<World> worlds = Bukkit.getServer().getWorlds();
+        Collection<World> worlds = Bukkit.getWorlds();
         for (World world : worlds) {
             sender.sendMessage(ChatColor.GRAY + world.getEnvironment().name());
 
             EntityType[] types = EntityType.values();
             for (EntityType entityType : types) {
-                Collection<? extends Entity> entities = world.getEntitiesByClass(entityType.getEntityClass());
-                if (entities.size() >= 20) {
-                    sender.sendMessage(ChatColor.YELLOW + " " + entityType.name() + " with " + entities.size());
+                // Throws errors sometimes.
+
+                try {
+                    int amount = world.getEntitiesByClass(entityType.getEntityClass()).size();
+                    if (amount >= 20) {
+                        sender.sendMessage(ChatColor.YELLOW + " " + entityType.name() + " with " + amount);
+                    }
+                } catch (Exception ignored) {
                 }
             }
         }

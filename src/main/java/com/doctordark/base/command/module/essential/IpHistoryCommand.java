@@ -4,7 +4,6 @@ import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.user.ServerParticipator;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,7 +15,9 @@ import sun.net.util.IPAddressUtil;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class IpHistoryCommand extends BaseCommand {
@@ -30,20 +31,18 @@ public class IpHistoryCommand extends BaseCommand {
         this.plugin = plugin;
     }
 
-    private List<String> getSharingPlayerNames(String ipAddress) {
-        final List<String> sharingNames = Lists.newArrayList();
+    private Set<String> getSharingPlayerNames(String ipAddress) {
+        Set<String> sharingNames = new HashSet<>();
         for (ServerParticipator participator : plugin.getUserManager().getParticipators().values()) {
-            if (!(participator instanceof BaseUser)) {
-                continue;
-            }
-
-            BaseUser baseUser = (BaseUser) participator;
-            if (baseUser.getAddressHistories().contains(ipAddress)) {
-                UUID uuid = baseUser.getUniqueId();
-                OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(uuid);
-                String playerName = player.getName();
-                if (playerName != null) {
-                    sharingNames.add(playerName);
+            if (participator instanceof BaseUser) {
+                BaseUser baseUser = (BaseUser) participator;
+                if (baseUser.getAddressHistories().contains(ipAddress)) {
+                    UUID uuid = baseUser.getUniqueId();
+                    OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
+                    String playerName = player.getName();
+                    if (playerName != null) {
+                        sharingNames.add(playerName);
+                    }
                 }
             }
         }
@@ -65,7 +64,7 @@ public class IpHistoryCommand extends BaseCommand {
             }
 
             @SuppressWarnings("deprecation")
-            OfflinePlayer target = Bukkit.getServer().getOfflinePlayer(args[1]);
+            OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
 
             if (!target.hasPlayedBefore() && target.getPlayer() == null) {
                 sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
@@ -94,7 +93,7 @@ public class IpHistoryCommand extends BaseCommand {
                 return true;
             }
 
-            List<String> sharingNames = getSharingPlayerNames(args[1]);
+            Set<String> sharingNames = getSharingPlayerNames(args[1]);
 
             if (sharingNames.isEmpty()) {
                 sender.sendMessage(ChatColor.RED + "No players share the ip '" + args[1] + "'.");
@@ -113,7 +112,7 @@ public class IpHistoryCommand extends BaseCommand {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
             return Arrays.asList("player", "address");
-        } else if ((args.length == 2) && (args[0].equalsIgnoreCase("player"))) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("player")) {
             return null;
         } else {
             return Collections.emptyList();

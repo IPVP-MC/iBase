@@ -50,7 +50,7 @@ public class CoordinatePair {
      * @return the {@link World} instance
      */
     public World getWorld() {
-        return Bukkit.getServer().getWorld(worldName);
+        return Bukkit.getWorld(worldName);
     }
 
     /**

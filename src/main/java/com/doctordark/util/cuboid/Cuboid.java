@@ -57,6 +57,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      */
     public Cuboid(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
         Validate.notNull(world, "World cannot be null");
+
         this.worldName = world.getName();
         this.x1 = Math.min(x1, x2);
         this.x2 = Math.max(x1, x2);
@@ -79,6 +80,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      */
     private Cuboid(String worldName, int x1, int y1, int z1, int x2, int y2, int z2) {
         Validate.notNull(worldName, "World name cannot be null");
+
         this.worldName = worldName;
         this.x1 = Math.min(x1, x2);
         this.y1 = Math.min(y1, y2);
@@ -99,6 +101,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         Validate.notNull(first, "Location 1 cannot be null");
         Validate.notNull(second, "Location 2 cannot be null");
         Validate.isTrue(first.getWorld().equals(second.getWorld()), "Locations must be on the same world");
+
         this.worldName = first.getWorld().getName();
         this.x1 = Math.min(first.getBlockX(), second.getBlockX());
         this.y1 = Math.min(first.getBlockY(), second.getBlockY());
@@ -220,7 +223,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return set of {@link Player}s in {@link Cuboid}
      */
     public Set<Player> getPlayers() {
-        return Bukkit.getServer().getOnlinePlayers().stream().filter(this::contains).collect(Collectors.toSet());
+        return Bukkit.getOnlinePlayers().stream().filter(this::contains).collect(Collectors.toSet());
     }
 
     /**
@@ -272,7 +275,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return the {@link World}, or null if is not loaded
      */
     public World getWorld() {
-        return Bukkit.getServer().getWorld(worldName);
+        return Bukkit.getWorld(worldName);
     }
 
     /**
@@ -563,6 +566,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return true if {@link Location} is within this {@link Cuboid}, false otherwise
      */
     public boolean contains(Location location) {
+        if (location == null) return false;
         return worldName.equals(location.getWorld().getName()) &&
                 contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
@@ -638,9 +642,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return the {@link Cuboid} width
      */
     public int getWidth() {
-        Location min = getMinimumPoint();
-        Location max = getMaximumPoint();
-        return (max.getBlockX() - min.getBlockX() + 1);
+        return (getMaximumPoint().getBlockX() - getMinimumPoint().getBlockX() + 1);
     }
 
     /**
@@ -649,9 +651,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return the {@link Cuboid} height
      */
     public int getHeight() {
-        Location min = getMinimumPoint();
-        Location max = getMaximumPoint();
-        return (max.getBlockY() - min.getBlockY() + 1);
+        return (getMaximumPoint().getBlockY() - getMinimumPoint().getBlockY() + 1);
     }
 
     /**
@@ -660,9 +660,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return the {@link Cuboid} length
      */
     public int getLength() {
-        Location min = getMinimumPoint();
-        Location max = getMaximumPoint();
-        return (max.getBlockZ() - min.getBlockZ() + 1);
+        return (getMaximumPoint().getBlockZ() - getMinimumPoint().getBlockZ() + 1);
     }
 
     /**
@@ -859,10 +857,13 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         return new CuboidBlockIterator(getWorld(), x1, y1, z1, x2, y2, z2);
     }
 
-    @SuppressWarnings("CloneDoesntCallSuperClone")
     @Override
-    public Cuboid clone() throws CloneNotSupportedException {
-        return new Cuboid(this);
+    public Cuboid clone()  {
+        try {
+            return (Cuboid) super.clone();
+        } catch (Exception ex) {
+            throw new AssertionError("Could not clone Cuboid");
+        }
     }
 
     @Override

@@ -123,6 +123,7 @@ commands:
     description: Shows the server rules.
   say:
     description: Tell a story to the server.
+  screenshare:
   seen:
     description: Checks when a player was last seen.
   setmaxplayers:
@@ -163,6 +164,8 @@ commands:
     description: Disable private messages.
   top:
     description: Teleport to highest spot of world
+  unfreeze:
+    description: Un-freezes' a player.
   uptime:
     description: Check how long a server has been up for.
   vanish:

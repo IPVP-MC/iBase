@@ -16,7 +16,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RemoveEntityCommand extends BaseCommand {
 
@@ -32,7 +34,7 @@ public class RemoveEntityCommand extends BaseCommand {
             return true;
         }
 
-        World world = Bukkit.getServer().getWorld(args[0]);
+        World world = Bukkit.getWorld(args[0]);
         EntityType entityType;
         try {
             entityType = EntityType.valueOf(args[1]);
@@ -46,21 +48,21 @@ public class RemoveEntityCommand extends BaseCommand {
             return true;
         }
 
-        int radius = 0;
-        if (args.length >= 3) {
-            Integer parsed = Ints.tryParse(args[2]);
-            if (parsed != null) {
-                radius = parsed;
-            }
-        }
-
         boolean removeCustomNamed = false;
-        if (args.length >= 4) {
+        if (args.length >= 3) {
             try {
-                removeCustomNamed = Boolean.parseBoolean(args[3]);
+                removeCustomNamed = Boolean.parseBoolean(args[2]);
             } catch (Exception ex) {
                 sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
                 return true;
+            }
+        }
+
+        int radius = 0;
+        if (args.length >= 4) {
+            Integer parsed = Ints.tryParse(args[3]);
+            if (parsed != null) {
+                radius = parsed;
             }
         }
 
@@ -70,12 +72,11 @@ public class RemoveEntityCommand extends BaseCommand {
         for (Chunk chunk : world.getLoadedChunks()) {
             for (Entity entity : chunk.getEntities()) {
                 if (entity.getType() != entityType) continue;
-                if ((radius <= 0) || (location != null && location.distanceSquared(entity.getLocation()) <= radius)) {
+                if (radius <= 0 || (location != null && location.distanceSquared(entity.getLocation()) <= radius)) {
                     if (entity instanceof Tameable && ((Tameable) entity).isTamed()) continue;
-
                     if (entity instanceof LivingEntity) {
                         LivingEntity livingEntity = (LivingEntity) entity;
-                        if (removeCustomNamed && livingEntity.getCustomName() != null) {
+                        if (!removeCustomNamed && livingEntity.getCustomName() != null) {
                             continue;
                         }
                     }
@@ -91,17 +92,18 @@ public class RemoveEntityCommand extends BaseCommand {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        List<String> results = Lists.newArrayList();
-        if (args.length == 1) {
-            for (World world : Bukkit.getServer().getWorlds()) {
-                results.add(world.getName());
-            }
-        } else if (args.length == 2) {
-            for (EntityType entityType : EntityType.values()) {
-                results.add(entityType.name());
-            }
+        switch (args.length) {
+            case 1:
+                return Bukkit.getWorlds().stream().map(World::getName).collect(Collectors.toList());
+            case 2:
+                EntityType[] entityTypes = EntityType.values();
+                List<String> results = Lists.newArrayListWithExpectedSize(entityTypes.length);
+                for (EntityType entityType : entityTypes) {
+                    results.add(entityType.getName());
+                }
+                return results;
+            default:
+                return Collections.emptyList();
         }
-
-        return getCompletions(args, results);
     }
 }

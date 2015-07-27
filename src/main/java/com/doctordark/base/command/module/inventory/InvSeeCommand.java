@@ -55,16 +55,13 @@ public class InvSeeCommand extends BaseCommand implements Listener {
         Inventory inventory = null;
         for (InventoryType type : this.types) {
             if (type.name().equalsIgnoreCase(args[0])) {
-                inventory = inventories.get(type);
-                if (inventory == null) {
-                    inventories.put(type, inventory = Bukkit.createInventory(player, type));
-                }
+                inventories.putIfAbsent(type, inventory = Bukkit.createInventory(player, type));
                 break;
             }
         }
 
         if (inventory == null) {
-            Player target = Bukkit.getServer().getPlayer(args[0]);
+            Player target = Bukkit.getPlayer(args[0]);
 
             if (sender.equals(target)) {
                 sender.sendMessage(ChatColor.RED + "You cannot check the inventory of yourself.");
@@ -89,14 +86,15 @@ public class InvSeeCommand extends BaseCommand implements Listener {
             return Collections.emptyList();
         }
 
-        List<String> results = new ArrayList<>(types.length);
-        for (InventoryType type : types) {
+        List<String> results = new ArrayList<>();
+        for (InventoryType type : InventoryType.values()) {
             results.add(type.name());
         }
 
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-            if ((!(sender instanceof Player)) || ((Player) sender).canSee(player)) {
-                results.add(player.getName());
+        Player senderPlayer = sender instanceof Player ? (Player) sender : null;
+        for (Player target : Bukkit.getOnlinePlayers()) {
+            if (senderPlayer == null || senderPlayer.canSee(target)) {
+                results.add(target.getName());
             }
         }
 

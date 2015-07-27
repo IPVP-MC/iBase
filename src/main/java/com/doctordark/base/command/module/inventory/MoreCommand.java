@@ -51,6 +51,7 @@ public class MoreCommand extends BaseCommand {
         } else {
             int curAmount = stack.getAmount();
             amount = stack.getMaxStackSize();
+
             if (curAmount >= amount) {
                 sender.sendMessage(ChatColor.RED + "You already have the maximum amount: " + amount + '.');
                 return true;

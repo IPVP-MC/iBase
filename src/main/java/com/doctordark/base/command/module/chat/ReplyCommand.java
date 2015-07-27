@@ -61,7 +61,7 @@ public class ReplyCommand extends BaseCommand {
         Set<Player> recipients = Sets.newHashSet(target);
 
         PlayerMessageEvent playerMessageEvent = new PlayerMessageEvent(player, recipients, message, false);
-        Bukkit.getServer().getPluginManager().callEvent(playerMessageEvent);
+        Bukkit.getPluginManager().callEvent(playerMessageEvent);
         if (!playerMessageEvent.isCancelled()) {
             playerMessageEvent.send();
         }

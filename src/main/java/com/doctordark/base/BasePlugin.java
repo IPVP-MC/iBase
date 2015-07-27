@@ -89,6 +89,7 @@ public class BasePlugin extends JavaPlugin {
 
         BossBarManager.unhook();
 
+        playTimeManager.savePlaytimeData();
         serverHandler.saveServerData();
         userManager.saveParticipatorData();
         warpManager.saveWarpData();

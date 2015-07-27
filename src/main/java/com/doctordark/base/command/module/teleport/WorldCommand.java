@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class WorldCommand extends BaseCommand {
             return true;
         }
 
-        World world = Bukkit.getServer().getWorld(args[0]);
+        World world = Bukkit.getWorld(args[0]);
 
         if (world == null) {
             sender.sendMessage(ChatColor.RED + "World '" + args[0] + "' not found.");
@@ -52,20 +53,13 @@ public class WorldCommand extends BaseCommand {
             return true;
         }
 
-        Location playerLocation = player.getLocation();
-        double x = playerLocation.getX();
-        double y = playerLocation.getY();
-        double z = playerLocation.getZ();
-        float yaw = playerLocation.getYaw();
-        float pitch = playerLocation.getPitch();
-        Location location = new Location(world, x, y, z, yaw, pitch);
-
+        Location origin = player.getLocation();
+        Location location = new Location(world, origin.getX(), origin.getY(), origin.getZ(), origin.getYaw(), origin.getPitch());
         player.teleport(location, PlayerTeleportEvent.TeleportCause.COMMAND);
 
-        String worldName = world.getName();
-        String environmentName = WordUtils.capitalizeFully(world.getEnvironment().name().replace('_', ' '));
+        sender.sendMessage(ChatColor.AQUA + "Switched world to '" + world.getName() +
+                ChatColor.YELLOW + " [" + WordUtils.capitalizeFully(world.getEnvironment().name().replace('_', ' ')) + ']' + ChatColor.AQUA + "'.");
 
-        sender.sendMessage(ChatColor.AQUA + "Switched world to '" + worldName + ChatColor.YELLOW + " [" + environmentName + ']' + ChatColor.AQUA + "'.");
         return true;
     }
 
@@ -75,8 +69,9 @@ public class WorldCommand extends BaseCommand {
             return Collections.emptyList();
         }
 
-        List<String> results = Lists.newArrayList();
-        for (World world : Bukkit.getServer().getWorlds()) {
+        Collection<World> worlds = Bukkit.getWorlds();
+        List<String> results = Lists.newArrayListWithExpectedSize(worlds.size());
+        for (World world : Bukkit.getWorlds()) {
             results.add(world.getName());
         }
 

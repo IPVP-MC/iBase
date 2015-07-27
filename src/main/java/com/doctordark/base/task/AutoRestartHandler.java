@@ -21,7 +21,7 @@ public class AutoRestartHandler {
 
     public AutoRestartHandler(BasePlugin plugin) {
         this.plugin = plugin;
-        this.scheduleRestart(TimeUnit.HOURS.toMicros(20L));
+        this.scheduleRestart(TimeUnit.HOURS.toMillis(20L));
     }
 
     /**
@@ -48,7 +48,7 @@ public class AutoRestartHandler {
      * @return true if there is a pending restart
      */
     public boolean isPendingRestart() {
-        return this.task != null;
+        return task != null && current != Long.MIN_VALUE;
     }
 
     /**
@@ -58,7 +58,7 @@ public class AutoRestartHandler {
         if (isPendingRestart()) {
             this.task.cancel();
             this.task = null;
-            this.current = 0L;
+            this.current = Long.MIN_VALUE;
         }
     }
 
@@ -84,12 +84,13 @@ public class AutoRestartHandler {
     /**
      * Schedules a restart with a reason in a given amount of milliseconds.
      *
-     * @param milliseconds the milliseconds to schedule in
-     * @param reason       the reason for restarting
+     * @param millis the milliseconds to schedule in
+     * @param reason the reason for restarting
      */
     public void scheduleRestart(final long millis, final String reason) {
         this.cancelRestart();
         this.reason = reason;
+        this.current = System.currentTimeMillis() + millis;
         this.task = new BukkitRunnable() {
             @Override
             public void run() {
@@ -104,7 +105,6 @@ public class AutoRestartHandler {
                             (reason.isEmpty()) ? "." : " [" + ChatColor.GRAY + reason + ChatColor.RED + "]."));
                 }
             }
-        }.runTaskTimer(plugin, 20L, 20L);
-        this.current = System.currentTimeMillis() + millis;
+        }.runTaskTimer(plugin, 1L, 20L);
     }
 }

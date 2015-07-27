@@ -2,6 +2,7 @@ package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
+import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import org.apache.commons.lang.StringUtils;
@@ -44,12 +45,20 @@ public class ProxycommandCommand extends BaseCommand {
         out.writeUTF("DispatchCommand");
         out.writeUTF(sender.getName());
         out.writeUTF(fullCommand = StringUtils.join(args, ' ', 0, args.length));
+
+        PluginMessageRecipient pluginMessageRecipient;
         if (sender instanceof PluginMessageRecipient) {
-            ((PluginMessageRecipient) sender).sendPluginMessage(plugin, PROXY_CHANNEL, out.toByteArray());
+            pluginMessageRecipient = ((PluginMessageRecipient) sender);
         } else {
-            Bukkit.getServer().sendPluginMessage(plugin, PROXY_CHANNEL, out.toByteArray());
+            pluginMessageRecipient = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
+
+            if (pluginMessageRecipient == null) {
+                sender.sendMessage(ChatColor.RED + "Unable to send plugin message, no players are online.");
+                return true;
+            }
         }
 
+        pluginMessageRecipient.sendPluginMessage(plugin, PROXY_CHANNEL, out.toByteArray());
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Executed proxy command " + fullCommand + '.');
         return true;
     }

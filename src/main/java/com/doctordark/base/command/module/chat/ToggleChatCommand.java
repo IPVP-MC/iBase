@@ -8,8 +8,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
-
 public class ToggleChatCommand extends BaseCommand {
 
     private final BasePlugin plugin;
@@ -29,9 +27,8 @@ public class ToggleChatCommand extends BaseCommand {
         }
 
         Player player = (Player) sender;
-        UUID uuid = player.getUniqueId();
 
-        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
+        BaseUser baseUser = plugin.getUserManager().getUser(player.getUniqueId());
         boolean newChatToggled = !baseUser.isGlobalChatVisible();
         baseUser.setGlobalChatVisible(newChatToggled);
 

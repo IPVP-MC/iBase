@@ -6,6 +6,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +44,9 @@ public class CopyInvCommand  extends BaseCommand {
             return true;
         }
 
-        ((Player) sender).getInventory().setContents(target.getInventory().getContents());
+        PlayerInventory inventory = target.getInventory();
+        inventory.setContents(deepClone(target.getInventory().getContents()));
+        inventory.setArmorContents(deepClone(target.getInventory().getArmorContents()));
 
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Copied inventory of player " + target.getName() + '.');
         return true;
@@ -51,5 +55,15 @@ public class CopyInvCommand  extends BaseCommand {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         return (args.length == 1) ? null : Collections.<String>emptyList();
+    }
+
+    private ItemStack[] deepClone(ItemStack[] contents) {
+        ItemStack[] cloned = new ItemStack[contents.length];
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack next = contents[i];
+            cloned[i] = next == null ? null : next.clone();
+        }
+
+        return cloned;
     }
 }

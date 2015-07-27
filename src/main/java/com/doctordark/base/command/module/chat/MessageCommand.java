@@ -3,7 +3,6 @@ package com.doctordark.base.command.module.chat;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.command.module.chat.event.PlayerMessageEvent;
-import com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -35,7 +35,7 @@ public class MessageCommand extends BaseCommand {
         }
 
         Player player = (Player) sender;
-        Player target = Bukkit.getServer().getPlayer(args[0]);
+        Player target = Bukkit.getPlayer(args[0]);
 
         if (target == null || !canSee(sender, target)) {
             sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
@@ -43,10 +43,10 @@ public class MessageCommand extends BaseCommand {
         }
 
         String message = StringUtils.join(args, ' ', 1, args.length);
-        Set<Player> recipients = Sets.newHashSet(target);
+        Set<Player> recipients = Collections.singleton(target);
 
         PlayerMessageEvent playerMessageEvent = new PlayerMessageEvent(player, recipients, message, false);
-        Bukkit.getServer().getPluginManager().callEvent(playerMessageEvent);
+        Bukkit.getPluginManager().callEvent(playerMessageEvent);
         if (!playerMessageEvent.isCancelled()) {
             playerMessageEvent.send();
         }

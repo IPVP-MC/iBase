@@ -17,7 +17,6 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 public class BackCommand extends BaseCommand implements Listener {
 
@@ -26,7 +25,7 @@ public class BackCommand extends BaseCommand implements Listener {
     public BackCommand(BasePlugin plugin) {
         super("back", "Go to a players last known location.", "base.command.back");
         setUsage("/(command) [playerName]");
-        Bukkit.getServer().getPluginManager().registerEvents(this, this.plugin = plugin);
+        Bukkit.getPluginManager().registerEvents(this, this.plugin = plugin);
     }
 
     @Override
@@ -38,7 +37,7 @@ public class BackCommand extends BaseCommand implements Listener {
 
         final Player target;
         if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
-            target = Bukkit.getServer().getPlayer(args[0]);
+            target = Bukkit.getPlayer(args[0]);
         } else {
             target = (Player) sender;
         }
@@ -51,8 +50,7 @@ public class BackCommand extends BaseCommand implements Listener {
             return true;
         }
 
-        Player player = (Player) sender;
-        player.teleport(previous);
+        ((Player) sender).teleport(previous);
 
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Teleported to back location of " + target.getName() + '.');
         return true;
@@ -66,20 +64,20 @@ public class BackCommand extends BaseCommand implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        UUID uuid = player.getUniqueId();
-        BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-        Location location = player.getLocation();
-        baseUser.setBackLocation(location);
+        plugin.getUserManager().getUser(player.getUniqueId()).setBackLocation(player.getLocation());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         PlayerTeleportEvent.TeleportCause cause = event.getCause();
-        if ((cause == PlayerTeleportEvent.TeleportCause.COMMAND) || (cause == PlayerTeleportEvent.TeleportCause.UNKNOWN) || (cause == PlayerTeleportEvent.TeleportCause.PLUGIN)) {
-            Player player = event.getPlayer();
-            UUID uuid = player.getUniqueId();
-            BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-            baseUser.setBackLocation(event.getFrom().clone());
+        switch (event.getCause()) {
+            case COMMAND:
+            case UNKNOWN:
+            case PLUGIN:
+                plugin.getUserManager().getUser(event.getPlayer().getUniqueId()).setBackLocation(event.getFrom().clone());
+                break;
+            default:
+                break;
         }
     }
 }

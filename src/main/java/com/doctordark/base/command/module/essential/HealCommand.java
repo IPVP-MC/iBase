@@ -25,9 +25,9 @@ public class HealCommand extends BaseCommand {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final Player target;
         if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
-            target = Bukkit.getServer().getPlayer(args[0]);
+            target = Bukkit.getPlayer(args[0]);
         } else if (args.length > 0 && args[0].equalsIgnoreCase("all") && sender.hasPermission(command.getPermission() + ".all")) {
-            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
                 if (player.hasPotionEffect(PotionEffectType.HUNGER)) {
                     player.removePotionEffect(PotionEffectType.HUNGER);
                 }

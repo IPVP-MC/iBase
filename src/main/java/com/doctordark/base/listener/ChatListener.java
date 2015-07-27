@@ -152,7 +152,7 @@ public class ChatListener implements Listener {
         String senderId = senderUUID.toString();
         String recipientId = recipient.getUniqueId().toString();
 
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             if (!player.equals(sender) && !recipient.equals(sender)) {
                 BaseUser baseOnline = plugin.getUserManager().getUser(player.getUniqueId());
                 Set<String> messageSpying = baseOnline.getMessageSpying();

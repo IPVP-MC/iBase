@@ -19,19 +19,19 @@ public class EnchantCommand extends BaseCommand {
 
     public EnchantCommand() {
         super("enchant", "Unsafely enchant an item.", "base.command.enchant");
-        this.setUsage("/(command) <playerName> <enchantment> <level>");
+        this.setUsage("/(command) <enchantment> <level> [playerName]");
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length < 3) {
+        if (args.length < 2) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
             return true;
         }
 
         final Player target;
-        if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
-            target = Bukkit.getServer().getPlayer(args[0]);
+        if (args.length > 2 && sender.hasPermission(command.getPermission() + ".others")) {
+            target = Bukkit.getPlayer(args[2]);
         } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -83,8 +83,9 @@ public class EnchantCommand extends BaseCommand {
         if (args.length == 1) {
             return null;
         } else if (args.length == 2) {
-            List<String> results = Lists.newArrayList();
-            for (Enchantment enchantment : Enchantment.values()) {
+            Enchantment[] enchantments = Enchantment.values();
+            List<String> results = Lists.newArrayListWithExpectedSize(enchantments.length);
+            for (Enchantment enchantment : enchantments) {
                 results.add(enchantment.getName());
             }
 

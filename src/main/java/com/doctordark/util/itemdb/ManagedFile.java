@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -40,7 +41,7 @@ public class ManagedFile {
     }
 
     public static void copyResourceAscii(final String resourceName, final File file) throws IOException {
-        try (InputStreamReader reader = new InputStreamReader(ManagedFile.class.getResourceAsStream(resourceName))) {
+        try (InputStreamReader reader = new InputStreamReader(ManagedFile.class.getResourceAsStream(resourceName), StandardCharsets.UTF_8)) {
             final MessageDigest digest = getDigest();
             try (DigestOutputStream digestStream = new DigestOutputStream(new FileOutputStream(file), digest)) {
                 try (OutputStreamWriter writer = new OutputStreamWriter(digestStream)) {

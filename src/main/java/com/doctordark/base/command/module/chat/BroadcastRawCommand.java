@@ -29,7 +29,7 @@ public class BroadcastRawCommand extends BaseCommand {
             return true;
         }
 
-        Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', message));
+        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', message));
         return true;
     }
 }

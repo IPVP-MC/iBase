@@ -15,8 +15,7 @@ public class ColouredSignListener implements Listener {
         if (player != null && player.hasPermission("base.sign.colour")) {
             String[] lines = event.getLines();
             for (int i = 0; i < lines.length; i++) {
-                String line = lines[i];
-                event.setLine(i, ChatColor.translateAlternateColorCodes('&', line));
+                event.setLine(i, ChatColor.translateAlternateColorCodes('&', lines[i]));
             }
         }
     }

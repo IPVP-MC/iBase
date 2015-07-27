@@ -75,7 +75,7 @@ public class SkullCommand extends BaseCommand {
         }
 
         List<String> completions = Lists.newArrayList(SKULL_NAMES);
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             if (sender instanceof Player && !((Player) sender).canSee(player)) {
                 continue;
             }

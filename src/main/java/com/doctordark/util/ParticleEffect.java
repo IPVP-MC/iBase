@@ -150,7 +150,7 @@ public enum ParticleEffect {
      */
     public void broadcast(float x, float y, float z, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
         Packet packet = createPacket(x, y, z, offsetX, offsetY, offsetZ, speed, amount);
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
         }
     }
@@ -167,7 +167,7 @@ public enum ParticleEffect {
      */
     public void broadcast(Location location, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
         Packet packet = createPacket(location, offsetX, offsetY, offsetZ, speed, amount);
-        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
         }
     }

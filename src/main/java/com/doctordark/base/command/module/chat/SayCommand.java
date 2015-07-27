@@ -30,7 +30,7 @@ public class SayCommand extends BaseCommand {
         }
 
         String prefix = ChatColor.LIGHT_PURPLE + "[" + BukkitUtils.getDisplayName(sender) + ChatColor.LIGHT_PURPLE + ']';
-        Bukkit.getServer().broadcastMessage(prefix + ' ' + message);
+        Bukkit.broadcastMessage(prefix + ' ' + message);
         return true;
     }
 }

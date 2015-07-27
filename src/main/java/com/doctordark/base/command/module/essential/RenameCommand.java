@@ -49,8 +49,7 @@ public class RenameCommand extends BaseCommand {
         if (args[0].equalsIgnoreCase("none") || args[0].equalsIgnoreCase("null")) {
             newName = null;
         } else {
-            newName = StringUtils.join(args, ' ', 0, args.length);
-            newName = ChatColor.translateAlternateColorCodes('&', newName).trim();
+            newName = ChatColor.translateAlternateColorCodes('&', StringUtils.join(args, ' ', 0, args.length));
         }
 
         if (oldName == null && newName == null) {
