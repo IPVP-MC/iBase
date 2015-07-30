@@ -24,7 +24,7 @@ public class RemoveEntityCommand extends BaseCommand {
 
     public RemoveEntityCommand() {
         super("removeentity", "Removes all of a specific entity.", "base.command.removeentity");
-        setUsage("/(command) <worldName> <entityType> [radius] [removeCustomNamed]");
+        setUsage("/(command) <worldName> <entityType> [removeCustomNamed] [radius]");
     }
 
     @Override
@@ -58,12 +58,20 @@ public class RemoveEntityCommand extends BaseCommand {
             }
         }
 
-        int radius = 0;
+        final Integer radius;
         if (args.length >= 4) {
-            Integer parsed = Ints.tryParse(args[3]);
-            if (parsed != null) {
-                radius = parsed;
+            radius = Ints.tryParse(args[3]);
+            if (radius == null) {
+                sender.sendMessage(ChatColor.RED + "'" + args[3] + "' is not a number.");
+                return true;
             }
+
+            if (radius <= 0) {
+                sender.sendMessage(ChatColor.RED + "Radius must be positive.");
+                return true;
+            }
+        } else {
+            radius = 0;
         }
 
         Location location = (sender instanceof Player) ? ((Player) sender).getLocation() : null;
@@ -72,7 +80,7 @@ public class RemoveEntityCommand extends BaseCommand {
         for (Chunk chunk : world.getLoadedChunks()) {
             for (Entity entity : chunk.getEntities()) {
                 if (entity.getType() != entityType) continue;
-                if (radius <= 0 || (location != null && location.distanceSquared(entity.getLocation()) <= radius)) {
+                if (radius == 0 || (location != null && location.distanceSquared(entity.getLocation()) <= radius)) {
                     if (entity instanceof Tameable && ((Tameable) entity).isTamed()) continue;
                     if (entity instanceof LivingEntity) {
                         LivingEntity livingEntity = (LivingEntity) entity;
