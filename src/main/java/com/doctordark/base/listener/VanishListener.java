@@ -195,12 +195,10 @@ public class VanishListener implements Listener {
             case RIGHT_CLICK_BLOCK:
                 Block block = event.getClickedBlock();
                 BlockState state = block.getState();
-                if (state instanceof InventoryHolder && plugin.getUserManager().getUser(uuid).isVanished()) {
-                    InventoryHolder holder = (InventoryHolder) state;
-                    InventoryType type = holder.getInventory().getType();
-
+                if (state instanceof Chest && plugin.getUserManager().getUser(uuid).isVanished()) {
                     Chest chest = (Chest) state;
                     Location chestLocation = chest.getLocation();
+                    InventoryType type = chest.getInventory().getType();
                     if (type == InventoryType.CHEST && fakeChestLocationMap.putIfAbsent(uuid, chestLocation) == null) {
                         ItemStack[] contents = chest.getInventory().getContents();
                         Inventory fakeInventory = Bukkit.createInventory(null, contents.length, FAKE_CHEST_PREFIX + type.getDefaultTitle());
