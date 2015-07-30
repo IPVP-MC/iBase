@@ -13,6 +13,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collections;
 import java.util.List;
 
 public class EnchantCommand extends BaseCommand {
@@ -40,14 +41,14 @@ public class EnchantCommand extends BaseCommand {
         }
 
         if (target == null || !canSee(sender, target)) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
+            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[2] + ChatColor.GOLD + "' not found.");
             return true;
         }
 
-        Enchantment enchantment = Enchantment.getByName(args[1]);
+        Enchantment enchantment = Enchantment.getByName(args[0]);
 
         if (enchantment == null) {
-            sender.sendMessage(ChatColor.RED + "No enchantment named '" + args[1] + "' found.");
+            sender.sendMessage(ChatColor.RED + "No enchantment named '" + args[0] + "' found.");
             return true;
         }
 
@@ -58,10 +59,21 @@ public class EnchantCommand extends BaseCommand {
             return true;
         }
 
-        Integer level = Ints.tryParse(args[2]);
+        Integer level = Ints.tryParse(args[1]);
 
         if (level == null) {
-            sender.sendMessage(ChatColor.RED + "'" + args[2] + "' is not a number.");
+            sender.sendMessage(ChatColor.RED + "'" + args[1] + "' is not a number.");
+            return true;
+        }
+
+        int maxLevel = enchantment.getMaxLevel();
+        if (level > maxLevel && !sender.hasPermission("base.command.enchant.abovelevel")) {
+            sender.sendMessage(ChatColor.RED + "The maximum enchantment level for " + enchantment.getName() + " is " + maxLevel + '.');
+            return true;
+        }
+
+        if (!enchantment.getItemTarget().includes(stack) && !sender.hasPermission("base.command.enchant.anyitem")) {
+            sender.sendMessage(ChatColor.RED + "Enchantment " + enchantment.getName() + " cannot be applied to that item.");
             return true;
         }
 
@@ -74,24 +86,25 @@ public class EnchantCommand extends BaseCommand {
             itemName = stack.getType().name();
         }
 
-        Command.broadcastCommandMessage(sender, "Applied " + enchantment.getName() + " at level " + level + " onto " + itemName + " of " + target.getName() + '.');
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Applied " + enchantment.getName() + " at level " + level + " onto " + itemName + " of " + target.getName() + '.');
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length == 1) {
-            return null;
-        } else if (args.length == 2) {
-            Enchantment[] enchantments = Enchantment.values();
-            List<String> results = Lists.newArrayListWithExpectedSize(enchantments.length);
-            for (Enchantment enchantment : enchantments) {
-                results.add(enchantment.getName());
-            }
+        switch (args.length) {
+            case 1:
+                Enchantment[] enchantments = Enchantment.values();
+                List<String> results = Lists.newArrayListWithExpectedSize(enchantments.length);
+                for (Enchantment enchantment : enchantments) {
+                    results.add(enchantment.getName());
+                }
 
-            return getCompletions(args, results);
-        } else {
-            return super.onTabComplete(sender, command, label, args);
+                return getCompletions(args, results);
+            case 3:
+                return null;
+            default:
+                return Collections.emptyList();
         }
     }
 }
