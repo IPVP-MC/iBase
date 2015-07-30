@@ -15,6 +15,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -96,8 +97,13 @@ public class VanishListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onEntityTarget(EntityTargetEvent event) {
+        if (event.getReason() == EntityTargetEvent.TargetReason.CUSTOM) {
+            return;
+        }
+
         Entity target = event.getTarget();
-        if (event.getEntity() instanceof LivingEntity && target instanceof Player && plugin.getUserManager().getUser(target.getUniqueId()).isVanished()) {
+        Entity entity = event.getEntity();
+        if ((entity instanceof ExperienceOrb || entity instanceof LivingEntity) && target instanceof Player && plugin.getUserManager().getUser(target.getUniqueId()).isVanished()) {
             event.setCancelled(true);
         }
     }
