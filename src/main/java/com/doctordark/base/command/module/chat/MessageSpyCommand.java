@@ -6,8 +6,8 @@ import com.doctordark.base.command.CommandWrapper;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,7 +16,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -227,18 +229,25 @@ public class MessageSpyCommand extends BaseCommand {
             UUID uuid = player.getUniqueId();
             BaseUser baseUser = plugin.getUserManager().getUser(uuid);
 
-            Set<String> spyingNames = Sets.newHashSet();
-            for (String spyingId : baseUser.getMessageSpying()) {
-                OfflinePlayer target = Bukkit.getOfflinePlayer(UUID.fromString(spyingId));
-                spyingNames.add(target.getName());
-            }
-
-            if (spyingNames.isEmpty()) {
-                sender.sendMessage(ChatColor.RED + "You are not spying on the PM's of any players.");
+            Set<String> spyingNames = new LinkedHashSet<>();
+            Collection<String> messageSpying = baseUser.getMessageSpying();
+            if (messageSpying.size() == 1 && Iterables.getOnlyElement(messageSpying).equals("all")) {
+                sender.sendMessage(ChatColor.GRAY + "You are currently spying on the messages of all players.");
                 return true;
             }
 
-            sender.sendMessage(ChatColor.GRAY + "You are currently spying on the PM's of (" + spyingNames.size() + "): " + ChatColor.RED +
+            for (String spyingId : baseUser.getMessageSpying()) {
+                String name = Bukkit.getOfflinePlayer(UUID.fromString(spyingId)).getName();
+                if (name == null) continue;
+                spyingNames.add(name);
+            }
+
+            if (spyingNames.isEmpty()) {
+                sender.sendMessage(ChatColor.RED + "You are not spying on the messages of any players.");
+                return true;
+            }
+
+            sender.sendMessage(ChatColor.GRAY + "You are currently spying on the messages of (" + spyingNames.size() + " players): " + ChatColor.RED +
                     StringUtils.join(spyingNames, ChatColor.GRAY.toString() + ", " + ChatColor.RED) + ChatColor.GRAY + '.');
 
             return true;
