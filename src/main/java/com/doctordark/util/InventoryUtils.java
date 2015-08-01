@@ -99,8 +99,8 @@ public final class InventoryUtils {
         }
 
         if (result) return true;
-        if (inventory instanceof PlayerInventory) {
-            contents = inventory.getContents();
+        if (checkArmour && inventory instanceof PlayerInventory) {
+            contents = ((PlayerInventory) inventory).getArmorContents();
             for (ItemStack content : contents) {
                 if (content != null && content.getType() != Material.AIR) {
                     result = false;
