@@ -85,7 +85,7 @@ public final class InventoryUtils {
     }
 
     public static boolean isEmpty(Inventory inventory) {
-        return isEmpty(inventory, false);
+        return isEmpty(inventory, true);
     }
 
     public static boolean isEmpty(Inventory inventory, boolean checkArmour) {
@@ -112,6 +112,12 @@ public final class InventoryUtils {
         return result;
     }
 
+    /**
+     * Checks if the top inventory was clicked in the {@link InventoryDragEvent}.
+     *
+     * @param event the {@link org.bukkit.event.Event} to check for
+     * @return true if the top {@link Inventory} was clicked
+     */
     public static boolean clickedTopInventory(InventoryDragEvent event) {
         InventoryView view = event.getView();
         Inventory topInventory = view.getTopInventory();
