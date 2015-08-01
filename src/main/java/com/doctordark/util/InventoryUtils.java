@@ -12,7 +12,25 @@ import java.util.Set;
 
 public final class InventoryUtils {
 
+    public static final int DEFAULT_INVENTORY_WIDTH = 9;
+
+    public static final int MINIMUM_INVENTORY_HEIGHT = 1;
+    public static final int MINIMUM_INVENTORY_SIZE = MINIMUM_INVENTORY_HEIGHT * DEFAULT_INVENTORY_WIDTH;
+
+    public static final int MAXIMUM_INVENTORY_HEIGHT = 6;
+    public static final int MAXIMUM_INVENTORY_SIZE = MAXIMUM_INVENTORY_HEIGHT * DEFAULT_INVENTORY_WIDTH;
+
     private InventoryUtils() {
+    }
+
+    /**
+     * Converts an initial value to a safe inventory size.
+     *
+     * @param initialSize the initial size of inventory
+     * @return the safe Bukkit {@link Inventory} size
+     */
+    public static int getSafestInventorySize(int initialSize) {
+        return (initialSize + (DEFAULT_INVENTORY_WIDTH - 1)) / DEFAULT_INVENTORY_WIDTH * DEFAULT_INVENTORY_WIDTH;
     }
 
     /**
@@ -82,7 +100,7 @@ public final class InventoryUtils {
 
         if (result) return true;
         if (inventory instanceof PlayerInventory) {
-            contents = ((PlayerInventory) inventory).getContents();
+            contents = inventory.getContents();
             for (ItemStack content : contents) {
                 if (content != null && content.getType() != Material.AIR) {
                     result = false;
