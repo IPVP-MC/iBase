@@ -20,6 +20,9 @@ public final class InventoryUtils {
     public static final int MAXIMUM_INVENTORY_HEIGHT = 6;
     public static final int MAXIMUM_INVENTORY_SIZE = MAXIMUM_INVENTORY_HEIGHT * DEFAULT_INVENTORY_WIDTH;
 
+    public static final int MAXIMUM_SINGLE_CHEST_SIZE = DEFAULT_INVENTORY_WIDTH * 3;
+    public static final int MAXIMUM_DOUBLE_CHEST_SIZE = MAXIMUM_SINGLE_CHEST_SIZE * 2;
+
     private InventoryUtils() {
     }
 
