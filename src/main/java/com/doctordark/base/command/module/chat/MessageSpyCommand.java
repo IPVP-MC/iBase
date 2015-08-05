@@ -3,7 +3,7 @@ package com.doctordark.base.command.module.chat;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.command.CommandWrapper;
-import com.doctordark.base.user.BaseUser;
+import com.doctordark.base.user.ServerParticipator;
 import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.Iterables;
@@ -14,7 +14,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -68,24 +67,22 @@ public class MessageSpyCommand extends BaseCommand {
 
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
+            ServerParticipator participator = plugin.getUserManager().getParticipator(sender);
+
+            if (participator == null) {
+                sender.sendMessage(ChatColor.RED + "You are not able to message spy.");
                 return true;
             }
-
-            Player player = (Player) sender;
-            UUID uuid = player.getUniqueId();
-            BaseUser baseUser = plugin.getUserManager().getUser(uuid);
 
             if (args.length < 2) {
                 sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
                 return true;
             }
 
-            Set<String> messageSpying = baseUser.getMessageSpying();
+            Set<String> messageSpying = participator.getMessageSpying();
             if (args[1].equalsIgnoreCase("all")) {
                 messageSpying.remove("all");
-                sender.sendMessage(ChatColor.RED + "No longer spying on the messages of all players.");
+                sender.sendMessage(ChatColor.RED + "You are no longer spying on the messages of all players.");
                 return true;
             }
 
@@ -97,7 +94,7 @@ public class MessageSpyCommand extends BaseCommand {
                 return true;
             }
 
-            sender.sendMessage("You are " + (messageSpying.remove(offlineTarget.getUniqueId().toString()) ? ChatColor.GREEN + "now" : ChatColor.RED + "still not") +
+            sender.sendMessage("You are " + (messageSpying.remove(offlineTarget.getUniqueId().toString()) ? ChatColor.GREEN + "no longer" : ChatColor.RED + "still not") +
                     ChatColor.YELLOW + " spying on the messages of " + offlineTarget.getName() + '.');
 
             return true;
@@ -125,8 +122,10 @@ public class MessageSpyCommand extends BaseCommand {
 
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
+            ServerParticipator participator = plugin.getUserManager().getParticipator(sender);
+
+            if (participator == null) {
+                sender.sendMessage(ChatColor.RED + "You are not able to message spy.");
                 return true;
             }
 
@@ -135,8 +134,7 @@ public class MessageSpyCommand extends BaseCommand {
                 return true;
             }
 
-            BaseUser baseUser = plugin.getUserManager().getUser(((Player) sender).getUniqueId());
-            Set<String> messageSpying = baseUser.getMessageSpying();
+            Set<String> messageSpying = participator.getMessageSpying();
 
             boolean all;
             if ((all = messageSpying.contains("all")) || JavaUtils.containsIgnoreCase(messageSpying, args[1])) {
@@ -164,8 +162,8 @@ public class MessageSpyCommand extends BaseCommand {
                 return true;
             }
 
-            sender.sendMessage(ChatColor.YELLOW + "You are " + (messageSpying.add(offlineTarget.getUniqueId().toString()) ? ChatColor.GREEN + "now" : ChatColor.RED + "no longer") +
-                    ChatColor.YELLOW + " spying on the messages of " + offlineTarget.getName() + ".");
+            sender.sendMessage(ChatColor.YELLOW + "You are " + (messageSpying.add(offlineTarget.getUniqueId().toString()) ? ChatColor.GREEN + "now" : ChatColor.RED + "already") +
+                    ChatColor.YELLOW + " spying on the messages of " + offlineTarget.getName() + '.');
 
             return true;
         }
@@ -192,13 +190,14 @@ public class MessageSpyCommand extends BaseCommand {
 
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
+            ServerParticipator participator = plugin.getUserManager().getParticipator(sender);
+
+            if (participator == null) {
+                sender.sendMessage(ChatColor.RED + "You are not able to message spy.");
                 return true;
             }
 
-            Set<String> messageSpying = plugin.getUserManager().getUser(((Player) sender).getUniqueId()).getMessageSpying();
-            messageSpying.clear();
+            participator.getMessageSpying().clear();
             sender.sendMessage(ChatColor.YELLOW + "You are no longer spying the messages of anyone.");
             return true;
         }
@@ -220,23 +219,21 @@ public class MessageSpyCommand extends BaseCommand {
 
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
+            ServerParticipator participator = plugin.getUserManager().getParticipator(sender);
+
+            if (participator == null) {
+                sender.sendMessage(ChatColor.RED + "You are not able to message spy.");
                 return true;
             }
 
-            Player player = (Player) sender;
-            UUID uuid = player.getUniqueId();
-            BaseUser baseUser = plugin.getUserManager().getUser(uuid);
-
             Set<String> spyingNames = new LinkedHashSet<>();
-            Collection<String> messageSpying = baseUser.getMessageSpying();
+            Collection<String> messageSpying = participator.getMessageSpying();
             if (messageSpying.size() == 1 && Iterables.getOnlyElement(messageSpying).equals("all")) {
                 sender.sendMessage(ChatColor.GRAY + "You are currently spying on the messages of all players.");
                 return true;
             }
 
-            for (String spyingId : baseUser.getMessageSpying()) {
+            for (String spyingId : messageSpying) {
                 String name = Bukkit.getOfflinePlayer(UUID.fromString(spyingId)).getName();
                 if (name == null) continue;
                 spyingNames.add(name);

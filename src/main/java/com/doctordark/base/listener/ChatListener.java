@@ -17,6 +17,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.permissions.Permissible;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
@@ -152,12 +154,14 @@ public class ChatListener implements Listener {
         String senderId = senderUUID.toString();
         String recipientId = recipient.getUniqueId().toString();
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (!player.equals(sender) && !recipient.equals(sender)) {
-                BaseUser baseOnline = plugin.getUserManager().getUser(player.getUniqueId());
-                Set<String> messageSpying = baseOnline.getMessageSpying();
+        Collection<CommandSender> recipients = new HashSet<>(Bukkit.getOnlinePlayers());
+        recipients.add(Bukkit.getConsoleSender());
+        for (CommandSender target : recipients) {
+            if (!target.equals(sender) && !recipient.equals(sender)) {
+                ServerParticipator participator = plugin.getUserManager().getParticipator(target);
+                Set<String> messageSpying = participator.getMessageSpying();
                 if (messageSpying.contains("all") || messageSpying.contains(recipientId) || messageSpying.contains(senderId)) {
-                    player.sendMessage(String.format(Locale.ENGLISH, MESSAGE_SPY_FORMAT, sender.getName(), recipient.getName(), message));
+                    target.sendMessage(String.format(Locale.ENGLISH, MESSAGE_SPY_FORMAT, sender.getName(), recipient.getName(), message));
                 }
             }
         }
