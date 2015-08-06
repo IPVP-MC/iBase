@@ -861,8 +861,8 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
     public Cuboid clone() {
         try {
             return (Cuboid) super.clone();
-        } catch (Exception ex) {
-            throw new AssertionError("Could not clone Cuboid");
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("this could never happen", e);
         }
     }
 
