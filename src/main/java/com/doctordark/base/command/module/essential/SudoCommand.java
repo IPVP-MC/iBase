@@ -46,13 +46,13 @@ public class SudoCommand extends BaseCommand {
 
         Player target = Bukkit.getPlayer(args[1]);
 
-        if ((target == null) || (!canSee(sender, target))) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
+        if (target == null || !canSee(sender, target)) {
+            sender.sendMessage(ChatColor.GOLD + "Player named or with UUID '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
             return true;
         }
 
         executeCommand(target, executingCommand, force);
-        sender.sendMessage(ChatColor.RED + "Making " + target.getName() + " to run " + executingCommand + (force ? "with permission bypasses" : "") + '.');
+        sender.sendMessage(ChatColor.RED + "Making " + target.getName() + " to run " + executingCommand + (force ? " with permission bypasses" : "") + '.');
         return true;
     }
 

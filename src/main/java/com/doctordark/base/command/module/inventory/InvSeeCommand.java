@@ -1,7 +1,9 @@
 package com.doctordark.base.command.module.inventory;
 
+import com.doctordark.base.BaseConstants;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.util.BukkitUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -61,7 +63,7 @@ public class InvSeeCommand extends BaseCommand implements Listener {
         }
 
         if (inventory == null) {
-            Player target = Bukkit.getPlayer(args[0]);
+            Player target = BukkitUtils.playerWithNameOrUUID(args[0]);
 
             if (sender.equals(target)) {
                 sender.sendMessage(ChatColor.RED + "You cannot check the inventory of yourself.");
@@ -69,7 +71,7 @@ public class InvSeeCommand extends BaseCommand implements Listener {
             }
 
             if (target == null || !canSee(sender, target)) {
-                sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
+                sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
                 return true;
             }
 

@@ -1,9 +1,10 @@
 package com.doctordark.base.command.module.essential;
 
+import com.doctordark.base.BaseConstants;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.util.BukkitUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -31,7 +32,7 @@ public class PlayTimeCommand extends BaseCommand {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final OfflinePlayer target;
         if (args.length >= 1) {
-            target = Bukkit.getOfflinePlayer(args[0]);
+            target = BukkitUtils.offlinePlayerWithNameOrUUID(args[0]);
         } else if (sender instanceof Player) {
             target = (Player) sender;
         } else {
@@ -41,7 +42,7 @@ public class PlayTimeCommand extends BaseCommand {
 
         Player onlineTarget;
         if ((!target.hasPlayedBefore() || !target.isOnline()) || (sender instanceof Player && (onlineTarget = target.getPlayer()) != null && !((Player) sender).canSee(onlineTarget))) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
+            sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
             return true;
         }
 

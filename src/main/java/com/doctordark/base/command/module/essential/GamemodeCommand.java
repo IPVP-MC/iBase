@@ -1,8 +1,8 @@
 package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.util.BukkitUtils;
 import com.google.common.collect.Lists;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
@@ -40,7 +40,7 @@ public class GamemodeCommand extends BaseCommand {
 
         final Player target;
         if (args.length > 1) {
-            target = Bukkit.getPlayer(args[1]);
+            target = BukkitUtils.playerWithNameOrUUID(args[1]);
         } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -49,7 +49,7 @@ public class GamemodeCommand extends BaseCommand {
         }
 
         if (target == null || !canSee(sender, target)) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
+            sender.sendMessage(ChatColor.GOLD + "Player named or with UUID '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
             return true;
         }
 

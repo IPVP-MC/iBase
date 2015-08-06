@@ -7,9 +7,11 @@ import com.google.common.collect.Maps;
 import net.minecraft.server.v1_7_R4.MinecraftServer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -29,6 +31,7 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.ChatPaginator;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -205,6 +208,27 @@ public final class BukkitUtils {
     }
 
     /**
+     * Gets a {@link Player} with the name or {@link java.util.UUID} of given String.
+     *
+     * @param id the id to search
+     * @return the found {@link Player} or null
+     */
+    public static Player playerWithNameOrUUID(String id) {
+        return JavaUtils.isUUID(id) ? Bukkit.getPlayer(UUID.fromString(id)) : Bukkit.getPlayer(id);
+    }
+
+    /**
+     * Gets a {@link OfflinePlayer} with the name or {@link java.util.UUID} of given String.
+     *
+     * @param id the id to search
+     * @return the found {@link OfflinePlayer} or null
+     */
+    @Deprecated
+    public static OfflinePlayer offlinePlayerWithNameOrUUID(String id) {
+        return JavaUtils.isUUID(id) ? Bukkit.getOfflinePlayer(UUID.fromString(id)) : Bukkit.getOfflinePlayer(id);
+    }
+
+    /**
      * Checks if a {@link Location} is within a specific distance of another {@link Location}.
      *
      * @param location1 the location to check for {@link Location}
@@ -215,11 +239,8 @@ public final class BukkitUtils {
     public static boolean isWithinX(Location location1, Location location2, int distance) {
         World world1 = location1.getWorld();
         World world2 = location2.getWorld();
-        if (!world1.equals(world2)) {
-            return false;
-        }
+        return world1.equals(world2) && ((Math.abs(location2.getX() - location1.getX()) <= distance) && (Math.abs(location2.getZ() - location1.getZ()) <= distance));
 
-        return ((Math.abs(location2.getX() - location1.getX()) <= distance) && (Math.abs(location2.getZ() - location1.getZ()) <= distance));
     }
 
     /**

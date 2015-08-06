@@ -36,17 +36,15 @@ public class NameHistoryCommand extends BaseCommand {
         BaseUser targetUser = null;
         List<String> messages = Lists.newArrayList();
         for (ServerParticipator participator : plugin.getUserManager().getParticipators().values()) {
-            if (!(participator instanceof BaseUser)) {
-                continue;
-            }
-
-            BaseUser baseUser = (BaseUser) participator;
-            List<NameHistory> nameHistories = baseUser.getNameHistories();
-            for (NameHistory nameHistory : nameHistories) {
-                if (nameHistory.getName().equalsIgnoreCase(args[0])) {
-                    messages.add(ChatColor.GRAY + nameHistory.getName() + " (" + FORMAT.format(nameHistory.getMillis()) + ')');
-                    targetUser = baseUser;
-                    break;
+            if (participator instanceof BaseUser) {
+                BaseUser baseUser = (BaseUser) participator;
+                List<NameHistory> nameHistories = baseUser.getNameHistories();
+                for (NameHistory nameHistory : nameHistories) {
+                    if (nameHistory.getName().equalsIgnoreCase(args[0])) {
+                        messages.add(ChatColor.GRAY + nameHistory.getName() + " (" + FORMAT.format(nameHistory.getMillis()) + ')');
+                        targetUser = baseUser;
+                        break;
+                    }
                 }
             }
         }

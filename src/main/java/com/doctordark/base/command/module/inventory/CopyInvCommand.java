@@ -1,7 +1,8 @@
 package com.doctordark.base.command.module.inventory;
 
+import com.doctordark.base.BaseConstants;
 import com.doctordark.base.command.BaseCommand;
-import org.bukkit.Bukkit;
+import com.doctordark.util.BukkitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -37,10 +38,10 @@ public class CopyInvCommand extends BaseCommand {
             return true;
         }
 
-        Player target = Bukkit.getPlayer(args[0]);
+        Player target = BukkitUtils.playerWithNameOrUUID(args[0]);
 
         if (target == null || !canSee(sender, target)) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
+            sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
             return true;
         }
 

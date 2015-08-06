@@ -4,6 +4,7 @@ import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.user.ServerParticipator;
+import com.doctordark.util.BukkitUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,7 +27,6 @@ public class IpHistoryCommand extends BaseCommand {
 
     public IpHistoryCommand(BasePlugin plugin) {
         super("iphistory", "Checks data about IP addresses or players.", "base.command.iphistory");
-        setAliases(new String[0]);
         setUsage("/(command) <player|address>");
         this.plugin = plugin;
     }
@@ -64,10 +64,10 @@ public class IpHistoryCommand extends BaseCommand {
             }
 
             @SuppressWarnings("deprecation")
-            OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+            OfflinePlayer target = BukkitUtils.offlinePlayerWithNameOrUUID(args[1]);
 
             if (!target.hasPlayedBefore() && target.getPlayer() == null) {
-                sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
+                sender.sendMessage(ChatColor.GOLD + "Player named or with UUID '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
                 return true;
             }
 

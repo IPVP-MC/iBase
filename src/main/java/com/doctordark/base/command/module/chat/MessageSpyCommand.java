@@ -4,6 +4,7 @@ import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.command.CommandWrapper;
 import com.doctordark.base.user.ServerParticipator;
+import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.Iterables;
@@ -87,10 +88,10 @@ public class MessageSpyCommand extends BaseCommand {
             }
 
             @SuppressWarnings("deprecation")
-            OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(args[1]);
+            OfflinePlayer offlineTarget = BukkitUtils.offlinePlayerWithNameOrUUID(args[1]);
 
             if (!offlineTarget.hasPlayedBefore() && !offlineTarget.isOnline()) {
-                sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
+                sender.sendMessage(ChatColor.GOLD + "Player named or with UUID '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
                 return true;
             }
 

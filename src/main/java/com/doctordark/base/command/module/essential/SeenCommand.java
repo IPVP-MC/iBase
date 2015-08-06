@@ -1,14 +1,15 @@
 package com.doctordark.base.command.module.essential;
 
+import com.doctordark.base.BaseConstants;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.util.BukkitUtils;
 import me.confuser.banmanager.BanManager;
 import me.confuser.banmanager.bukkitutil.Message;
 import me.confuser.banmanager.data.PlayerData;
 import me.confuser.banmanager.util.IPUtils;
 import me.confuser.banmanager.util.UUIDUtils;
 import org.apache.commons.lang.time.FastDateFormat;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -36,7 +37,7 @@ public class SeenCommand extends BaseCommand {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final OfflinePlayer target;
         if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
-            target = Bukkit.getOfflinePlayer(args[0]);
+            target = BukkitUtils.offlinePlayerWithNameOrUUID(args[0]);
         } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -45,7 +46,7 @@ public class SeenCommand extends BaseCommand {
         }
 
         if (!target.hasPlayedBefore()) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
+            sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
             return true;
         }
 

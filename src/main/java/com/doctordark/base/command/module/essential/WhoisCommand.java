@@ -1,5 +1,6 @@
 package com.doctordark.base.command.module.essential;
 
+import com.doctordark.base.BaseConstants;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.listener.VanishPriority;
@@ -7,7 +8,6 @@ import com.doctordark.base.user.BaseUser;
 import com.doctordark.util.BukkitUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -35,10 +35,10 @@ public class WhoisCommand extends BaseCommand {
             return true;
         }
 
-        Player target = Bukkit.getPlayer(args[0]);
+        Player target = BukkitUtils.playerWithNameOrUUID(args[0]);
 
         if (target == null || !canSee(sender, target)) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
+            sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
             return true;
         }
 

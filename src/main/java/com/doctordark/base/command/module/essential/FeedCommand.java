@@ -1,6 +1,8 @@
 package com.doctordark.base.command.module.essential;
 
+import com.doctordark.base.BaseConstants;
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.util.BukkitUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -27,18 +29,20 @@ public class FeedCommand extends BaseCommand {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final Player target;
         if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
-            target = Bukkit.getPlayer(args[0]);
-        } else if (args.length > 0 && args[0].equalsIgnoreCase("all") && sender.hasPermission(command.getPermission() + ".all")) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (player.hasPotionEffect(PotionEffectType.HUNGER)) {
-                    player.removePotionEffect(PotionEffectType.HUNGER);
+            if (args[0].equalsIgnoreCase("all") && sender.hasPermission(command.getPermission() + ".all")) {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (player.hasPotionEffect(PotionEffectType.HUNGER)) {
+                        player.removePotionEffect(PotionEffectType.HUNGER);
+                    }
+
+                    player.setFoodLevel(MAX_HUNGER);
                 }
 
-                player.setFoodLevel(MAX_HUNGER);
+                Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Fed all online players.");
+                return true;
             }
 
-            Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Fed all online players.");
-            return true;
+            target = BukkitUtils.playerWithNameOrUUID(args[0]);
         } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -47,7 +51,7 @@ public class FeedCommand extends BaseCommand {
         }
 
         if (target == null || !canSee(sender, target)) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
+            sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
             return true;
         }
 

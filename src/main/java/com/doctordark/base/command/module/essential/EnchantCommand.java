@@ -1,9 +1,9 @@
 package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.util.BukkitUtils;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -32,7 +32,7 @@ public class EnchantCommand extends BaseCommand {
 
         final Player target;
         if (args.length > 2 && sender.hasPermission(command.getPermission() + ".others")) {
-            target = Bukkit.getPlayer(args[2]);
+            target = BukkitUtils.playerWithNameOrUUID(args[2]);
         } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -41,7 +41,7 @@ public class EnchantCommand extends BaseCommand {
         }
 
         if (target == null || !canSee(sender, target)) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[2] + ChatColor.GOLD + "' not found.");
+            sender.sendMessage(ChatColor.GOLD + "Player named or with UUID '" + ChatColor.WHITE + args[2] + ChatColor.GOLD + "' not found.");
             return true;
         }
 

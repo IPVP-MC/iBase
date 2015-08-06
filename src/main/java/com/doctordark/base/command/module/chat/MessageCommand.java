@@ -1,8 +1,10 @@
 package com.doctordark.base.command.module.chat;
 
+import com.doctordark.base.BaseConstants;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.command.module.chat.event.PlayerMessageEvent;
+import com.doctordark.util.BukkitUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,10 +37,10 @@ public class MessageCommand extends BaseCommand {
         }
 
         Player player = (Player) sender;
-        Player target = Bukkit.getPlayer(args[0]);
+        Player target = BukkitUtils.playerWithNameOrUUID(args[0]);
 
         if (target == null || !canSee(sender, target)) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
+            sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
             return true;
         }
 

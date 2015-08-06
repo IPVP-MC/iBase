@@ -1,7 +1,8 @@
 package com.doctordark.base.command.module.teleport;
 
+import com.doctordark.base.BaseConstants;
 import com.doctordark.base.command.BaseCommand;
-import org.bukkit.Bukkit;
+import com.doctordark.util.BukkitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -44,23 +45,23 @@ public class TeleportCommand extends BaseCommand {
                 return true;
             }
         } else {
-            targetA = Bukkit.getPlayer(args[0]);
+            targetA = BukkitUtils.playerWithNameOrUUID(args[0]);
         }
 
-        if ((targetA == null) || (!canSee(sender, targetA))) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
+        if (targetA == null || !canSee(sender, targetA)) {
+            sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
             return true;
         }
 
         if (args.length < 3) {
-            Player targetB = Bukkit.getPlayer(args[args.length - 1]);
+            Player targetB = BukkitUtils.playerWithNameOrUUID(args[args.length - 1]);
 
-            if ((targetB == null) || (!canSee(sender, targetB))) {
-                sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[args.length - 1] + ChatColor.GOLD + "' not found.");
+            if (targetB == null || !canSee(sender, targetB)) {
+                sender.sendMessage(ChatColor.GOLD + "Player named or with UUID '" + ChatColor.WHITE + args[args.length - 1] + ChatColor.GOLD + "' not found.");
                 return true;
             }
 
-            if (targetA.getName().equalsIgnoreCase(targetB.getName())) {
+            if (targetA.equals(targetB)) {
                 sender.sendMessage(ChatColor.RED + "The teleportee and teleported are the same player.");
                 return true;
             }

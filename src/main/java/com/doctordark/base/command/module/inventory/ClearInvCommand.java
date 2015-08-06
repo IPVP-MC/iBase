@@ -1,7 +1,8 @@
 package com.doctordark.base.command.module.inventory;
 
+import com.doctordark.base.BaseConstants;
 import com.doctordark.base.command.BaseCommand;
-import org.bukkit.Bukkit;
+import com.doctordark.util.BukkitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -33,7 +34,7 @@ public class ClearInvCommand extends BaseCommand {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final Player target;
         if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
-            target = Bukkit.getPlayer(args[0]);
+            target = BukkitUtils.playerWithNameOrUUID(args[0]);
         } else if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
@@ -42,7 +43,7 @@ public class ClearInvCommand extends BaseCommand {
         }
 
         if (target == null || !canSee(sender, target)) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[0] + ChatColor.GOLD + "' not found.");
+            sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
             return true;
         }
 
