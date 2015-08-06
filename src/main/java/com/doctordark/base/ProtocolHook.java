@@ -6,10 +6,12 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.user.UserManager;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -34,9 +36,12 @@ public class ProtocolHook {
                 BaseUser baseUser = userManager.getUser(player.getUniqueId());
                 if (!baseUser.isGlintEnabled()) {
                     PacketContainer packet = event.getPacket();
-                    ItemStack stack = packet.getItemModifier().read(0);
-                    if (stack != null && stack.getType() != Material.AIR) {
-                        convert(stack);
+                    StructureModifier<ItemStack> modifier = packet.getItemModifier();
+                    if (modifier.size() > 0) {
+                        ItemStack stack = modifier.read(0);
+                        if (stack != null && stack.getType() != Material.AIR) {
+                            convert(stack);
+                        }
                     }
                 }
             }
@@ -54,13 +59,14 @@ public class ProtocolHook {
                 BaseUser baseUser = userManager.getUser(player.getUniqueId());
                 if (!baseUser.isGlintEnabled()) {
                     PacketContainer packet = event.getPacket();
-
-                    // See if we are modifying an item stack
-                    if (packet.getEntityModifier(event).read(0) instanceof Item) {
+                    StructureModifier<Entity> modifier = packet.getEntityModifier(event);
+                    if (modifier.size() > 0 && modifier.read(0) instanceof Item) {
                         WrappedDataWatcher watcher = new WrappedDataWatcher(packet.getWatchableCollectionModifier().read(0));
-                        ItemStack stack = watcher.getItemStack(10).clone();
-                        if (stack != null && stack.getType() != Material.AIR) {
-                            convert(stack);
+                        if (watcher.size() >= 10) {
+                            ItemStack stack = watcher.getItemStack(10).clone();
+                            if (stack != null && stack.getType() != Material.AIR) {
+                                convert(stack);
+                            }
                         }
                     }
                 }
