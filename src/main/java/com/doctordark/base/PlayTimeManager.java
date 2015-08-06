@@ -49,7 +49,7 @@ public class PlayTimeManager implements Listener {
     public void reloadPlaytimeData() {
         // Load the kit use count.
         Object object = config.get("playing-times");
-        if (object != null && object instanceof MemorySection) {
+        if (object instanceof MemorySection) {
             MemorySection section = (MemorySection) object;
             for (String id : section.getKeys(false)) {
                 totalPlaytimeMap.put(UUID.fromString(id), config.getLong("playing-times." + id, 0L));
