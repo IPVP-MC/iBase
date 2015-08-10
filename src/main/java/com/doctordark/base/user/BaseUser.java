@@ -24,6 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -158,18 +159,21 @@ public class BaseUser extends ServerParticipator {
     }
 
     public void setVanished(boolean vanished, boolean update) {
+        setVanished(Bukkit.getPlayer(getUniqueId()), vanished, update);
+    }
+
+    public void setVanished(@Nullable Player player, boolean vanished, boolean update) {
         if (this.vanished == vanished) {
             return;
         }
 
         this.vanished = vanished;
         if (update) {
-            updateVanishedState(vanished);
+            updateVanishedState(player, vanished);
         }
     }
 
-    public void updateVanishedState(boolean vanished) {
-        Player player = toPlayer();
+    public void updateVanishedState(Player player, boolean vanished) {
         if (player == null || !player.isOnline()) {
             return;
         }

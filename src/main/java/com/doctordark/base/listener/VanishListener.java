@@ -64,14 +64,7 @@ public class VanishListener implements Listener {
         BaseUser baseUser = plugin.getUserManager().getUser(player.getUniqueId());
         if (baseUser.isVanished()) {
             player.sendMessage(ChatColor.GOLD + "You have joined vanished.");
-            baseUser.updateVanishedState(true);
-        }
-
-        VanishPriority userPriority = VanishPriority.of(player);
-        for (Player target : Bukkit.getOnlinePlayers()) {
-            if (plugin.getUserManager().getUser(target.getUniqueId()).isVanished() && VanishPriority.of(target).isMoreThan(userPriority)) {
-                player.hidePlayer(target);
-            }
+            baseUser.updateVanishedState(player, true);
         }
     }
 
