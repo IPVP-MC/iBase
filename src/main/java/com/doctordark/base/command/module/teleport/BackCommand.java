@@ -1,8 +1,10 @@
 package com.doctordark.base.command.module.teleport;
 
+import com.doctordark.base.BaseConstants;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.user.BaseUser;
+import com.doctordark.util.BukkitUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -37,12 +39,16 @@ public class BackCommand extends BaseCommand implements Listener {
 
         final Player target;
         if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
-            target = Bukkit.getPlayer(args[0]);
+            target = BukkitUtils.playerWithNameOrUUID(args[0]);
+            if (target == null) {
+                sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
+                return true;
+            }
         } else {
             target = (Player) sender;
         }
 
-        BaseUser targetUser = this.plugin.getUserManager().getUser(target.getUniqueId());
+        BaseUser targetUser = plugin.getUserManager().getUser(target.getUniqueId());
         Location previous = targetUser.getBackLocation();
 
         if (previous == null) {
@@ -70,14 +76,8 @@ public class BackCommand extends BaseCommand implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         PlayerTeleportEvent.TeleportCause cause = event.getCause();
-        switch (event.getCause()) {
-            case COMMAND:
-            case UNKNOWN:
-            case PLUGIN:
-                plugin.getUserManager().getUser(event.getPlayer().getUniqueId()).setBackLocation(event.getFrom().clone());
-                break;
-            default:
-                break;
+        if (cause == PlayerTeleportEvent.TeleportCause.COMMAND || cause == PlayerTeleportEvent.TeleportCause.UNKNOWN || cause == PlayerTeleportEvent.TeleportCause.PLUGIN) {
+            plugin.getUserManager().getUser(event.getPlayer().getUniqueId()).setBackLocation(event.getFrom().clone());
         }
     }
 }
