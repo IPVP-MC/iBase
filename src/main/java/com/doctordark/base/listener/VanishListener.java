@@ -1,6 +1,7 @@
 package com.doctordark.base.listener;
 
 import com.doctordark.base.BasePlugin;
+import com.doctordark.base.event.PlayerVanishEvent;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.util.BukkitUtils;
 import net.minecraft.server.v1_7_R4.Blocks;
@@ -41,7 +42,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class VanishListener implements Listener {
@@ -51,6 +54,8 @@ public class VanishListener implements Listener {
     private static final String FAKE_CHEST_PREFIX = "[F] ";
 
     private final Map<UUID, Location> fakeChestLocationMap = new HashMap<>();
+    private final Set<Player> onlineVanishedPlayers = new HashSet<>();
+
     private final BasePlugin plugin;
 
     public VanishListener(BasePlugin plugin) {
@@ -63,15 +68,36 @@ public class VanishListener implements Listener {
 
         BaseUser baseUser = plugin.getUserManager().getUser(player.getUniqueId());
         if (baseUser.isVanished()) {
+            onlineVanishedPlayers.add(player);
             player.sendMessage(ChatColor.GOLD + "You have joined vanished.");
             baseUser.updateVanishedState(player, true);
+        }
+
+        // Hide any current vanished players to this player.
+        VanishPriority selfPriority = VanishPriority.of(player);
+        if (selfPriority != VanishPriority.HIGHEST) {
+            for (Player target : onlineVanishedPlayers) {
+                if (plugin.getUserManager().getUser(target.getUniqueId()).isVanished() && VanishPriority.of(target).isMoreThan(selfPriority)) {
+                    player.hidePlayer(target);
+                }
+            }
         }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     public void onPlayerQuit(PlayerQuitEvent event) {
         if (plugin.getUserManager().getUser(event.getPlayer().getUniqueId()).isVanished()) {
+            onlineVanishedPlayers.remove(event.getPlayer());
             event.setQuitMessage(null);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerVanish(PlayerVanishEvent event) {
+        if (event.isVanished()) {
+            onlineVanishedPlayers.add(event.getPlayer());
+        } else {
+            onlineVanishedPlayers.remove(event.getPlayer());
         }
     }
 

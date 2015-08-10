@@ -1,6 +1,7 @@
 package com.doctordark.base.user;
 
 import com.doctordark.base.BasePlugin;
+import com.doctordark.base.event.PlayerVanishEvent;
 import com.doctordark.base.listener.VanishPriority;
 import com.doctordark.util.GenericUtils;
 import com.doctordark.util.PersistableLocation;
@@ -162,15 +163,26 @@ public class BaseUser extends ServerParticipator {
         setVanished(Bukkit.getPlayer(getUniqueId()), vanished, update);
     }
 
-    public void setVanished(@Nullable Player player, boolean vanished, boolean update) {
-        if (this.vanished == vanished) {
-            return;
+    public boolean setVanished(@Nullable Player player, boolean vanished, boolean update) {
+        if (this.vanished != vanished) {
+            boolean cancelled = false;
+            if (player != null) {
+                PlayerVanishEvent event = new PlayerVanishEvent(player, vanished);
+                Bukkit.getPluginManager().callEvent(event);
+                cancelled = event.isCancelled();
+            }
+
+            if (!cancelled) {
+                this.vanished = vanished;
+                if (update) {
+                    updateVanishedState(player, vanished);
+                }
+
+                return true;
+            }
         }
 
-        this.vanished = vanished;
-        if (update) {
-            updateVanishedState(player, vanished);
-        }
+        return false;
     }
 
     public void updateVanishedState(Player player, boolean vanished) {
