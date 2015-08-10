@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 public class ClearChatCommand extends BaseCommand {
 
     private static final int CHAT_HEIGHT = 101;
+    private static final String[] CLEAR_MESSAGE = new String[CHAT_HEIGHT];
 
     public ClearChatCommand() {
         super("clearchat", "Clears the server chat for players.", "base.command.clearchat");
@@ -19,9 +20,8 @@ public class ClearChatCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        String[] messages = new String[CHAT_HEIGHT];
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(messages);
+            player.sendMessage(CLEAR_MESSAGE);
         }
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + sender.getName() + " cleared in-game chat.");
