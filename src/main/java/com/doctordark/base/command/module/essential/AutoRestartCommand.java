@@ -25,7 +25,7 @@ public class AutoRestartCommand extends BaseCommand {
         setAliases(new String[]{"autorestart"});
         setUsage("/(command) <cancel|time|schedule>");
 
-        List<CommandArgument> arguments = Lists.newArrayListWithExpectedSize(3);
+        List<CommandArgument> arguments = Lists.newArrayListWithCapacity(3);
         arguments.add(new AutoRestartCancelArgument(plugin));
         arguments.add(new AutoRestartScheduleArgument(plugin));
         arguments.add(new AutoRestartTimeArgument(plugin));

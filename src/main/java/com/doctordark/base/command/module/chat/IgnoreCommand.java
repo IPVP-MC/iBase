@@ -27,7 +27,7 @@ public class IgnoreCommand extends BaseCommand {
         super("ignore", "Ignores a player from messages.", "base.command.ignore");
         setUsage("/(command) <list|add|del|clear> [playerName]");
 
-        List<CommandArgument> arguments = Lists.newArrayListWithExpectedSize(4);
+        List<CommandArgument> arguments = Lists.newArrayListWithCapacity(4);
         arguments.add(new IgnoreClearArgument(plugin));
         arguments.add(new IgnoreListArgument(plugin));
         arguments.add(new IgnoreAddArgument(plugin));

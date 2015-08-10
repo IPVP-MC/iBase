@@ -95,7 +95,7 @@ public class EnchantCommand extends BaseCommand {
         switch (args.length) {
             case 1:
                 Enchantment[] enchantments = Enchantment.values();
-                List<String> results = Lists.newArrayListWithExpectedSize(enchantments.length);
+                List<String> results = Lists.newArrayListWithCapacity(enchantments.length);
                 for (Enchantment enchantment : enchantments) {
                     results.add(enchantment.getName());
                 }

@@ -105,7 +105,7 @@ public class RemoveEntityCommand extends BaseCommand {
                 return Bukkit.getWorlds().stream().map(World::getName).collect(Collectors.toList());
             case 2:
                 EntityType[] entityTypes = EntityType.values();
-                List<String> results = Lists.newArrayListWithExpectedSize(entityTypes.length);
+                List<String> results = Lists.newArrayListWithCapacity(entityTypes.length);
                 for (EntityType entityType : entityTypes) {
                     results.add(entityType.getName());
                 }

@@ -89,7 +89,7 @@ public final class BukkitUtils {
 
         int count = 0;
         ChatColor[] values = ChatColor.values();
-        List<Character> charList = Lists.newArrayListWithExpectedSize(values.length);
+        List<Character> charList = Lists.newArrayListWithCapacity(values.length);
         for (ChatColor colour : values) {
             charList.add(colour.getChar());
         }

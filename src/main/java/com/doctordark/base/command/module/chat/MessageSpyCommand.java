@@ -32,7 +32,7 @@ public class MessageSpyCommand extends BaseCommand {
         this.setAliases(new String[]{"ms", "msgspy", "pmspy", "whisperspy", "privatemessagespy", "tellspy"});
         this.setUsage("/(command) <list|add|del|clear> [playerName]");
 
-        List<CommandArgument> arguments = Lists.newArrayListWithExpectedSize(4);
+        List<CommandArgument> arguments = Lists.newArrayListWithCapacity(4);
         arguments.add(new MessageSpyListArgument(plugin));
         arguments.add(new IgnoreClearArgument(plugin));
         arguments.add(new MessageSpyAddArgument(plugin));

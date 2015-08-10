@@ -70,7 +70,7 @@ public class WorldCommand extends BaseCommand {
         }
 
         Collection<World> worlds = Bukkit.getWorlds();
-        List<String> results = Lists.newArrayListWithExpectedSize(worlds.size());
+        List<String> results = Lists.newArrayListWithCapacity(worlds.size());
         for (World world : Bukkit.getWorlds()) {
             results.add(world.getName());
         }

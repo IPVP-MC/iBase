@@ -71,7 +71,7 @@ public class GamemodeCommand extends BaseCommand {
         }
 
         GameMode[] gameModes = GameMode.values();
-        List<String> results = Lists.newArrayListWithExpectedSize(gameModes.length);
+        List<String> results = Lists.newArrayListWithCapacity(gameModes.length);
         for (GameMode mode : gameModes) {
             results.add(mode.name());
         }
