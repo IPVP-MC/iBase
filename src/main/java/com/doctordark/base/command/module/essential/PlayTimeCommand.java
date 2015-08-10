@@ -40,8 +40,7 @@ public class PlayTimeCommand extends BaseCommand {
             return true;
         }
 
-        Player onlineTarget;
-        if ((!target.hasPlayedBefore() || !target.isOnline()) || (sender instanceof Player && (onlineTarget = target.getPlayer()) != null && !((Player) sender).canSee(onlineTarget))) {
+        if (!target.hasPlayedBefore() || !target.isOnline()) {
             sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
             return true;
         }

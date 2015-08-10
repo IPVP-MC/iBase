@@ -25,7 +25,6 @@ public class UserManager {
 
     public UserManager(BasePlugin plugin) {
         this.plugin = plugin;
-        this.participators = Maps.newHashMap();
         this.reloadParticipatorData();
 
         // Load the ConsoleUser data here.
@@ -91,14 +90,15 @@ public class UserManager {
      * @return the {@link BaseUser} or null
      */
     public BaseUser getUser(UUID uuid) {
+        final BaseUser baseUser;
         ServerParticipator participator = getParticipator(uuid);
         if (participator != null && participator instanceof BaseUser) {
-            return (BaseUser) participator;
+            baseUser = (BaseUser) participator;
         } else {
-            final BaseUser baseUser;
             participators.put(uuid, baseUser = new BaseUser(uuid));
-            return baseUser;
         }
+
+        return baseUser;
     }
 
     /**
@@ -107,15 +107,15 @@ public class UserManager {
     public void reloadParticipatorData() {
         userConfig = new Config(plugin, "participators");
         Object object = userConfig.get("participators");
-        if (object == null || !(object instanceof MemorySection)) {
-            this.participators = new HashMap<>();
-        } else {
+        if (object instanceof MemorySection) {
             MemorySection section = (MemorySection) object;
             Set<String> keys = section.getKeys(false);
             this.participators = Maps.newHashMapWithExpectedSize(keys.size());
             for (String id : keys) {
                 this.participators.put(UUID.fromString(id), (ServerParticipator) userConfig.get("participators." + id));
             }
+        } else {
+            this.participators = new HashMap<>();
         }
     }
 

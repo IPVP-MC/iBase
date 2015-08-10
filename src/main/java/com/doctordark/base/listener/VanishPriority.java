@@ -57,9 +57,9 @@ public enum VanishPriority {
      * @return the {@link VanishPriority} of {@link Player}, or {@code NONE}
      */
     public static VanishPriority of(Player player) {
-        for (int i = HIGHEST.priorityLevel; i > NONE.priorityLevel; i--) {
-            if (player.hasPermission("base.vanishpriority." + i)) {
-                return of(i);
+        for (VanishPriority vanishPriority : VanishPriority.values()) {
+            if (player.hasPermission("base.vanishpriority." + vanishPriority.priorityLevel)) {
+                return vanishPriority;
             }
         }
 

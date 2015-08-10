@@ -566,9 +566,12 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return true if {@link Location} is within this {@link Cuboid}, false otherwise
      */
     public boolean contains(Location location) {
-        if (location == null) return false;
-        return worldName.equals(location.getWorld().getName()) &&
-                contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        if (location == null || worldName == null) {
+            return false;
+        }
+
+        World world = location.getWorld(); // null check the World as disabling the End can usually screw this up
+        return world != null && worldName.equals(location.getWorld().getName()) && contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
     /**

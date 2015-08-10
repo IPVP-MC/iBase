@@ -75,12 +75,11 @@ public class SkullCommand extends BaseCommand {
         }
 
         List<String> completions = Lists.newArrayList(SKULL_NAMES);
+        Player senderPlayer = sender instanceof Player ? (Player) sender : null;
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (sender instanceof Player && !((Player) sender).canSee(player)) {
-                continue;
+            if (senderPlayer == null || senderPlayer.canSee(player)) {
+                completions.add(player.getName());
             }
-
-            completions.add(player.getName());
         }
 
         return getCompletions(args, completions);

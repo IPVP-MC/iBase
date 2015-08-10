@@ -270,9 +270,10 @@ public final class BukkitUtils {
         int z = cloned.getBlockZ();
         while (y > origin.getBlockY()) {
             y--;
-            Location next = new Location(world, x, y, z);
-            Block block = next.getBlock();
+
+            Block block = world.getBlockAt(x, y, z);
             if (!block.isEmpty()) {
+                Location next = block.getLocation();
                 next.setPitch(origin.getPitch());
                 next.setYaw(origin.getYaw());
                 return next;
