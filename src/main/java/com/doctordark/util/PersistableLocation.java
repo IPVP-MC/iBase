@@ -1,13 +1,13 @@
 package com.doctordark.util;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -59,17 +59,20 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
         this.worldName = (String) map.get("worldName");
         this.worldUID = UUID.fromString((String) map.get("worldUID"));
 
-        if (map.get("x") instanceof String) {
-            this.x = Double.parseDouble((String) map.get("x"));
-        } else this.x = (Double) map.get("x");
+        Object o = map.get("x");
+        if (o instanceof String) {
+            this.x = Double.parseDouble((String) o);
+        } else this.x = (Double) o;
 
-        if (map.get("y") instanceof String) {
-            this.y = Double.parseDouble((String) map.get("y"));
-        } else this.y = (Double) map.get("y");
+        o = map.get("y");
+        if (o instanceof String) {
+            this.y = Double.parseDouble((String) o);
+        } else this.y = (Double) o;
 
-        if (map.get("z") instanceof String) {
-            this.z = Double.parseDouble((String) map.get("z"));
-        } else this.z = (Double) map.get("z");
+        o = map.get("z");
+        if (o instanceof String) {
+            this.z = Double.parseDouble((String) o);
+        } else this.z = (Double) o;
 
         this.yaw = Float.parseFloat((String) map.get("yaw"));
         this.pitch = Float.parseFloat((String) map.get("pitch"));
@@ -77,7 +80,7 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = Maps.newHashMapWithExpectedSize(7);
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put("worldName", worldName);
         map.put("worldUID", worldUID.toString());
         map.put("x", x);

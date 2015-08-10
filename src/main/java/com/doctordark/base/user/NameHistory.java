@@ -1,8 +1,8 @@
 package com.doctordark.base.user;
 
-import com.google.common.collect.Maps;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -37,7 +37,7 @@ public class NameHistory implements ConfigurationSerializable {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = Maps.newHashMapWithExpectedSize(2);
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put("name", name);
         map.put("millis", Long.toString(millis));
         return map;

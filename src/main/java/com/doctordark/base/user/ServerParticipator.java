@@ -3,12 +3,12 @@ package com.doctordark.base.user;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.util.GenericUtils;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -86,7 +86,7 @@ public abstract class ServerParticipator implements ConfigurationSerializable {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = Maps.newHashMapWithExpectedSize(11);
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put("uniqueID", uniqueId.toString());
         map.put("ignoring", Lists.newArrayList(ignoring));
         map.put("messageSpying", Lists.newArrayList(messageSpying));

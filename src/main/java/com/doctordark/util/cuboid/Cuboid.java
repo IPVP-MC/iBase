@@ -1,6 +1,5 @@
 package com.doctordark.util.cuboid;
 
-import com.google.common.collect.Maps;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -14,6 +13,7 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -132,7 +132,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = Maps.newHashMapWithExpectedSize(7);
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put("worldName", worldName);
         map.put("x1", x1);
         map.put("y1", y1);
