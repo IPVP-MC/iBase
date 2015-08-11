@@ -9,14 +9,11 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.Collection;
-import java.util.Locale;
-import java.util.logging.Level;
 
 public class LagCommand extends BaseCommand {
 
+    private static final long MEGABYTE = 1024L * 1024L;
     private static final double MAXIMUM_TPS = 20.0D;
 
     public LagCommand() {
@@ -38,14 +35,15 @@ public class LagCommand extends BaseCommand {
             colour = ChatColor.RED;
         }
 
-        Runtime runtime = Runtime.getRuntime();
-        sender.sendMessage(colour + "Server tps is currently at " + format(tps) + '.');
-        sender.sendMessage(colour + "Server lag is currently at " + format(lag) + '%');
+        sender.sendMessage(colour + "Server TPS is currently at " + (Math.round(tps * 10000) / 10000.0D) + '.');
+        sender.sendMessage(colour + "Server lag is currently at " + (Math.round(lag * 10000) / 10000.0D) + '%');
 
         if (sender.hasPermission(getPermission() + ".memory")) {
-            sender.sendMessage(colour + "Max Memory: " + runtime.maxMemory() / 1024L / 1024L);
-            sender.sendMessage(colour + "Total Memory: " + runtime.totalMemory() / 1024L / 1024L);
-            sender.sendMessage(colour + "Free Memory: " + runtime.freeMemory() / 1024L / 1024L);
+            Runtime runtime = Runtime.getRuntime();
+            sender.sendMessage(colour + "Available Processors: " + runtime.availableProcessors());
+            sender.sendMessage(colour + "Max Memory: " + (runtime.maxMemory() / MEGABYTE) + "MB");
+            sender.sendMessage(colour + "Total Memory: " + (runtime.totalMemory() / MEGABYTE) + "MB");
+            sender.sendMessage(colour + "Free Memory: " + (runtime.freeMemory() / MEGABYTE) + "MB");
 
             Collection<World> worlds = Bukkit.getWorlds();
             for (World world : worlds) {
@@ -53,30 +51,16 @@ public class LagCommand extends BaseCommand {
                 String environmentName = WordUtils.capitalizeFully(environment.name().replace('_', ' '));
 
                 int tileEntities = 0;
-                try {
-                    for (Chunk chunk : world.getLoadedChunks()) {
-                        tileEntities += chunk.getTileEntities().length;
-                    }
-                } catch (ClassCastException ex) {
-                    Bukkit.getLogger().log(Level.SEVERE, "Corrupted chunk data on world " + world, ex);
+                Chunk[] loadedChunks = world.getLoadedChunks();
+                for (Chunk chunk : loadedChunks) {
+                    tileEntities += chunk.getTileEntities().length;
                 }
 
-                int loadedChunks = world.getLoadedChunks().length;
-                int entities = world.getEntities().size();
-                sender.sendMessage(String.format(Locale.ENGLISH, ChatColor.RED + "%1$s: " + ChatColor.YELLOW + "%2$s chunks, %3$s entities, %4$s tile entities.",
-                        environmentName, loadedChunks, entities, tileEntities));
+                sender.sendMessage(ChatColor.RED + world.getName() + '(' + environmentName + "): " +
+                        ChatColor.YELLOW + loadedChunks.length + " chunks, " + world.getEntities().size() + " entities, " + tileEntities + "tile entities.");
             }
         }
 
         return true;
-    }
-
-    private String format(Double value) {
-        DecimalFormat decimalFormat = new DecimalFormat();
-        decimalFormat.setMaximumFractionDigits(2);
-        decimalFormat.setMinimumFractionDigits(0);
-        decimalFormat.setGroupingUsed(false);
-        BigDecimal bigDecimal = new BigDecimal(value.toString());
-        return decimalFormat.format(bigDecimal);
     }
 }

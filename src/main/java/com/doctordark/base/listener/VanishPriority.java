@@ -1,5 +1,6 @@
 package com.doctordark.base.listener;
 
+import com.google.common.collect.ImmutableMap;
 import org.bukkit.entity.Player;
 
 /**
@@ -13,6 +14,17 @@ public enum VanishPriority {
 
     VanishPriority(int priorityLevel) {
         this.priorityLevel = priorityLevel;
+    }
+
+    private static final ImmutableMap<Integer, VanishPriority> BY_ID;
+
+    static {
+        ImmutableMap.Builder<Integer, VanishPriority> builder = new ImmutableMap.Builder<>();
+        for (VanishPriority vanishPriority : values()) {
+            builder.put(vanishPriority.priorityLevel, vanishPriority);
+        }
+
+        BY_ID = builder.build();
     }
 
     /**
@@ -41,13 +53,7 @@ public enum VanishPriority {
      * @return the {@link VanishPriority} of level, or {@code NONE}
      */
     public static VanishPriority of(int level) {
-        for (VanishPriority vanishPriority : VanishPriority.values()) {
-            if (vanishPriority.priorityLevel == level) {
-                return vanishPriority;
-            }
-        }
-
-        return NONE;
+        return BY_ID.get(level);
     }
 
     /**
@@ -57,7 +63,7 @@ public enum VanishPriority {
      * @return the {@link VanishPriority} of {@link Player}, or {@code NONE}
      */
     public static VanishPriority of(Player player) {
-        for (VanishPriority vanishPriority : VanishPriority.values()) {
+        for (VanishPriority vanishPriority : values()) {
             if (player.hasPermission("base.vanishpriority." + vanishPriority.priorityLevel)) {
                 return vanishPriority;
             }

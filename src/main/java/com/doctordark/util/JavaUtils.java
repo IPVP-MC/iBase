@@ -121,20 +121,28 @@ public final class JavaUtils {
     /**
      * Parses a string describing measures of time (e.g. “1d 1m 1s”) to milliseconds
      *
-     * @param string the string to parse
+     * @param input the string to parse
      * @return the parsed time in milliseconds
      */
     public static Long parse(String input) {
+        if (input == null || input.isEmpty()) {
+            return null;
+        }
+
         Long result = null;
-        String number = "";
+        StringBuilder number = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
             if (Character.isDigit(c)) {
-                number += c;
-            } else if (Character.isLetter(c) && !number.isEmpty()) {
+                number.append(c);
+                continue;
+            }
+
+            String str = number.toString();
+            if (Character.isLetter(c) && !str.isEmpty()) {
                 if (result == null) result = 0L;
-                result += convert(Integer.parseInt(number), c);
-                number = "";
+                result += convert(Integer.parseInt(str), c);
+                number = new StringBuilder();
             }
         }
 

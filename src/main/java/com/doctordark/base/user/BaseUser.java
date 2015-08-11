@@ -165,31 +165,24 @@ public class BaseUser extends ServerParticipator {
 
     public boolean setVanished(@Nullable Player player, boolean vanished, boolean update) {
         if (this.vanished != vanished) {
-            boolean cancelled = false;
             if (player != null) {
                 PlayerVanishEvent event = new PlayerVanishEvent(player, vanished);
                 Bukkit.getPluginManager().callEvent(event);
-                cancelled = event.isCancelled();
-            }
+                if (event.isCancelled()) return false;
 
-            if (!cancelled) {
-                this.vanished = vanished;
                 if (update) {
                     updateVanishedState(player, vanished);
                 }
-
-                return true;
             }
+
+            this.vanished = vanished;
+            return true;
         }
 
         return false;
     }
 
     public void updateVanishedState(Player player, boolean vanished) {
-        if (player == null || !player.isOnline()) {
-            return;
-        }
-
         player.spigot().setCollidesWithEntities(!vanished);
         player.showInvisibles(vanished); // allow vanished players to see those invisible.
 
@@ -258,13 +251,13 @@ public class BaseUser extends ServerParticipator {
                     for (int i = 0; i < armour.length; i++) {
                         ItemStack stack = armour[i];
                         if (stack != null && stack.getType() != Material.AIR) {
-                            connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, (i + 1), CraftItemStack.asNMSCopy(stack)));
+                            connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, i + 1, CraftItemStack.asNMSCopy(stack)));
                         }
                     }
 
                     ItemStack stack = inventory.getItemInHand();
                     if (stack != null && stack.getType() != Material.AIR) {
-                        //TODO: connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, CraftEntityEquipment.WEAPON_SLOT, CraftItemStack.asNMSCopy(stack)));
+                        connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, /*CraftEntityEquipment.WEAPON_SLOT(*/0, CraftItemStack.asNMSCopy(stack)));
                     }
                 }
             }

@@ -74,11 +74,13 @@ public class VanishListener implements Listener {
         }
 
         // Hide any current vanished players to this player.
-        VanishPriority selfPriority = VanishPriority.of(player);
-        if (selfPriority != VanishPriority.HIGHEST) {
-            for (Player target : onlineVanishedPlayers) {
-                if (plugin.getUserManager().getUser(target.getUniqueId()).isVanished() && VanishPriority.of(target).isMoreThan(selfPriority)) {
-                    player.hidePlayer(target);
+        if (!onlineVanishedPlayers.isEmpty()) {
+            VanishPriority selfPriority = VanishPriority.of(player);
+            if (selfPriority != VanishPriority.HIGHEST) {
+                for (Player target : onlineVanishedPlayers) {
+                    if (plugin.getUserManager().getUser(target.getUniqueId()).isVanished() && VanishPriority.of(target).isMoreThan(selfPriority)) {
+                        player.hidePlayer(target);
+                    }
                 }
             }
         }
