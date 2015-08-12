@@ -57,7 +57,7 @@ public class LagCommand extends BaseCommand {
                 }
 
                 sender.sendMessage(ChatColor.RED + world.getName() + '(' + environmentName + "): " +
-                        ChatColor.YELLOW + loadedChunks.length + " chunks, " + world.getEntities().size() + " entities, " + tileEntities + "tile entities.");
+                        ChatColor.YELLOW + loadedChunks.length + " chunks, " + world.getEntities().size() + " entities, " + tileEntities + " tile entities.");
             }
         }
 
