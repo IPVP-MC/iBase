@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class AutoRestartHandler {
 
     private static final int[] ALERT_SECONDS = {600, 300, 270, 240, 210, 180, 150, 120, 90, 60, 30, 15, 10, 5, 4, 3, 2, 1};
-    private static final long TICKS_DAY = TimeUnit.DAYS.toMillis(1L) / 50L;
+    private static final long TICKS_DAY = TimeUnit.DAYS.toMillis(1L);
 
     private final BasePlugin plugin;
     private long current = Long.MIN_VALUE;
