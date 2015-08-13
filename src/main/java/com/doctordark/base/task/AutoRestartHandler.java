@@ -1,6 +1,7 @@
 package com.doctordark.base.task;
 
 import com.doctordark.base.BasePlugin;
+import net.minecraft.server.v1_7_R4.MinecraftServer;
 import net.minecraft.util.com.google.common.primitives.Ints;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
@@ -13,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class AutoRestartHandler {
 
     private static final int[] ALERT_SECONDS = {600, 300, 270, 240, 210, 180, 150, 120, 90, 60, 30, 15, 10, 5, 4, 3, 2, 1};
+    private static final long TICKS_DAY = TimeUnit.DAYS.toMillis(1L) / 50L;
 
     private final BasePlugin plugin;
     private long current = Long.MIN_VALUE;
@@ -21,7 +23,7 @@ public class AutoRestartHandler {
 
     public AutoRestartHandler(BasePlugin plugin) {
         this.plugin = plugin;
-        this.scheduleRestart(TimeUnit.HOURS.toMillis(20L));
+        this.scheduleRestart(TICKS_DAY);
     }
 
     /**
@@ -63,13 +65,21 @@ public class AutoRestartHandler {
     }
 
     /**
-     * Gets the remaining milliseconds until the pending
-     * restart applies.
+     * Gets the remaining milliseconds until the pending restart applies.
      *
      * @return time in milliseconds
      */
     public long getRemainingMilliseconds() {
-        return current - System.currentTimeMillis();
+        return getRemainingTicks() * 50L;
+    }
+
+    /**
+     * Gets the remaining ticks until the pending restart applies.
+     *
+     * @return time in ticks
+     */
+    public long getRemainingTicks() {
+        return current - MinecraftServer.currentTick;
     }
 
     /**
@@ -90,16 +100,21 @@ public class AutoRestartHandler {
     public void scheduleRestart(final long millis, final String reason) {
         this.cancelRestart();
         this.reason = reason;
-        this.current = System.currentTimeMillis() + millis;
+        this.current = MinecraftServer.currentTick + (millis / 50L);
         this.task = new BukkitRunnable() {
             @Override
             public void run() {
                 if (current == 0L) cancel(); // this restart was cancelled.
 
-                long remainingMillis = getRemainingMilliseconds();
-                if (remainingMillis <= 0) {
+                long remainingTicks = getRemainingTicks();
+                if (remainingTicks <= 0) {
+                    cancel();
                     Bukkit.shutdown(ChatColor.RED + "Server restarting.. Back up momentarily!" + (reason == null ? "" : ChatColor.GOLD + "\n\n" + reason));
-                } else if (Ints.contains(AutoRestartHandler.ALERT_SECONDS, ((int) (remainingMillis / 1000L)))) {
+                    return;
+                }
+
+                long remainingMillis = remainingTicks * 50L;
+                if (Ints.contains(AutoRestartHandler.ALERT_SECONDS, (int) (remainingMillis / 1000L))) {
                     Bukkit.broadcastMessage(ChatColor.RED + "Server restarting in " + ChatColor.GOLD +
                             DurationFormatUtils.formatDurationWords(remainingMillis, true, true) + ChatColor.RED + ((reason == null) ||
                             (reason.isEmpty()) ? "." : " [" + ChatColor.GRAY + reason + ChatColor.RED + "]."));
