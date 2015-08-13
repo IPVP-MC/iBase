@@ -1,6 +1,8 @@
 package com.doctordark.util;
 
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 
@@ -75,6 +77,30 @@ public final class JavaUtils {
         }
 
         return result;
+    }
+
+    /**
+     * Joins a collection of strings together using {@link Joiner#join(Iterable)} as a base
+     * with the last object using and instead of a comma.
+     *
+     * @param collection     the collection to join
+     * @param commaBeforeAnd if a comma should be shown before the and
+     * @return the returned list or empty string is collection is null or empty
+     */
+    public static String andJoin(Collection<String> collection, boolean commaBeforeAnd) {
+        if (collection == null || collection.isEmpty()) {
+            return "";
+        }
+
+        String last = Iterables.getLast(collection, null);
+        collection.remove(last);
+
+        StringBuilder builder = new StringBuilder(Joiner.on(", ").join(collection));
+        if (commaBeforeAnd) {
+            builder.append(',');
+        }
+
+        return builder.append(" and ").append(last).toString();
     }
 
     /**
