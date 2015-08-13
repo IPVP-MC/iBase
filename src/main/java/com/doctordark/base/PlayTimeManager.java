@@ -1,7 +1,9 @@
 package com.doctordark.base;
 
 import com.doctordark.util.Config;
-import com.google.common.collect.Maps;
+import net.minecraft.util.gnu.trove.iterator.TObjectLongIterator;
+import net.minecraft.util.gnu.trove.map.TObjectLongMap;
+import net.minecraft.util.gnu.trove.map.hash.TObjectLongHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
@@ -12,8 +14,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -21,8 +21,8 @@ import java.util.UUID;
  */
 public class PlayTimeManager implements Listener {
 
-    private final Map<UUID, Long> totalPlaytimeMap = Maps.newHashMap();  // map used to store total play-times in milliseconds
-    private final Map<UUID, Long> sessionTimestamps = Maps.newHashMap(); // map used to store milliseconds at session joins
+    private final TObjectLongMap<UUID> totalPlaytimeMap = new TObjectLongHashMap<>();  // map used to store total play-times in milliseconds
+    private final TObjectLongMap<UUID> sessionTimestamps = new TObjectLongHashMap<>(); // map used to store milliseconds at session joins
 
     private final Config config;
 
@@ -70,9 +70,10 @@ public class PlayTimeManager implements Listener {
             totalPlaytimeMap.put(player.getUniqueId(), getTotalPlayTime(player.getUniqueId()));
         }
 
-        Set<Map.Entry<UUID, Long>> entrySet = totalPlaytimeMap.entrySet();
-        for (Map.Entry<UUID, Long> entry : entrySet) {
-            config.set("playing-times." + entry.getKey().toString(), entry.getValue());
+        TObjectLongIterator<UUID> iterator = totalPlaytimeMap.iterator();
+        while (iterator.hasNext()) {
+            iterator.advance();
+            config.set("playing-times." + iterator.key().toString(), iterator.value());
         }
 
         config.save();
@@ -96,7 +97,8 @@ public class PlayTimeManager implements Listener {
      * @return the previous sessions play time in milliseconds
      */
     public long getPreviousPlayTime(UUID uuid) {
-        return totalPlaytimeMap.getOrDefault(uuid, 0L);
+        long stamp = totalPlaytimeMap.get(uuid);
+        return stamp == totalPlaytimeMap.getNoEntryValue() ? 0L : stamp;
     }
 
     /**

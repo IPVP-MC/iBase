@@ -5,6 +5,8 @@ import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.event.PlayerFreezeEvent;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.JavaUtils;
+import net.minecraft.util.gnu.trove.map.TObjectLongMap;
+import net.minecraft.util.gnu.trove.map.hash.TObjectLongHashMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
@@ -22,9 +24,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -35,7 +35,7 @@ public class FreezeCommand extends BaseCommand implements Listener {
 
     private static final String FREEZE_BYPASS = "base.freeze.bypass";
 
-    private final Map<UUID, Long> frozenPlayers = new HashMap<>();
+    private final TObjectLongMap<UUID> frozenPlayers = new TObjectLongHashMap<>();
     private long defaultFreezeDuration;
     private long serverFrozenMillis;
 
@@ -188,8 +188,8 @@ public class FreezeCommand extends BaseCommand implements Listener {
      * @return the remaining time in milliseconds
      */
     public long getRemainingPlayerFrozenMillis(UUID uuid) {
-        Long remaining = frozenPlayers.get(uuid);
-        if (remaining == null) return 0L;
+        long remaining = frozenPlayers.get(uuid);
+        if (remaining == frozenPlayers.getNoEntryValue()) return 0L;
         return remaining - System.currentTimeMillis();
     }
 }

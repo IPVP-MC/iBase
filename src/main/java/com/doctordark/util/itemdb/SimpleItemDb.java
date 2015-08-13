@@ -1,7 +1,11 @@
 package com.doctordark.util.itemdb;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.primitives.Ints;
+import net.minecraft.util.gnu.trove.map.TObjectIntMap;
+import net.minecraft.util.gnu.trove.map.TObjectShortMap;
+import net.minecraft.util.gnu.trove.map.hash.TObjectIntHashMap;
+import net.minecraft.util.gnu.trove.map.hash.TObjectShortHashMap;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -32,10 +36,10 @@ public class SimpleItemDb implements ItemDb {
         }
     };
 
-    private final Map<String, Integer> items = new HashMap<>();
-    private final Map<ItemData, List<String>> names = new HashMap<>();
+    private final TObjectIntMap<String> items = new TObjectIntHashMap<>();
+    private final ArrayListMultimap<ItemData, String> names = ArrayListMultimap.create();
     private final Map<ItemData, String> primaryName = new HashMap<>();
-    private final Map<String, Short> durabilities = new HashMap<>();
+    private final TObjectShortMap<String> durabilities = new TObjectShortHashMap<>();
     private final ManagedFile file;
     private final Pattern splitPattern = Pattern.compile("((.*)[:+',;.](\\d+))");
 
@@ -84,8 +88,7 @@ public class SimpleItemDb implements ItemDb {
                 nameList.add(itemName);
                 Collections.sort(nameList, COMPARATOR);
             } else {
-                List<String> nameList = Lists.newArrayList(itemName);
-                names.put(itemData, nameList);
+                names.put(itemData, itemName);
                 primaryName.put(itemData, itemName);
             }
         }
