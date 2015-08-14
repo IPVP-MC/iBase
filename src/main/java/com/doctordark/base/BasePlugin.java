@@ -6,6 +6,11 @@ import com.doctordark.base.command.module.ChatModule;
 import com.doctordark.base.command.module.EssentialModule;
 import com.doctordark.base.command.module.InventoryModule;
 import com.doctordark.base.command.module.TeleportModule;
+import com.doctordark.base.kit.FlatFileKitManager;
+import com.doctordark.base.kit.Kit;
+import com.doctordark.base.kit.KitExecutor;
+import com.doctordark.base.kit.KitListener;
+import com.doctordark.base.kit.KitManager;
 import com.doctordark.base.listener.ChatListener;
 import com.doctordark.base.listener.ColouredSignListener;
 import com.doctordark.base.listener.DecreasedLagListener;
@@ -25,6 +30,7 @@ import com.doctordark.base.warp.FlatFileWarpManager;
 import com.doctordark.base.warp.Warp;
 import com.doctordark.base.warp.WarpManager;
 import com.doctordark.util.PersistableLocation;
+import com.doctordark.util.SignHandler;
 import com.doctordark.util.bossbar.BossBarManager;
 import com.doctordark.util.chat.Lang;
 import com.doctordark.util.cuboid.Cuboid;
@@ -49,8 +55,10 @@ public class BasePlugin extends JavaPlugin {
     private AutoRestartHandler autoRestartHandler;
     private BukkitRunnable announcementTask;
     private CommandManager commandManager;
+    private KitManager kitManager;
     private PlayTimeManager playTimeManager;
     private ServerHandler serverHandler;
+    private SignHandler signHandler;
     private UserManager userManager;
     private WarpManager warpManager;
 
@@ -66,6 +74,7 @@ public class BasePlugin extends JavaPlugin {
         ConfigurationSerialization.registerClass(PersistableLocation.class);
         ConfigurationSerialization.registerClass(Cuboid.class);
         ConfigurationSerialization.registerClass(NamedCuboid.class);
+        ConfigurationSerialization.registerClass(Kit.class);
 
         registerManagers();
         registerCommands();
@@ -89,8 +98,10 @@ public class BasePlugin extends JavaPlugin {
 
         BossBarManager.unhook();
 
+        kitManager.saveKitData();
         playTimeManager.savePlaytimeData();
         serverHandler.saveServerData();
+        signHandler.cancelTasks(null);
         userManager.saveParticipatorData();
         warpManager.saveWarpData();
 
@@ -104,7 +115,9 @@ public class BasePlugin extends JavaPlugin {
     private void registerManagers() {
         BossBarManager.hook();
         autoRestartHandler = new AutoRestartHandler(this);
+        kitManager = new FlatFileKitManager(this);
         serverHandler = new ServerHandler(this);
+        signHandler = new SignHandler(this);
         userManager = new UserManager(this);
         warpManager = new FlatFileWarpManager(this);
 
@@ -122,6 +135,8 @@ public class BasePlugin extends JavaPlugin {
         commandManager.registerAll(new EssentialModule(this));
         commandManager.registerAll(new InventoryModule());
         commandManager.registerAll(new TeleportModule(this));
+
+        getCommand("kit").setExecutor(new KitExecutor(this));
     }
 
     private void registerListeners() {
@@ -130,6 +145,7 @@ public class BasePlugin extends JavaPlugin {
         manager.registerEvents(new ColouredSignListener(), this);
         manager.registerEvents(new DecreasedLagListener(this), this);
         manager.registerEvents(new JoinListener(this), this);
+        manager.registerEvents(new KitListener(this), this);
         manager.registerEvents(new NameVerifyListener(), this);
         manager.registerEvents(new PingListener(), this);
         manager.registerEvents(playTimeManager = new PlayTimeManager(this), this);
@@ -159,12 +175,20 @@ public class BasePlugin extends JavaPlugin {
         return itemDb;
     }
 
+    public KitManager getKitManager() {
+        return kitManager;
+    }
+
     public PlayTimeManager getPlayTimeManager() {
         return playTimeManager;
     }
 
     public ServerHandler getServerHandler() {
         return serverHandler;
+    }
+
+    public SignHandler getSignHandler() {
+        return signHandler;
     }
 
     public UserManager getUserManager() {

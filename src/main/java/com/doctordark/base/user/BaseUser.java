@@ -2,6 +2,7 @@ package com.doctordark.base.user;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.event.PlayerVanishEvent;
+import com.doctordark.base.kit.Kit;
 import com.doctordark.base.listener.VanishPriority;
 import com.doctordark.util.GenericUtils;
 import com.doctordark.util.PersistableLocation;
@@ -13,6 +14,10 @@ import net.minecraft.server.v1_7_R4.DataWatcher;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_7_R4.PlayerConnection;
+import net.minecraft.util.gnu.trove.map.TObjectIntMap;
+import net.minecraft.util.gnu.trove.map.TObjectLongMap;
+import net.minecraft.util.gnu.trove.map.hash.TObjectIntHashMap;
+import net.minecraft.util.gnu.trove.map.hash.TObjectLongHashMap;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -40,6 +45,9 @@ public class BaseUser extends ServerParticipator {
     private boolean vanished;
     private boolean glintEnabled = true;
     private long lastGlintUse;
+
+    private final TObjectIntMap<String> kitUseMap = new TObjectIntHashMap<>();
+    private final TObjectLongMap<String> kitCooldownMap = new TObjectLongHashMap<>();
 
     /**
      * @see ServerParticipator#ServerParticipator(UUID)
@@ -84,6 +92,9 @@ public class BaseUser extends ServerParticipator {
         if (map.containsKey("lastGlintUse")) {
             this.lastGlintUse = Long.parseLong((String) map.get("lastGlintUse"));
         }
+
+        this.kitUseMap.putAll(GenericUtils.castMap(map.get("kit-use-map"), String.class, Integer.class));
+        this.kitCooldownMap.putAll(GenericUtils.castMap(map.get("kit-cooldown-map"), String.class, Long.class));
     }
 
     @Override
@@ -91,7 +102,7 @@ public class BaseUser extends ServerParticipator {
         Map<String, Object> map = super.serialize();
         map.put("addressHistories", this.addressHistories);
         map.put("nameHistories", this.nameHistories);
-        if (backLocation != null && backLocation.getWorld() != null) { // the world may
+        if (backLocation != null && backLocation.getWorld() != null) { // the world may be null
             map.put("backLocation", new PersistableLocation(backLocation));
         }
 
@@ -99,7 +110,28 @@ public class BaseUser extends ServerParticipator {
         map.put("vanished", vanished);
         map.put("glintEnabled", glintEnabled);
         map.put("lastGlintUse", Long.toString(lastGlintUse));
+        map.put("kit-use-map", kitUseMap);
+        map.put("kit-cooldown-map", kitCooldownMap);
         return map;
+    }
+
+    public long getRemainingKitCooldown(Kit kit) {
+        long remaining = kitCooldownMap.get(kit.getName());
+        if (remaining == kitCooldownMap.getNoEntryValue()) return 0L;
+        return remaining - System.currentTimeMillis();
+    }
+
+    public void updateKitCooldown(Kit kit) {
+        kitCooldownMap.put(kit.getName(), System.currentTimeMillis() + kit.getDelayMillis());
+    }
+
+    public int getKitUses(Kit kit) {
+        int i = this.kitUseMap.get(kit.getName());
+        return i == this.kitUseMap.getNoEntryValue() ? 0 : i;
+    }
+
+    public int incrementKitUses(Kit kit) {
+        return kitUseMap.adjustOrPutValue(kit.getName(), 1, 1);
     }
 
     @Override

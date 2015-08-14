@@ -78,6 +78,8 @@ commands:
   kill:
     aliases: [suicide, slay]
     description: Kill a player.
+  kit:
+    description: Command to apply or use kits.
   lag:
     description: Check the server lag.
   message:
