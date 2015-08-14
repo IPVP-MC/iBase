@@ -22,15 +22,15 @@ import java.util.Map;
  * Created by J on 7/16/2015.
  */
 public class PlayerUtil {
-    private static Map<Player, Location> frozen = new HashMap<>();
-    private static Map<Player, PlayerCache> playerCaches = new HashMap<>();
+    private static final Map<Player, Location> frozen = new HashMap<>();
+    private static final Map<Player, PlayerCache> playerCaches = new HashMap<>();
     static {
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
             public void onMove(PlayerMoveEvent event) {
                 Player player = event.getPlayer();
-                if(frozen.containsKey(player)) {
-                    Location location = frozen.get(player);
+                Location location = frozen.get(player);
+                if (location != null) {
                     Location to = event.getTo();
                     if (to.getBlockX() != location.getBlockX() || to.getBlockZ() != location.getBlockZ() ||
                             Math.abs(to.getBlockY() - location.getBlockY()) >= 2) {
@@ -84,9 +84,9 @@ public class PlayerUtil {
     }
 
     public static void restore(Player player) {
-        if(!playerCaches.containsKey(player)) {
-            return;
+        PlayerCache playerCache = playerCaches.get(player);
+        if (playerCache != null) {
+            playerCaches.get(player).apply(player);
         }
-        playerCaches.get(player).apply(player);
     }
 }
