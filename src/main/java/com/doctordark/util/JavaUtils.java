@@ -145,7 +145,7 @@ public final class JavaUtils {
     }
 
     /**
-     * Parses a string describing measures of time (e.g. “1d 1m 1s”) to milliseconds
+     * Parses a string describing measures of time (e.g. "1d 1m 1s") to milliseconds
      *
      * @param input the string to parse
      * @return the parsed time in milliseconds

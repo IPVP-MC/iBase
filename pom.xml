@@ -20,6 +20,20 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.github.paperspigot</groupId>
+            <artifactId>paperspigot-api</artifactId>
+            <version>1.7.10-r0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/Libs/paperspigot-api-1.7.10-r0.1-snapshot.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.github.paperspigot</groupId>
+            <artifactId>paperspigot</artifactId>
+            <version>1.7.10-r0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/Libs/paperspigot-1.7.10-r0.1-snapshot.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>LATEST</version>
