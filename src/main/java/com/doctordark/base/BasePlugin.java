@@ -15,6 +15,7 @@ import com.doctordark.base.listener.ChatListener;
 import com.doctordark.base.listener.ColouredSignListener;
 import com.doctordark.base.listener.DecreasedLagListener;
 import com.doctordark.base.listener.JoinListener;
+import com.doctordark.base.listener.MobstackListener;
 import com.doctordark.base.listener.NameVerifyListener;
 import com.doctordark.base.listener.PingListener;
 import com.doctordark.base.listener.PlayerLimitListener;
@@ -146,6 +147,7 @@ public class BasePlugin extends JavaPlugin {
         manager.registerEvents(new DecreasedLagListener(this), this);
         manager.registerEvents(new JoinListener(this), this);
         manager.registerEvents(new KitListener(this), this);
+        manager.registerEvents(new MobstackListener(), this);
         manager.registerEvents(new NameVerifyListener(), this);
         manager.registerEvents(new PingListener(), this);
         manager.registerEvents(playTimeManager = new PlayTimeManager(this), this);
