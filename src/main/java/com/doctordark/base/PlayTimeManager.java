@@ -1,9 +1,9 @@
 package com.doctordark.base;
 
 import com.doctordark.util.Config;
-import net.minecraft.util.gnu.trove.iterator.TObjectLongIterator;
 import net.minecraft.util.gnu.trove.map.TObjectLongMap;
 import net.minecraft.util.gnu.trove.map.hash.TObjectLongHashMap;
+import net.minecraft.util.gnu.trove.procedure.TObjectLongProcedure;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
@@ -70,11 +70,13 @@ public class PlayTimeManager implements Listener {
             totalPlaytimeMap.put(player.getUniqueId(), getTotalPlayTime(player.getUniqueId()));
         }
 
-        TObjectLongIterator<UUID> iterator = totalPlaytimeMap.iterator();
-        while (iterator.hasNext()) {
-            iterator.advance();
-            config.set("playing-times." + iterator.key().toString(), iterator.value());
-        }
+        totalPlaytimeMap.forEachEntry(new TObjectLongProcedure<UUID>() {
+            @Override
+            public boolean execute(UUID uuid, long l) {
+                config.set("playing-times." + uuid.toString(), l);
+                return false;
+            }
+        });
 
         config.save();
     }
@@ -86,8 +88,8 @@ public class PlayTimeManager implements Listener {
      * @return the session playing time in millis
      */
     public long getSessionPlayTime(UUID uuid) {
-        Long session = sessionTimestamps.get(uuid);
-        return session != null ? System.currentTimeMillis() - session : 0L;
+        long session = sessionTimestamps.get(uuid);
+        return session != sessionTimestamps.getNoEntryValue() ? System.currentTimeMillis() - session : 0L;
     }
 
     /**
