@@ -7,15 +7,6 @@
     <name>Base</name>
     <description>Base brings general commands to Minecraft servers.</description>
 
-    <licenses>
-        <license>
-            <name>GNU General Public License 2.0</name>
-            <url>LICENSE.txt</url>
-            <distribution>repo</distribution>
-            <comments>License on all contributions</comments>
-        </license>
-    </licenses>
-
     <repositories>
         <repository>
             <id>comphenix-repo</id>
