@@ -28,13 +28,16 @@ public class PlayerUtil {
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
             public void onMove(PlayerMoveEvent event) {
-                Player player = event.getPlayer();
-                Location location = frozen.get(player);
-                if (location != null) {
-                    Location to = event.getTo();
-                    if (to.getBlockX() != location.getBlockX() || to.getBlockZ() != location.getBlockZ() ||
-                            Math.abs(to.getBlockY() - location.getBlockY()) >= 2) {
-                        event.setTo(location);
+                Location from = event.getFrom();
+                Location to = event.getTo();
+                if (from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ()) {
+                    Player player = event.getPlayer();
+                    Location location = frozen.get(player);
+                    if (location != null) {
+                        if (to.getBlockX() != location.getBlockX() || to.getBlockZ() != location.getBlockZ() ||
+                                Math.abs(to.getBlockY() - location.getBlockY()) >= 2) {
+                            event.setTo(location);
+                        }
                     }
                 }
             }
@@ -86,7 +89,7 @@ public class PlayerUtil {
     public static void restore(Player player) {
         PlayerCache playerCache = playerCaches.get(player);
         if (playerCache != null) {
-            playerCaches.get(player).apply(player);
+            playerCache.apply(player);
         }
     }
 }
