@@ -1,13 +1,12 @@
 package com.doctordark.util.player;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.doctordark.base.BasePlugin;
+import net.minecraft.server.v1_7_R4.EnumClientCommand;
+import net.minecraft.server.v1_7_R4.PacketPlayInClientCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,10 +28,14 @@ public class PlayerUtil {
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
             public void onMove(PlayerMoveEvent event) {
-                if(frozen.containsKey(event.getPlayer()) && (event.getTo().getBlockX() != frozen.get(event.getPlayer()).getBlockX() ||
-                        event.getTo().getBlockZ() != frozen.get(event.getPlayer()).getBlockZ() ||
-                        Math.abs(event.getTo().getBlockY() - frozen.get(event.getPlayer()).getBlockY()) >= 2)) {
-                    event.setTo(frozen.get(event.getPlayer()));
+                Player player = event.getPlayer();
+                if(frozen.containsKey(player)) {
+                    Location location = frozen.get(player);
+                    Location to = event.getTo();
+                    if (to.getBlockX() != location.getBlockX() || to.getBlockZ() != location.getBlockZ() ||
+                            Math.abs(to.getBlockY() - location.getBlockY()) >= 2) {
+                        event.setTo(location);
+                    }
                 }
             }
 
@@ -44,13 +47,7 @@ public class PlayerUtil {
     }
 
     public static void respawn(Player player) {
-        PacketContainer packet = new PacketContainer(PacketType.Play.Client.CLIENT_COMMAND);
-        packet.getClientCommands().writeSafely(0, EnumWrappers.ClientCommand.PERFORM_RESPAWN);
-        try {
-            ProtocolLibrary.getProtocolManager().recieveClientPacket(player, packet);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayInClientCommand(EnumClientCommand.PERFORM_RESPAWN));
     }
 
     public static void wipe(Player player) {
