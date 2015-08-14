@@ -4,10 +4,14 @@ import com.doctordark.base.command.BaseCommand;
 import com.doctordark.util.BukkitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
+
+import java.util.Objects;
 
 public class TopCommand extends BaseCommand {
 
@@ -30,9 +34,13 @@ public class TopCommand extends BaseCommand {
 
         Player player = (Player) sender;
         Location origin = player.getLocation().clone();
+        Block originBlock;
 
         Location highestLocation = BukkitUtils.getHighestLocation(origin.clone());
-        if (highestLocation == null || highestLocation.equals(origin)) {
+        if (highestLocation == null || Objects.equals(highestLocation, origin) ||
+                (highestLocation.getBlockY() - (originBlock = origin.getBlock()).getY() == 1 &&
+                        originBlock.getType() == Material.WATER || originBlock.getType() == Material.STATIONARY_WATER)) {
+
             sender.sendMessage(ChatColor.RED + "No highest location found.");
             return true;
         }
