@@ -72,7 +72,7 @@ public class EnchantCommand extends BaseCommand {
             return true;
         }
 
-        if (!enchantment.getItemTarget().includes(stack) && !sender.hasPermission("base.command.enchant.anyitem")) {
+        if (!enchantment.canEnchantItem(stack) && !sender.hasPermission("base.command.enchant.anyitem")) {
             sender.sendMessage(ChatColor.RED + "Enchantment " + enchantment.getName() + " cannot be applied to that item.");
             return true;
         }
