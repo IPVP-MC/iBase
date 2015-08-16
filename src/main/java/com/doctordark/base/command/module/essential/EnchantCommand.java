@@ -67,7 +67,7 @@ public class EnchantCommand extends BaseCommand {
         }
 
         int maxLevel = enchantment.getMaxLevel();
-        if (level > maxLevel && !sender.hasPermission("base.command.enchant.abovelevel")) {
+        if (level > maxLevel && !sender.hasPermission(command.getPermission() + ".abovelevel")) {
             sender.sendMessage(ChatColor.RED + "The maximum enchantment level for " + enchantment.getName() + " is " + maxLevel + '.');
             return true;
         }
