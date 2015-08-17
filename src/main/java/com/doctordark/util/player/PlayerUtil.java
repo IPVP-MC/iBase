@@ -1,12 +1,13 @@
 package com.doctordark.util.player;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.doctordark.base.BasePlugin;
-import net.minecraft.server.v1_7_R4.EnumClientCommand;
-import net.minecraft.server.v1_7_R4.PacketPlayInClientCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,7 +51,13 @@ public class PlayerUtil {
     }
 
     public static void respawn(Player player) {
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(new PacketPlayInClientCommand(EnumClientCommand.PERFORM_RESPAWN));
+        PacketContainer packet = new PacketContainer(PacketType.Play.Client.CLIENT_COMMAND);
+        packet.getClientCommands().writeSafely(0, EnumWrappers.ClientCommand.PERFORM_RESPAWN);
+        try {
+            ProtocolLibrary.getProtocolManager().recieveClientPacket(player, packet);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public static void wipe(Player player) {
@@ -91,5 +98,9 @@ public class PlayerUtil {
         if (playerCache != null) {
             playerCache.apply(player);
         }
+    }
+
+    public static PlayerCache getCache(Player player) {
+        return playerCaches.get(player);
     }
 }
