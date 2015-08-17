@@ -67,12 +67,12 @@ public class EnchantCommand extends BaseCommand {
         }
 
         int maxLevel = enchantment.getMaxLevel();
-        if (level > maxLevel && !sender.hasPermission("base.command.enchant.abovelevel")) {
+        if (level > maxLevel && !sender.hasPermission(command.getPermission() + ".abovelevel")) {
             sender.sendMessage(ChatColor.RED + "The maximum enchantment level for " + enchantment.getName() + " is " + maxLevel + '.');
             return true;
         }
 
-        if (!enchantment.getItemTarget().includes(stack) && !sender.hasPermission("base.command.enchant.anyitem")) {
+        if (!enchantment.canEnchantItem(stack) && !sender.hasPermission("base.command.enchant.anyitem")) {
             sender.sendMessage(ChatColor.RED + "Enchantment " + enchantment.getName() + " cannot be applied to that item.");
             return true;
         }

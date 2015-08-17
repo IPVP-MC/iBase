@@ -18,6 +18,8 @@ import net.minecraft.util.gnu.trove.map.TObjectIntMap;
 import net.minecraft.util.gnu.trove.map.TObjectLongMap;
 import net.minecraft.util.gnu.trove.map.hash.TObjectIntHashMap;
 import net.minecraft.util.gnu.trove.map.hash.TObjectLongHashMap;
+import net.minecraft.util.gnu.trove.procedure.TObjectIntProcedure;
+import net.minecraft.util.gnu.trove.procedure.TObjectLongProcedure;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -31,6 +33,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -110,8 +113,28 @@ public class BaseUser extends ServerParticipator {
         map.put("vanished", vanished);
         map.put("glintEnabled", glintEnabled);
         map.put("lastGlintUse", Long.toString(lastGlintUse));
-        map.put("kit-use-map", kitUseMap);
-        map.put("kit-cooldown-map", kitCooldownMap);
+
+        Map<String, Integer> kitUseSaveMap = new HashMap<>(kitUseMap.size());
+        kitUseMap.forEachEntry(new TObjectIntProcedure<String>() {
+            @Override
+            public boolean execute(String s, int i) {
+                kitUseSaveMap.put(s, i);
+                return true;
+            }
+        });
+
+        map.put("kit-use-map", kitUseSaveMap);
+
+        Map<String, Integer> kitCooldownSaveMap = new HashMap<>(kitCooldownMap.size());
+        kitCooldownMap.forEachEntry(new TObjectLongProcedure<String>() {
+            @Override
+            public boolean execute(String s, long i) {
+                kitCooldownMap.put(s, i);
+                return true;
+            }
+        });
+
+        map.put("kit-cooldown-map", kitCooldownSaveMap);
         return map;
     }
 
