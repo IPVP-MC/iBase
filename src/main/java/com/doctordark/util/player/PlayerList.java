@@ -69,6 +69,10 @@ public class PlayerList implements Iterable<Player> {
         }
     }
 
+    public void remove(String player) {
+        players.remove(player);
+    }
+
     public void clear() {
         players.clear();
     }
