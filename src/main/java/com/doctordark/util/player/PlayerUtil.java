@@ -81,8 +81,8 @@ public class PlayerUtil {
         frozen.put(player, player.getLocation());
     }
 
-    public static void thaw(Player player) {
-        frozen.remove(player);
+    public static boolean thaw(Player player) {
+        return frozen.remove(player) != null;
     }
 
     public static boolean isFrozen(Player player) {
