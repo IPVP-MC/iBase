@@ -29,13 +29,17 @@ public class PlayerList implements Iterable<Player> {
 
             @Override
             public boolean hasNext() {
-                return !playerUniqueIds.isEmpty() && index < playerUniqueIds.size();
+                if(playerUniqueIds.size() == 0)
+                    return false;
+                if(index >= playerUniqueIds.size())
+                    return false;
+                return true;
             }
 
             @Override
             public Player next() {
                 index++;
-                return getPlayers().get(index--);
+                return getPlayers().get(index-1);
             }
 
             @Override
