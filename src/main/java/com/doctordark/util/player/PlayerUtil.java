@@ -6,6 +6,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.doctordark.base.BasePlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -38,6 +39,7 @@ public class PlayerUtil {
                         if (to.getBlockX() != location.getBlockX() || to.getBlockZ() != location.getBlockZ() ||
                                 Math.abs(to.getBlockY() - location.getBlockY()) >= 2) {
                             event.setTo(location);
+                            player.sendMessage(ChatColor.YELLOW + "You are currently " + ChatColor.AQUA + "frozen!");
                         }
                     }
                 }

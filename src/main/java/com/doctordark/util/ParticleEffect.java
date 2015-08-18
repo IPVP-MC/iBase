@@ -1,5 +1,6 @@
 package com.doctordark.util;
 
+import net.minecraft.server.v1_7_R4.MathHelper;
 import net.minecraft.server.v1_7_R4.Packet;
 import net.minecraft.server.v1_7_R4.PacketPlayOutWorldParticles;
 import org.apache.commons.lang.Validate;
@@ -170,6 +171,76 @@ public enum ParticleEffect {
         for (Player player : Bukkit.getOnlinePlayers()) {
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
         }
+    }
+
+    /**
+     * Displays this {@link ParticleEffect} as a sphere to a {@link Player}
+     * @param player    the {@link Player} to show
+     * @param location  the {@link Location} of the center
+     * @param radius    the radius of the sphere
+     * @param density   the density of particle locations
+     * @param intensity the number of particles at each location
+     */
+    public void sphere(Player player, Location location, float radius, float density, int intensity) {
+        float deltaPitch = 180 / density;
+        float deltaYaw = 360 / density;
+        for (int i = 0; i < density; i++) {
+            for (int j = 0; j < density; j++) {
+                float pitch = -90 + (j * deltaPitch);
+                float yaw = -180 + (i * deltaYaw);
+                float x = radius * MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI) *
+                        -MathHelper.cos(-pitch * 0.017453292F) + (float) location.getX();
+                float y = radius * MathHelper.sin(-pitch * 0.017453292F) + (float) location.getY();
+                float z = radius * MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI) *
+                        -MathHelper.cos(-pitch * 0.017453292F) + (float) location.getZ();
+
+                display(player, new Location(location.getWorld(), x, y, z), 0f, 0f, 0f, 0f, intensity);
+            }
+        }
+    }
+
+    /**
+     * Displays this {@link ParticleEffect} as a sphere to a {@link Player}
+     * @param player    the {@link Player} to show
+     * @param location  the {@link Location} of the center
+     * @param radius    the radius of the sphere
+     */
+    public void sphere(Player player, Location location, float radius) {
+        sphere(player, location, radius, 20f, 2);
+    }
+
+    /**
+     * Displays this {@link ParticleEffect} as a sphere to all players
+     * @param location  the {@link Location} of the center
+     * @param radius    the radius of the sphere
+     * @param density   the density of particle locations
+     * @param intensity the number of particles at each location
+     */
+    public void sphere(Location location, float radius, float density, int intensity) {
+        float deltaPitch = 180 / density;
+        float deltaYaw = 360 / density;
+        for (int i = 0; i < density; i++) {
+            for (int j = 0; j < density; j++) {
+                float pitch = -90 + (j * deltaPitch);
+                float yaw = -180 + (i * deltaYaw);
+                float x = radius * MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI) *
+                        -MathHelper.cos(-pitch * 0.017453292F) + (float) location.getX();
+                float y = radius * MathHelper.sin(-pitch * 0.017453292F) + (float) location.getY();
+                float z = radius * MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI) *
+                        -MathHelper.cos(-pitch * 0.017453292F) + (float) location.getZ();
+
+                broadcast(new Location(location.getWorld(), x, y, z), 0f, 0f, 0f, 0f, intensity);
+            }
+        }
+    }
+
+    /**
+     * Displays this {@link ParticleEffect} as a sphere to all players
+     * @param location  the {@link Location} of the center
+     * @param radius    the radius of the sphere
+     */
+    public void sphere(Location location, float radius) {
+        sphere(location, radius, 20f, 2);
     }
 
     private PacketPlayOutWorldParticles createPacket(float x, float y, float z, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
