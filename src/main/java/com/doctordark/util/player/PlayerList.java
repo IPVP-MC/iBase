@@ -16,6 +16,8 @@ public class PlayerList implements Iterable<Player> {
     private List<UUID> playerUniqueIds = Lists.newArrayList();
     private List<Player> playerList = Lists.newArrayList();
 
+    public PlayerList() {}
+
     public PlayerList(Collection<UUID> col) {
         this.playerUniqueIds = Lists.newArrayList(col);
     }
