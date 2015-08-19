@@ -38,6 +38,8 @@ public class PlayerUtil {
                     if (location != null) {
                         if (to.getBlockX() != location.getBlockX() || to.getBlockZ() != location.getBlockZ() ||
                                 Math.abs(to.getBlockY() - location.getBlockY()) >= 2) {
+                            location.setYaw(to.getYaw());
+                            location.setPitch(to.getPitch());
                             event.setTo(location);
                             player.sendMessage(ChatColor.YELLOW + "You are currently " + ChatColor.AQUA + "frozen!");
                         }
