@@ -20,6 +20,7 @@
 /bin
 /dist
 /manifest.mf
+git.properties
 
 # Mac Filesystem Dust
 .DS_Store
