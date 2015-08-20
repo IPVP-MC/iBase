@@ -87,11 +87,6 @@ public class AutoRestartCommand extends BaseCommand {
 
         @Override
         public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-            if (!plugin.getAutoRestartHandler().isPendingRestart()) {
-                sender.sendMessage(ChatColor.RED + "There is not a restart task pending.");
-                return true;
-            }
-
             if (args.length < 2) {
                 sender.sendMessage(ChatColor.RED + "Usage: /" + label + ' ' + args[0].toLowerCase() + " <time> [reason]");
                 return true;
