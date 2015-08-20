@@ -8,7 +8,7 @@ import com.doctordark.base.user.BaseUser;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

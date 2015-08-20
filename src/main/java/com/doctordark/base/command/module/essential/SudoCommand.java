@@ -2,7 +2,7 @@ package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

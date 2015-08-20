@@ -46,12 +46,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class BasePlugin extends JavaPlugin {
 
     private static BasePlugin plugin;
 
     private ItemDb itemDb;
+    private Random random = new Random();
 
     private AutoRestartHandler autoRestartHandler;
     private BukkitRunnable announcementTask;
@@ -163,6 +165,10 @@ public class BasePlugin extends JavaPlugin {
         long announcementDelay = serverHandler.getAnnouncementDelay() * 20L;
         BukkitRunnable announcementRunnable = announcementTask = new AnnouncementHandler(this);
         announcementRunnable.runTaskTimer(this, announcementDelay, announcementDelay);
+    }
+
+    public Random getRandom() {
+        return random;
     }
 
     public AutoRestartHandler getAutoRestartHandler() {

@@ -3,7 +3,7 @@ package com.doctordark.base.command;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.command.CommandArgument;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

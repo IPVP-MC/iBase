@@ -3,7 +3,7 @@ package com.doctordark.base.kit;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.util.Config;
 import com.doctordark.util.GenericUtils;
-import net.minecraft.util.org.apache.commons.lang3.time.DurationFormatUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

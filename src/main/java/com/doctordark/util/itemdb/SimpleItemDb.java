@@ -6,7 +6,7 @@ import net.minecraft.util.gnu.trove.map.TObjectIntMap;
 import net.minecraft.util.gnu.trove.map.TObjectShortMap;
 import net.minecraft.util.gnu.trove.map.hash.TObjectIntHashMap;
 import net.minecraft.util.gnu.trove.map.hash.TObjectShortHashMap;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;

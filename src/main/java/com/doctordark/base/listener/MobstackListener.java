@@ -1,5 +1,6 @@
 package com.doctordark.base.listener;
 
+import com.doctordark.base.BasePlugin;
 import com.doctordark.util.cuboid.CoordinatePair;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -9,7 +10,6 @@ import com.google.common.primitives.Ints;
 import net.minecraft.util.gnu.trove.iterator.TObjectIntIterator;
 import net.minecraft.util.gnu.trove.map.TObjectIntMap;
 import net.minecraft.util.gnu.trove.map.hash.TObjectIntHashMap;
-import org.apache.commons.lang.math.RandomUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -65,7 +65,7 @@ public class MobstackListener implements Listener {
             return;
         }
 
-        LivingEntity chosen = RandomUtils.nextBoolean() ? event.getFirstParent() : event.getSecondParent();
+        LivingEntity chosen = BasePlugin.getPlugin().getRandom().nextBoolean() ? event.getFirstParent() : event.getSecondParent();
         Integer stackedQuantity = getStackedQuantity(chosen);
         if (stackedQuantity == null) stackedQuantity = 1;
 

@@ -2,7 +2,7 @@ package com.doctordark.base.command.module.teleport;
 
 import com.doctordark.base.command.BaseCommand;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

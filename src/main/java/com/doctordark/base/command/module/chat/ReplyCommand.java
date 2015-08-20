@@ -5,7 +5,7 @@ import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.command.module.chat.event.PlayerMessageEvent;
 import com.doctordark.base.user.BaseUser;
 import com.google.common.collect.Sets;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

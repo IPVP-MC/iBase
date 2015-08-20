@@ -3,7 +3,7 @@ package com.doctordark.base.command.module.chat.event;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.user.BaseUser;
 import com.google.common.collect.Iterables;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

@@ -3,7 +3,7 @@ package com.doctordark.base.user;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.util.Config;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.MemorySection;

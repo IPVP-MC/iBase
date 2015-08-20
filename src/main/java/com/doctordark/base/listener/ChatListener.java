@@ -6,7 +6,7 @@ import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.user.ServerParticipator;
 import com.doctordark.util.BukkitUtils;
 import com.google.common.collect.Sets;
-import org.apache.commons.lang.time.DurationFormatUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
