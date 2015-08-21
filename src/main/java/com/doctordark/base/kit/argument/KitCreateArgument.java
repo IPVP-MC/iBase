@@ -23,7 +23,7 @@ public class KitCreateArgument extends CommandArgument {
         super("create", "Creates a kit");
         this.plugin = plugin;
         this.aliases = new String[]{"make", "build"};
-        this.permission = "hcf.command.kit.argument." + getName();
+        this.permission = "base.command.kit.argument." + getName();
     }
 
     @Override

@@ -23,7 +23,7 @@ public class KitPreviewArgument extends CommandArgument {
         super("preview", "Preview the items you will get in a kit");
         this.plugin = plugin;
         this.aliases = new String[]{"look", "check", "see"};
-        this.permission = "hcf.command.kit.argument." + getName();
+        this.permission = "base.command.kit.argument." + getName();
     }
 
     @Override

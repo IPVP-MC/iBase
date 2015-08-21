@@ -23,7 +23,7 @@ public class KitSetItemsArgument extends CommandArgument {
     public KitSetItemsArgument(BasePlugin plugin) {
         super("setitems", "Sets the items of a kit");
         this.plugin = plugin;
-        this.permission = "hcf.command.kit.argument." + getName();
+        this.permission = "base.command.kit.argument." + getName();
     }
 
     @Override

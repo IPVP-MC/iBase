@@ -24,7 +24,7 @@ public class KitSetDelayArgument extends CommandArgument {
         super("setdelay", "Sets the delay time of a kit");
         this.plugin = plugin;
         this.aliases = new String[]{"delay", "setcooldown", "cooldown"};
-        this.permission = "hcf.command.kit.argument." + getName();
+        this.permission = "base.command.kit.argument." + getName();
     }
 
     @Override

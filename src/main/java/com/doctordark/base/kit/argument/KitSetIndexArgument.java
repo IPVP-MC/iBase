@@ -24,7 +24,7 @@ public class KitSetIndexArgument extends CommandArgument {
         super("setindex", "Sets the position of a kit for the GUI");
         this.plugin = plugin;
         this.aliases = new String[]{"setorder", "setindex", "setpos", "setposition"};
-        this.permission = "hcf.command.kit.argument." + getName();
+        this.permission = "base.command.kit.argument." + getName();
     }
 
     @Override

@@ -23,7 +23,7 @@ public class KitRenameArgument extends CommandArgument {
     public KitRenameArgument(BasePlugin plugin) {
         super("rename", "Renames a kit");
         this.plugin = plugin;
-        this.permission = "hcf.command.kit.argument." + getName();
+        this.permission = "base.command.kit.argument." + getName();
     }
 
     @Override

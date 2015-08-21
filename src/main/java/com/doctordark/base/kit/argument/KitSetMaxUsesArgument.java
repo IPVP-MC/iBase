@@ -25,7 +25,7 @@ public class KitSetMaxUsesArgument extends CommandArgument {
         super("setmaxuses", "Sets the maximum uses for a kit");
         this.plugin = plugin;
         this.aliases = new String[]{"setmaximumuses"};
-        this.permission = "hcf.command.kit.argument." + getName();
+        this.permission = "base.command.kit.argument." + getName();
     }
 
     @Override

@@ -23,7 +23,7 @@ public class KitDescriptionArgument extends CommandArgument {
         super("setdesc", "Sets the description of a kit");
         this.plugin = plugin;
         this.aliases = new String[]{"setdescription"};
-        this.permission = "hcf.command.kit.argument." + getName();
+        this.permission = "base.command.kit.argument." + getName();
     }
 
     @Override

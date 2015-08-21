@@ -38,6 +38,7 @@ public class KitExecutor extends ArgumentExecutor {
         this.plugin = plugin;
 
         addArgument(new KitApplyArgument(plugin));
+        addArgument(new KitBypassplaytimeArgument(plugin));
         addArgument(new KitCreateArgument(plugin));
         addArgument(new KitDeleteArgument(plugin));
         addArgument(new KitDescriptionArgument(plugin));

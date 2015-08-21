@@ -22,7 +22,7 @@ public class KitDisableArgument extends CommandArgument {
         super("disable", "Disable or enable a kit");
         this.plugin = plugin;
         this.aliases = new String[]{"enable", "toggle"};
-        this.permission = "hcf.command.kit.argument." + getName();
+        this.permission = "base.command.kit.argument." + getName();
     }
 
     @Override

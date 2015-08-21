@@ -24,7 +24,7 @@ public class KitDeleteArgument extends CommandArgument {
         super("delete", "Deletes a kit");
         this.plugin = plugin;
         this.aliases = new String[]{"del", "remove"};
-        this.permission = "hcf.command.kit.argument." + getName();
+        this.permission = "base.command.kit.argument." + getName();
     }
 
     @Override

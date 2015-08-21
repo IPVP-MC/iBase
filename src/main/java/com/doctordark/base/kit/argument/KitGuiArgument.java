@@ -23,7 +23,7 @@ public class KitGuiArgument extends CommandArgument {
         super("gui", "Opens the kit gui");
         this.plugin = plugin;
         this.aliases = new String[]{"menu"};
-        this.permission = "hcf.command.kit.argument." + getName();
+        this.permission = "base.command.kit.argument." + getName();
     }
 
     @Override

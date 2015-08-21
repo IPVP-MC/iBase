@@ -25,7 +25,7 @@ public class KitSetImageArgument extends CommandArgument {
         super("setimage", "Sets the image of kit in GUI to held item");
         this.plugin = plugin;
         this.aliases = new String[]{"setitem", "setpic", "setpicture"};
-        this.permission = "hcf.command.kit.argument." + getName();
+        this.permission = "base.command.kit.argument." + getName();
     }
 
     @Override

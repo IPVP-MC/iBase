@@ -310,7 +310,7 @@ public class Kit implements ConfigurationSerializable {
      * @return the {@link Kit} permission
      */
     public final String getPermission() {
-        return "hcf.kit." + name;
+        return "base.kit." + name;
     }
 
     /**

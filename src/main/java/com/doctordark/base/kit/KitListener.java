@@ -1,6 +1,7 @@
 package com.doctordark.base.kit;
 
 import com.doctordark.base.BasePlugin;
+import com.doctordark.base.kit.argument.KitBypassplaytimeArgument;
 import com.doctordark.base.kit.event.KitApplyEvent;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.util.ParticleEffect;
@@ -151,7 +152,7 @@ public class KitListener implements Listener {
         UUID uuid = player.getUniqueId();
         long curPlayTime = BasePlugin.getPlugin().getPlayTimeManager().getTotalPlayTime(uuid);
         long minPlayTimeKits = KitManager.MIN_PLAYTIME_KITS;
-        if (curPlayTime < minPlayTimeKits && !ALLOWED_KITS.contains(kit.getName())) {
+        if (!KitBypassplaytimeArgument.bypassPlaytime && curPlayTime < minPlayTimeKits && !ALLOWED_KITS.contains(kit.getName())) {
             player.sendMessage(ChatColor.RED + "Kits (with the exception of " + StringUtils.join(ALLOWED_KITS, ", ") + " are disabled until you have at least " +
                     DurationFormatUtils.formatDurationWords(minPlayTimeKits, true, true) + " playtime. " +
                     "You have only played for " + DurationFormatUtils.formatDurationWords(curPlayTime, true, true) + '.');

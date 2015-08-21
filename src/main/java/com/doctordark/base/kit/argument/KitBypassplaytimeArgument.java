@@ -16,14 +16,15 @@ import java.util.stream.Collectors;
 /**
  * An {@link CommandArgument} used for applying {@link Kit}s to {@link Player}s.
  */
-public class KitApplyArgument extends CommandArgument {
+public class KitBypassplaytimeArgument extends CommandArgument {
+
+    public static boolean bypassPlaytime = false;
 
     private final BasePlugin plugin;
 
-    public KitApplyArgument(BasePlugin plugin) {
-        super("apply", "Applies a kit to player");
+    public KitBypassplaytimeArgument(BasePlugin plugin) {
+        super("bypassplaytime", "Bypass minimum kit playtime");
         this.plugin = plugin;
-        this.aliases = new String[]{"give"};
         this.permission = "base.command.kit.argument." + getName();
     }
 
@@ -34,32 +35,11 @@ public class KitApplyArgument extends CommandArgument {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length < 3) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
-            return true;
-        }
+        if (bypassPlaytime) {
+            Command.broadcastCommandMessage(sender, "Players can no longer use kits ignoring playtime");
+        } else Command.broadcastCommandMessage(sender, "Players can now use kits ignoring playtime");
 
-        Kit kit = plugin.getKitManager().getKit(args[1]);
-
-        if (kit == null) {
-            sender.sendMessage(ChatColor.RED + "There is not a kit named " + args[1] + '.');
-            return true;
-        }
-
-        Player target = Bukkit.getPlayer(args[2]);
-
-        if (target == null || (sender instanceof Player && !((Player) sender).canSee(target))) {
-            sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[2] + ChatColor.GOLD + "' not found.");
-            return true;
-        }
-
-        if (kit.applyTo(target, true, true)) {
-            sender.sendMessage(ChatColor.GRAY + "Applied kit '" + kit.getName() + "' to '" + target.getName() + "'.");
-        } else {
-            sender.sendMessage(ChatColor.RED + "Failed to apply kit " + kit.getName() + " to " + target.getName() + '.');
-            return true;
-        }
-
+        bypassPlaytime = !bypassPlaytime;
         return true;
     }
 

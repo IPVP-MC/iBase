@@ -22,7 +22,7 @@ public class KitListArgument extends CommandArgument {
     public KitListArgument(BasePlugin plugin) {
         super("list", "Lists all current kits");
         this.plugin = plugin;
-        this.permission = "hcf.command.kit.argument." + getName();
+        this.permission = "base.command.kit.argument." + getName();
     }
 
     @Override
