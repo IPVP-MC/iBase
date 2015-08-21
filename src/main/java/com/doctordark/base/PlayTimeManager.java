@@ -74,7 +74,7 @@ public class PlayTimeManager implements Listener {
             @Override
             public boolean execute(UUID uuid, long l) {
                 config.set("playing-times." + uuid.toString(), l);
-                return false;
+                return true;
             }
         });
 
