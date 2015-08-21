@@ -198,9 +198,9 @@ public enum ParticleEffect {
      */
     public void sphere(@Nullable Player player, Location location, float radius, float density, int intensity) {
         Validate.notNull(location, "Location cannot be null");
-        Validate.isTrue(radius > 0, "Radius must be positive");
-        Validate.isTrue(density > 0, "Density must be positive");
-        Validate.isTrue(intensity > 0, "Intensity must be positive");
+        Validate.isTrue(radius >= 0, "Radius must be positive");
+        Validate.isTrue(density >= 0, "Density must be positive");
+        Validate.isTrue(intensity >= 0, "Intensity must be positive");
 
         float deltaPitch = 180 / density;
         float deltaYaw = 360 / density;
@@ -228,7 +228,7 @@ public enum ParticleEffect {
     }
 
     private PacketPlayOutWorldParticles createPacket(float x, float y, float z, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
-        Validate.isTrue(speed > 0, "Speed must be positive");
+        Validate.isTrue(speed >= 0, "Speed must be positive");
         Validate.isTrue(amount > 0, "Cannot use less than one particle.");
         return new PacketPlayOutWorldParticles(name, x, y, z, offsetX, offsetY, offsetZ, speed, amount);
     }
