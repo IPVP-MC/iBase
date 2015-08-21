@@ -197,7 +197,6 @@ public enum ParticleEffect {
      * @param intensity the number of particles at each location
      */
     public void sphere(@Nullable Player player, Location location, float radius, float density, int intensity) {
-        Validate.notNull(player, "Player cannot be null");
         Validate.notNull(location, "Location cannot be null");
         Validate.isTrue(radius > 0, "Radius must be positive");
         Validate.isTrue(density > 0, "Density must be positive");
@@ -213,7 +212,13 @@ public enum ParticleEffect {
                 float x = radius * MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI) * -MathHelper.cos(-pitch * 0.017453292F) + (float) location.getX();
                 float y = radius * MathHelper.sin(-pitch * 0.017453292F) + (float) location.getY();
                 float z = radius * MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI) * -MathHelper.cos(-pitch * 0.017453292F) + (float) location.getZ();
-                display(player, new Location(world, x, y, z), 0f, 0f, 0f, 0f, intensity);
+
+                Location target = new Location(world, x, y, z);
+                if (player == null) {
+                    broadcast(target, 0f, 0f, 0f, 0f, intensity);
+                } else {
+                    display(player, target, 0f, 0f, 0f, 0f, intensity);
+                }
             }
         }
     }
