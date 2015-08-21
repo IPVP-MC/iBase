@@ -183,7 +183,7 @@ public enum ParticleEffect {
      * @param location  the {@link Location} of the center
      * @param radius    the radius of the sphere
      */
-    public void sphere(Player player, Location location, float radius) {
+    public void sphere(@Nullable Player player, Location location, float radius) {
         sphere(player, location, radius, 20f, 2);
     }
 
