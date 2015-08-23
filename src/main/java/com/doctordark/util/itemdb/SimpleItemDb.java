@@ -101,24 +101,24 @@ public class SimpleItemDb implements ItemDb {
 
     @Override
     public ItemStack getPotion(String id, int quantity) {
-        boolean splash = false;
-        boolean extended = false;
         int length = id.length();
-
         if (length <= 1) return null;
+
+        boolean splash = false;
         if (length > 1 && id.endsWith("s")) {
             id = id.substring(0, --length);
             splash = true;
+            if (length <= 1) return null;
         }
 
-        if (length <= 1) return null;
+        boolean extended = false;
         if (id.endsWith("e")) {
             id = id.substring(0, --length);
             extended = true;
+            if (length <= 1) return null;
         }
 
-        if (id.length() <= 1) return null;
-        Integer level = Ints.tryParse(id.substring(--length, id.length()));
+        Integer level = Ints.tryParse(id.substring(length - 1, length));
         id = id.substring(0, --length);
 
         PotionType type;
