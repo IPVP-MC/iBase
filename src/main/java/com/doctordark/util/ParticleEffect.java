@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
@@ -170,9 +171,26 @@ public enum ParticleEffect {
      * @param amount   the amount of particles to show
      */
     public void broadcast(Location location, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
+        this.broadcast(location, offsetX, offsetY, offsetZ, speed, amount, null);
+    }
+
+    /**
+     * Send this {@link ParticleEffect} to all online {@link Player}s
+     *
+     * @param location the {@link Location} to show at
+     * @param offsetX  the x range of the particle effect
+     * @param offsetY  the y range of the particle effect
+     * @param offsetZ  the z range of the particle effect
+     * @param speed    the speed (or color depending on the effect)
+     * @param amount   the amount of particles to show
+     * @param source   the source of this {@link ParticleEffect} or null
+     */
+    public void broadcast(Location location, float offsetX, float offsetY, float offsetZ, float speed, int amount, @Nullable Entity source) {
         Packet packet = createPacket(location, offsetX, offsetY, offsetZ, speed, amount);
         for (Player player : Bukkit.getOnlinePlayers()) {
-            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+            if (source == null || player.canSee(source)) {
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+            }
         }
     }
 
