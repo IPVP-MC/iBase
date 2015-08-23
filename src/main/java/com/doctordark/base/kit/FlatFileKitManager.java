@@ -3,6 +3,8 @@ package com.doctordark.base.kit;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.util.Config;
 import com.doctordark.util.GenericUtils;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,6 +16,7 @@ import org.bukkit.util.ChatPaginator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -22,6 +25,10 @@ import java.util.UUID;
 public class FlatFileKitManager implements KitManager {
 
     private Config config;
+
+    private final Map<String, Kit> kitNameMap = Maps.newHashMap();
+    private final Map<UUID, Kit> kitUUIDMap = Maps.newHashMap();
+
     private List<Kit> kits;
     private final BasePlugin plugin;
 
@@ -32,33 +39,38 @@ public class FlatFileKitManager implements KitManager {
 
     @Override
     public List<Kit> getKits() {
-        return kits;
+        return this.kits;
     }
 
     @Override
-    public boolean containsKit(Kit kit) {
-        return kits.contains(kit);
-    }
-
-    @Override
-    public void createKit(Kit kit) {
-        kits.add(kit);
-    }
-
-    @Override
-    public void removeKit(Kit kit) {
-        kits.remove(kit);
+    public Kit getKit(UUID uuid) {
+        return this.kitUUIDMap.get(uuid);
     }
 
     @Override
     public Kit getKit(String id) {
-        for (Kit kit : kits) {
-            if (kit.getName().equalsIgnoreCase(id)) {
-                return kit;
-            }
-        }
+        return this.kitNameMap.get(id);
+    }
 
-        return null;
+    @Override
+    public boolean containsKit(Kit kit) {
+        return this.kits.contains(kit);
+    }
+
+    @Override
+    public void createKit(Kit kit) {
+        if (this.kits.add(kit)) {
+            this.kitNameMap.put(kit.getName(), kit);
+            this.kitUUIDMap.put(kit.getUniqueID(), kit);
+        }
+    }
+
+    @Override
+    public void removeKit(Kit kit) {
+        if (this.kits.remove(kit)) {
+            this.kitNameMap.remove(kit.getName());
+            this.kitUUIDMap.remove(kit.getUniqueID());
+        }
     }
 
     @Override
@@ -72,14 +84,9 @@ public class FlatFileKitManager implements KitManager {
             int curUses = plugin.getUserManager().getUser(uuid).getKitUses(kit);
             int maxUses = kit.getMaximumUses();
 
-            List<String> lore = new ArrayList<>();
+            List<String> lore = Lists.newArrayList();
             if (player.hasPermission(kit.getPermission())) {
-                if (!kit.isEnabled()) {
-                    lore.add(ChatColor.RED + "Disabled");
-                } else if (kit.getDelayMillis() > 0L) {
-                    lore.add(ChatColor.YELLOW + DurationFormatUtils.formatDurationWords(kit.getDelayMillis(), true, true) + " cooldown");
-                }
-
+                lore.add(kit.isEnabled() ? ChatColor.YELLOW + DurationFormatUtils.formatDurationWords(kit.getDelayMillis(), true, true) + " cooldown" : ChatColor.RED + "Disabled");
                 if (maxUses != UNLIMITED_USES) {
                     lore.add(ChatColor.YELLOW + "Used " + curUses + '/' + maxUses + " times.");
                 }
@@ -90,9 +97,7 @@ public class FlatFileKitManager implements KitManager {
                         lore.add(ChatColor.WHITE + part);
                     }
                 }
-            } else {
-                lore.add(ChatColor.RED + "You do not own this kit.");
-            }
+            } else lore.add(ChatColor.RED + "You do not own this kit.");
 
             ItemStack cloned = stack.clone();
             ItemMeta meta = cloned.getItemMeta();
@@ -111,16 +116,19 @@ public class FlatFileKitManager implements KitManager {
 
         // Load the kits.
         Object object = config.get("kits");
-        if (!(object instanceof List)) {
-            kits = new ArrayList<>();
-        } else {
-            kits = GenericUtils.createList(object, Kit.class);
+        if (object instanceof List) {
+            this.kits = GenericUtils.createList(object, Kit.class);
+        } else this.kits = Lists.newArrayList();
+
+        for (Kit kit : this.kits) {
+            this.kitNameMap.put(kit.getName(), kit);
+            this.kitUUIDMap.put(kit.getUniqueID(), kit);
         }
     }
 
     @Override
     public void saveKitData() {
-        config.set("kits", kits);
-        config.save();
+        this.config.set("kits", this.kits);
+        this.config.save();
     }
 }
