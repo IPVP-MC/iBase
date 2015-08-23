@@ -143,7 +143,7 @@ public class BaseUser extends ServerParticipator {
     }
 
     public long getRemainingKitCooldown(Kit kit) {
-        long remaining = kitCooldownMap.get(kit.getName());
+        long remaining = kitCooldownMap.get(kit.getUniqueID());
         if (remaining == kitCooldownMap.getNoEntryValue()) return 0L;
         return remaining - System.currentTimeMillis();
     }
