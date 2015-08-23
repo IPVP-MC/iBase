@@ -103,19 +103,23 @@ public class SimpleItemDb implements ItemDb {
     public ItemStack getPotion(String id, int quantity) {
         boolean splash = false;
         boolean extended = false;
+        int length = id.length();
 
-        if (id.endsWith("s")) {
-            id = id.substring(0, id.length() - 1);
+        if (length <= 1) return null;
+        if (length > 1 && id.endsWith("s")) {
+            id = id.substring(0, --length);
             splash = true;
         }
 
+        if (length <= 1) return null;
         if (id.endsWith("e")) {
-            id = id.substring(0, id.length() - 1);
+            id = id.substring(0, --length);
             extended = true;
         }
 
-        Integer level = Ints.tryParse(id.substring(id.length() - 1, id.length()));
-        id = id.substring(0, id.length() - 1);
+        if (id.length() <= 1) return null;
+        Integer level = Ints.tryParse(id.substring(--length, id.length()));
+        id = id.substring(0, --length);
 
         PotionType type;
         switch (id.toLowerCase(Locale.ENGLISH)) {
@@ -156,10 +160,7 @@ public class SimpleItemDb implements ItemDb {
                 return null;
         }
 
-        if (level == null || level > type.getMaxLevel()) {
-            return null;
-        }
-
+        if (level == null || level > type.getMaxLevel()) return null;
         Potion potion = new Potion(type);
         potion.setLevel(level);
         potion.setSplash(splash);

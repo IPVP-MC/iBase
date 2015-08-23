@@ -39,7 +39,7 @@ public class ChatUtil {
     }
 
     public static Trans localFromItem(ItemStack stack) {
-        if (stack.getType() == Material.POTION) {
+        if (stack.getType() == Material.POTION && stack.getData().getData() == (short) 0) {
             Potion potion = Potion.fromItemStack(stack);
             // Cleaner potion names.
             if (potion != null) {
