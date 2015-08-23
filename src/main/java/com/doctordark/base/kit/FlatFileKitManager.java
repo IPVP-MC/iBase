@@ -26,7 +26,7 @@ public class FlatFileKitManager implements KitManager {
 
     private Config config;
 
-    private final Map<String, Kit> kitNameMap = Maps.newHashMap();
+    private final Map<String, Kit> kitNameMap = Maps.newTreeMap(String.CASE_INSENSITIVE_ORDER);
     private final Map<UUID, Kit> kitUUIDMap = Maps.newHashMap();
 
     private List<Kit> kits;
