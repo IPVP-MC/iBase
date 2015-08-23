@@ -19,6 +19,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
 
+/**
+ * Deprecated as the BungeeCord Chat API should be used instead
+ */
+@Deprecated
 public class ChatUtil {
 
     /**
