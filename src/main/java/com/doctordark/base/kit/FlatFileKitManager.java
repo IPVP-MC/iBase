@@ -1,6 +1,7 @@
 package com.doctordark.base.kit;
 
 import com.doctordark.base.BasePlugin;
+import com.doctordark.base.kit.event.KitRenameEvent;
 import com.doctordark.util.Config;
 import com.doctordark.util.GenericUtils;
 import com.google.common.collect.Lists;
@@ -9,12 +10,14 @@ import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.ChatPaginator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -22,7 +25,7 @@ import java.util.UUID;
 /**
  * Implementation of the {@link KitManager} saving to YAML.
  */
-public class FlatFileKitManager implements KitManager {
+public class FlatFileKitManager implements KitManager, Listener {
 
     private Config config;
 
@@ -35,6 +38,13 @@ public class FlatFileKitManager implements KitManager {
     public FlatFileKitManager(BasePlugin plugin) {
         this.plugin = plugin;
         this.reloadKitData();
+        Bukkit.getPluginManager().registerEvents(this, plugin);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onKitRename(KitRenameEvent event) {
+        this.kitNameMap.remove(event.getOldName());
+        this.kitNameMap.put(event.getNewName(), event.getKit());
     }
 
     @Override
