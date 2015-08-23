@@ -1,7 +1,6 @@
 package com.doctordark.base.kit;
 
 import com.doctordark.base.BasePlugin;
-import com.doctordark.base.kit.argument.KitBypassplaytimeArgument;
 import com.doctordark.base.kit.event.KitApplyEvent;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.util.ParticleEffect;
@@ -32,8 +31,6 @@ import java.util.UUID;
  * Listener that handles {@link Kit} based events.
  */
 public class KitListener implements Listener {
-
-    private static final ImmutableList<String> ALLOWED_KITS = ImmutableList.of("Fishing", "Feast");
 
     private final BasePlugin plugin;
 
@@ -150,12 +147,9 @@ public class KitListener implements Listener {
         }
 
         UUID uuid = player.getUniqueId();
-        long curPlayTime = BasePlugin.getPlugin().getPlayTimeManager().getTotalPlayTime(uuid);
-        long minPlayTimeKits = KitManager.MIN_PLAYTIME_KITS;
-        if (!KitBypassplaytimeArgument.bypassPlaytime && curPlayTime < minPlayTimeKits && !ALLOWED_KITS.contains(kit.getName())) {
-            player.sendMessage(ChatColor.RED + "Kits (with the exception of " + StringUtils.join(ALLOWED_KITS, ", ") + " are disabled until you have at least " +
-                    DurationFormatUtils.formatDurationWords(minPlayTimeKits, true, true) + " playtime. " +
-                    "You have only played for " + DurationFormatUtils.formatDurationWords(curPlayTime, true, true) + '.');
+        if (BasePlugin.getPlugin().getPlayTimeManager().getTotalPlayTime(uuid) < kit.getMinPlaytimeMillis()) {
+            player.sendMessage(ChatColor.RED + "You need at least " + DurationFormatUtils.formatDurationWords(kit.getMinPlaytimeMillis(), true, true) +
+                    " minimum playtime to use kit " + kit.getName() + '.');
 
             event.setCancelled(true);
             return;
@@ -176,7 +170,6 @@ public class KitListener implements Listener {
         if (curUses >= maxUses && maxUses != FlatFileKitManager.UNLIMITED_USES) {
             player.sendMessage(ChatColor.RED + "You have already used this kit " + curUses + '/' + maxUses + " times.");
             event.setCancelled(true);
-            return;
         }
     }
 

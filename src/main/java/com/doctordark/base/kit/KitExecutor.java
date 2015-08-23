@@ -2,7 +2,6 @@ package com.doctordark.base.kit;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.kit.argument.KitApplyArgument;
-import com.doctordark.base.kit.argument.KitBypassplaytimeArgument;
 import com.doctordark.base.kit.argument.KitCreateArgument;
 import com.doctordark.base.kit.argument.KitDeleteArgument;
 import com.doctordark.base.kit.argument.KitDescriptionArgument;
@@ -16,6 +15,7 @@ import com.doctordark.base.kit.argument.KitSetImageArgument;
 import com.doctordark.base.kit.argument.KitSetIndexArgument;
 import com.doctordark.base.kit.argument.KitSetItemsArgument;
 import com.doctordark.base.kit.argument.KitSetMaxUsesArgument;
+import com.doctordark.base.kit.argument.KitSetminplaytimeArgument;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.command.ArgumentExecutor;
 import com.doctordark.util.command.CommandArgument;
@@ -39,7 +39,6 @@ public class KitExecutor extends ArgumentExecutor {
         this.plugin = plugin;
 
         addArgument(new KitApplyArgument(plugin));
-        addArgument(new KitBypassplaytimeArgument(plugin));
         addArgument(new KitCreateArgument(plugin));
         addArgument(new KitDeleteArgument(plugin));
         addArgument(new KitDescriptionArgument(plugin));
@@ -53,6 +52,7 @@ public class KitExecutor extends ArgumentExecutor {
         addArgument(new KitSetIndexArgument(plugin));
         addArgument(new KitSetItemsArgument(plugin));
         addArgument(new KitSetMaxUsesArgument(plugin));
+        addArgument(new KitSetminplaytimeArgument(plugin));
     }
 
     @Override

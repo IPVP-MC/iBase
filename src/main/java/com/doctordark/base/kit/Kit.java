@@ -38,6 +38,7 @@ public class Kit implements ConfigurationSerializable {
     private ItemStack image;
     private boolean enabled = true;
     private long delayMillis;
+    private long minPlaytimeMillis;
     private int maximumUses;
 
     /**
@@ -284,6 +285,24 @@ public class Kit implements ConfigurationSerializable {
      */
     public void setDelayMillis(long delayMillis) {
         this.delayMillis = delayMillis;
+    }
+
+    /**
+     * Gets the minimum playing time in milliseconds before a {@link Player} can use this {@link Kit}.
+     *
+     * @return the time in milliseconds
+     */
+    public long getMinPlaytimeMillis() {
+        return minPlaytimeMillis;
+    }
+
+    /**
+     * Sets the minimum playing time in milliseconds before a {@link Player} can use this {@link Kit}.
+     *
+     * @param minPlaytimeMillis the time in milliseconds to set
+     */
+    public void setMinPlaytimeMillis(long minPlaytimeMillis) {
+        this.minPlaytimeMillis = minPlaytimeMillis;
     }
 
     /**

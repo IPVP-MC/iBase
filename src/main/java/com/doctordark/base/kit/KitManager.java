@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
  */
 public interface KitManager {
 
-    long MIN_PLAYTIME_KITS = TimeUnit.HOURS.toMillis(2L);
     int UNLIMITED_USES = Integer.MAX_VALUE;
 
     /**
