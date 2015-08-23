@@ -86,7 +86,7 @@ public class Kit implements ConfigurationSerializable {
      * @param map the map to construct from
      */
     public Kit(Map<String, Object> map) {
-        this.uniqueID = map.containsKey("uniqueID") ? UUID.fromString((String) map.get("uniqueID")) : UUID.randomUUID();
+        this.uniqueID = UUID.fromString((String) map.get("uniqueID"));
 
         this.name = (String) map.get("name");
         this.description = (String) map.get("description");
@@ -107,7 +107,7 @@ public class Kit implements ConfigurationSerializable {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = Maps.newLinkedHashMap();
-        if (uniqueID != null) map.put("uniqueID", uniqueID.toString());
+        map.put("uniqueID", uniqueID.toString());
         map.put("name", name);
         map.put("description", description);
         map.put("enabled", enabled);

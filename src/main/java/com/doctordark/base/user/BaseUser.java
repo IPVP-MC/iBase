@@ -10,6 +10,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.net.InetAddresses;
+import net.minecraft.server.v1_7_R4.AchievementList;
 import net.minecraft.server.v1_7_R4.DataWatcher;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityMetadata;
@@ -49,8 +50,8 @@ public class BaseUser extends ServerParticipator {
     private boolean glintEnabled = true;
     private long lastGlintUse;
 
-    private final TObjectIntMap<String> kitUseMap = new TObjectIntHashMap<>();
-    private final TObjectLongMap<String> kitCooldownMap = new TObjectLongHashMap<>();
+    private final TObjectIntMap<UUID> kitUseMap = new TObjectIntHashMap<>();
+    private final TObjectLongMap<UUID> kitCooldownMap = new TObjectLongHashMap<>();
 
     /**
      * @see ServerParticipator#ServerParticipator(UUID)
@@ -66,38 +67,42 @@ public class BaseUser extends ServerParticipator {
         super(map);
 
         this.addressHistories.addAll(GenericUtils.createList(map.get("addressHistories"), String.class));
-        if (map.containsKey("nameHistories")) {
-            this.nameHistories.addAll(GenericUtils.createList(map.get("nameHistories"), NameHistory.class));
+
+        Object object = map.get("nameHistories");
+        if (object != null) {
+            this.nameHistories.addAll(GenericUtils.createList(object, NameHistory.class));
         }
 
-        if (map.containsKey("backLocation")) {
-            Object object = map.get("backLocation");
-            if (object instanceof PersistableLocation) {
-                PersistableLocation persistableLocation = ((PersistableLocation) object);
-                if (persistableLocation.getWorld() != null) {
-                    this.backLocation = ((PersistableLocation) object).getLocation();
-                }
+        if ((object = map.get("backLocation")) instanceof PersistableLocation) {
+            PersistableLocation persistableLocation = ((PersistableLocation) object);
+            if (persistableLocation.getWorld() != null) {
+                this.backLocation = ((PersistableLocation) object).getLocation();
             }
         }
 
-        if (map.containsKey("messagingSounds")) {
-            this.messagingSounds = (Boolean) map.get("messagingSounds");
+        if ((object = map.get("messagingSounds")) instanceof Boolean) {
+            this.messagingSounds = (Boolean) object;
         }
 
-        if (map.containsKey("vanished")) {
-            this.vanished = (Boolean) map.get("vanished");
+        if ((object = map.get("vanished")) instanceof Boolean) {
+            this.vanished = (Boolean) object;
         }
 
-        if (map.containsKey("glintEnabled")) {
-            this.glintEnabled = (Boolean) map.get("glintEnabled");
+        if ((object = map.get("glintEnabled")) instanceof Boolean) {
+            this.glintEnabled = (Boolean) object;
         }
 
-        if (map.containsKey("lastGlintUse")) {
-            this.lastGlintUse = Long.parseLong((String) map.get("lastGlintUse"));
+        if ((object = map.get("lastGlintUse")) instanceof String) {
+            this.lastGlintUse = Long.parseLong((String) object);
         }
 
-        this.kitUseMap.putAll(GenericUtils.castMap(map.get("kit-use-map"), String.class, Integer.class));
-        this.kitCooldownMap.putAll(GenericUtils.castMap(map.get("kit-cooldown-map"), String.class, Long.class));
+        for (Map.Entry<String, Integer> entry : GenericUtils.castMap(map.get("kit-use-map"), String.class, Integer.class).entrySet()) {
+            this.kitUseMap.put(UUID.fromString(entry.getKey()), entry.getValue());
+        }
+
+        for (Map.Entry<String, String> entry : GenericUtils.castMap(map.get("kit-cooldown-map"), String.class, String.class).entrySet()) {
+            this.kitCooldownMap.put(UUID.fromString(entry.getKey()), Long.parseLong(entry.getValue()));
+        }
     }
 
     @Override
@@ -115,25 +120,24 @@ public class BaseUser extends ServerParticipator {
         map.put("lastGlintUse", Long.toString(lastGlintUse));
 
         Map<String, Integer> kitUseSaveMap = new HashMap<>(kitUseMap.size());
-        kitUseMap.forEachEntry(new TObjectIntProcedure<String>() {
+        kitUseMap.forEachEntry(new TObjectIntProcedure<UUID>() {
             @Override
-            public boolean execute(String s, int i) {
-                kitUseSaveMap.put(s, i);
+            public boolean execute(UUID uuid, int value) {
+                kitUseSaveMap.put(uuid.toString(), value);
+                return true;
+            }
+        });
+
+        Map<String, String> kitCooldownSaveMap = new HashMap<>(kitCooldownMap.size());
+        kitCooldownMap.forEachEntry(new TObjectLongProcedure<UUID>() {
+            @Override
+            public boolean execute(UUID uuid, long value) {
+                kitCooldownSaveMap.put(uuid.toString(), Long.toString(value));
                 return true;
             }
         });
 
         map.put("kit-use-map", kitUseSaveMap);
-
-        Map<String, Integer> kitCooldownSaveMap = new HashMap<>(kitCooldownMap.size());
-        kitCooldownMap.forEachEntry(new TObjectLongProcedure<String>() {
-            @Override
-            public boolean execute(String s, long i) {
-                kitCooldownMap.put(s, i);
-                return true;
-            }
-        });
-
         map.put("kit-cooldown-map", kitCooldownSaveMap);
         return map;
     }
@@ -145,16 +149,16 @@ public class BaseUser extends ServerParticipator {
     }
 
     public void updateKitCooldown(Kit kit) {
-        kitCooldownMap.put(kit.getName(), System.currentTimeMillis() + kit.getDelayMillis());
+        kitCooldownMap.put(kit.getUniqueID(), System.currentTimeMillis() + kit.getDelayMillis());
     }
 
     public int getKitUses(Kit kit) {
-        int i = this.kitUseMap.get(kit.getName());
-        return i == this.kitUseMap.getNoEntryValue() ? 0 : i;
+        int result = this.kitUseMap.get(kit.getUniqueID());
+        return result == this.kitUseMap.getNoEntryValue() ? 0 : result;
     }
 
     public int incrementKitUses(Kit kit) {
-        return kitUseMap.adjustOrPutValue(kit.getName(), 1, 1);
+        return kitUseMap.adjustOrPutValue(kit.getUniqueID(), 1, 1);
     }
 
     @Override
