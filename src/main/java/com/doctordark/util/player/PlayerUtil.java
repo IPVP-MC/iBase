@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.doctordark.base.BasePlugin;
+import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -16,6 +17,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,8 +26,9 @@ import java.util.Map;
  * Created by J on 7/16/2015.
  */
 public class PlayerUtil {
-    private static final Map<Player, Location> frozen = new HashMap<>();
-    private static final Map<Player, PlayerCache> playerCaches = new HashMap<>();
+    private static final Map<Player, Location> frozen = Maps.newHashMap();
+    private static final Map<Player, PlayerCache> playerCaches = Maps.newHashMap();
+    private static final Map<Player, Long> lastSent = Maps.newHashMap();
     static {
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
@@ -41,7 +44,11 @@ public class PlayerUtil {
                             location.setYaw(to.getYaw());
                             location.setPitch(to.getPitch());
                             event.setTo(location);
-                            player.sendMessage(ChatColor.YELLOW + "You are currently " + ChatColor.AQUA + "frozen!");
+                            if(lastSent.containsKey(player) && new Date().getTime() - lastSent.get(player) <= 3000) {
+                                return;
+                            }
+                            player.sendMessage(ChatColor.YELLOW + "You are currently " + ChatColor.AQUA + "frozen" +
+                                    ChatColor.YELLOW + "!");
                         }
                     }
                 }
