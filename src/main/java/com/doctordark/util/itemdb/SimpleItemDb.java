@@ -1,6 +1,8 @@
 package com.doctordark.util.itemdb;
 
 import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Ordering;
+import com.google.common.collect.TreeMultimap;
 import com.google.common.primitives.Ints;
 import net.minecraft.util.gnu.trove.map.TObjectIntMap;
 import net.minecraft.util.gnu.trove.map.TObjectShortMap;
@@ -18,6 +20,7 @@ import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -37,7 +40,7 @@ public class SimpleItemDb implements ItemDb {
     };
 
     private final TObjectIntMap<String> items = new TObjectIntHashMap<>();
-    private final ArrayListMultimap<ItemData, String> names = ArrayListMultimap.create();
+    private final TreeMultimap<ItemData, String> names = TreeMultimap.create(Ordering.allEqual(), COMPARATOR);
     private final Map<ItemData, String> primaryName = new HashMap<>();
     private final TObjectShortMap<String> durabilities = new TObjectShortHashMap<>();
     private final ManagedFile file;
@@ -75,18 +78,23 @@ public class SimpleItemDb implements ItemDb {
                 continue;
             }
 
-            final int numeric = Integer.parseInt(parts[1]);
+            Material material;
+            try {
+                final int numeric = Integer.parseInt(parts[1]);
+                material = Material.getMaterial(numeric);
+            } catch (IllegalArgumentException ex) {
+                material = Material.getMaterial(parts[1]);
+            }
+
             final short data = parts.length > 2 && !parts[2].equals("0") ? Short.parseShort(parts[2]) : 0;
             String itemName = parts[0].toLowerCase(Locale.ENGLISH);
 
             durabilities.put(itemName, data);
-            items.put(itemName, numeric);
+            items.put(itemName, material.getId());
 
-            ItemData itemData = new ItemData(numeric, data);
+            ItemData itemData = new ItemData(material, data);
             if (names.containsKey(itemData)) {
-                List<String> nameList = names.get(itemData);
-                nameList.add(itemName);
-                Collections.sort(nameList, COMPARATOR);
+                names.get(itemData).add(itemName);
             } else {
                 names.put(itemData, itemName);
                 primaryName.put(itemData, itemName);
@@ -249,9 +257,7 @@ public class SimpleItemDb implements ItemDb {
         List<ItemStack> items = new ArrayList<>();
         PlayerInventory inventory = player.getInventory();
 
-        if (args.length < 1) {
-            items.add(player.getItemInHand());
-        } else if (args[0].equalsIgnoreCase("hand")) {
+        if (args.length < 1 || args[0].equalsIgnoreCase("hand")) {
             items.add(player.getItemInHand());
         } else if (args[0].equalsIgnoreCase("inventory") || args[0].equalsIgnoreCase("invent") || args[0].equalsIgnoreCase("all")) {
             for (ItemStack stack : inventory.getContents()) {
@@ -284,10 +290,10 @@ public class SimpleItemDb implements ItemDb {
     @Deprecated
     @Override
     public String getPrimaryName(ItemStack item) {
-        ItemData itemData = new ItemData(item.getTypeId(), item.getDurability());
+        ItemData itemData = new ItemData(item.getType(), item.getDurability());
         String name = primaryName.get(itemData);
         if (name == null) {
-            itemData = new ItemData(item.getTypeId(), (short) 0);
+            itemData = new ItemData(item.getType(), (short) 0);
             name = primaryName.get(itemData);
             if (name == null) {
                 return null;
@@ -299,20 +305,21 @@ public class SimpleItemDb implements ItemDb {
 
     @Override
     public String getNames(ItemStack item) {
-        ItemData itemData = new ItemData(item.getTypeId(), item.getDurability());
-        List<String> nameList = names.get(itemData);
+        ItemData itemData = new ItemData(item.getType(), item.getDurability());
+        Collection<String> nameList = names.get(itemData);
         if (nameList == null) {
-            itemData = new ItemData(item.getTypeId(), (short) 0);
+            itemData = new ItemData(item.getType(), (short) 0);
             nameList = names.get(itemData);
             if (nameList == null) {
                 return null;
             }
         }
 
+        List<String> list = new ArrayList<>(nameList);
         if (nameList.size() > 15) {
-            nameList = nameList.subList(0, 14);
+            list = list.subList(0, 14);
         }
 
-        return StringUtils.join(nameList, ", ");
+        return StringUtils.join(list, ", ");
     }
 }
