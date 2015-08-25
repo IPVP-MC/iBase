@@ -101,7 +101,7 @@ public final class InventoryUtils {
             }
         }
 
-        if (result) return true;
+        if (!result) return false;
         if (checkArmour && inventory instanceof PlayerInventory) {
             contents = ((PlayerInventory) inventory).getArmorContents();
             for (ItemStack content : contents) {
