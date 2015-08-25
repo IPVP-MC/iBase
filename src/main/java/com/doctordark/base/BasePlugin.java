@@ -89,7 +89,7 @@ public class BasePlugin extends JavaPlugin {
             try {
                 ProtocolHook.hook(this);
             } catch (Exception ex) {
-                Bukkit.getLogger().severe("Error hooking into ProtocolLib from Base.");
+                getLogger().severe("Error hooking into ProtocolLib from Base.");
                 ex.printStackTrace();
             }
         }

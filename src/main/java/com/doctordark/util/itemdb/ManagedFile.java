@@ -1,5 +1,6 @@
 package com.doctordark.util.itemdb;
 
+import com.doctordark.base.BasePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -31,7 +32,7 @@ public class ManagedFile {
             try {
                 copyResourceAscii('/' + filename, file);
             } catch (IOException ex) {
-                Bukkit.getLogger().log(Level.SEVERE, "items.csv has not been loaded", ex);
+                plugin.getLogger().log(Level.SEVERE, "items.csv has not been loaded", ex);
             }
         }
     }
@@ -90,7 +91,7 @@ public class ManagedFile {
                 return lines;
             }
         } catch (IOException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
+            BasePlugin.getPlugin().getLogger().log(Level.SEVERE, ex.getMessage(), ex);
             return Collections.emptyList();
         }
     }

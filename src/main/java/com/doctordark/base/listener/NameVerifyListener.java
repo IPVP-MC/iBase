@@ -20,7 +20,7 @@ public class NameVerifyListener implements Listener {
             Player player = event.getPlayer();
             String playerName = player.getName();
             if (!NAME_PATTERN.matcher(playerName).matches()) {
-                Bukkit.getLogger().info("Name verification: " + playerName + " was kicked for having an invalid name " +
+                plugin.getLogger().info("Name verification: " + playerName + " was kicked for having an invalid name " +
                         "(to disable, turn off the name-verification feature in the config of 'Base' plugin)");
 
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Invalid player name detected.");
