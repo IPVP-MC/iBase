@@ -6,6 +6,8 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.doctordark.base.BasePlugin;
 import com.google.common.collect.Maps;
+import net.minecraft.util.gnu.trove.map.TObjectLongMap;
+import net.minecraft.util.gnu.trove.map.hash.TObjectLongHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -19,14 +21,13 @@ import org.bukkit.potion.PotionEffect;
 
 import java.util.Map;
 
-
 /**
  * Created by J on 7/16/2015.
  */
 public class PlayerUtil {
     private static final Map<Player, Location> frozen = Maps.newHashMap();
     private static final Map<Player, PlayerCache> playerCaches = Maps.newHashMap();
-    private static final Map<Player, Long> lastSent = Maps.newHashMap();
+    private static final TObjectLongMap<Player> lastSent = new TObjectLongHashMap<>();
     static {
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
@@ -43,8 +44,8 @@ public class PlayerUtil {
                             event.setTo(location);
 
                             long millis = System.currentTimeMillis();
-                            Long lastSentMillis = lastSent.get(player);
-                            if (lastSentMillis != null && millis - lastSentMillis <= 3000) {
+                            long lastSentMillis = lastSent.get(player);
+                            if (lastSentMillis != lastSent.getNoEntryValue() && millis - lastSentMillis <= 3000) {
                                 return;
                             }
 
