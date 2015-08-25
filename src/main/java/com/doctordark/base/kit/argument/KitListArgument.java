@@ -44,7 +44,7 @@ public class KitListArgument extends CommandArgument {
         for (Kit kit : kits) {
             String permission = kit.getPermission();
             if (permission == null || sender.hasPermission(permission)) {
-                kitNames.add(ChatColor.GREEN + kit.getName());
+                kitNames.add(ChatColor.GREEN + kit.getDisplayName());
             }
         }
 

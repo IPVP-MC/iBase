@@ -47,14 +47,14 @@ public class KitDescriptionArgument extends CommandArgument {
 
         if (args[2].equalsIgnoreCase("none") || args[2].equalsIgnoreCase("null")) {
             kit.setDescription(null);
-            sender.sendMessage(ChatColor.YELLOW + "Removed description of kit " + kit.getName() + '.');
+            sender.sendMessage(ChatColor.YELLOW + "Removed description of kit " + kit.getDisplayName() + '.');
             return true;
         }
 
         String description = StringUtils.join(args, ' ', 2, args.length);
         kit.setDescription(description);
 
-        sender.sendMessage(ChatColor.YELLOW + "Set description of kit " + kit.getName() + " to " + description + '.');
+        sender.sendMessage(ChatColor.YELLOW + "Set description of kit " + kit.getDisplayName() + " to " + description + '.');
         return true;
     }
 

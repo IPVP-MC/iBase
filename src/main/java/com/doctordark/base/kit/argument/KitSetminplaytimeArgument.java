@@ -56,8 +56,7 @@ public class KitSetminplaytimeArgument extends CommandArgument {
         }
 
         kit.setMinPlaytimeMillis(duration);
-
-        sender.sendMessage(ChatColor.YELLOW + "Set minimum playtime to use kit " + kit.getName() + " at " + DurationFormatUtils.formatDurationWords(duration, true, true) + '.');
+        sender.sendMessage(ChatColor.YELLOW + "Set minimum playtime to use kit " + kit.getDisplayName() + " at " + kit.getMinPlaytimeWords() + '.');
         return true;
     }
 

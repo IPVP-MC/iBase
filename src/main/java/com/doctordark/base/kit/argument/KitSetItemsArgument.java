@@ -57,7 +57,7 @@ public class KitSetItemsArgument extends CommandArgument {
         kit.setArmour(inventory.getArmorContents());
         kit.setEffects(player.getActivePotionEffects());
 
-        sender.sendMessage(ChatColor.AQUA + "Set the items of kit " + kit.getName() + " as your current inventory.");
+        sender.sendMessage(ChatColor.AQUA + "Set the items of kit " + kit.getDisplayName() + " as your current inventory.");
         return true;
     }
 

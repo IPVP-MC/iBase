@@ -69,14 +69,14 @@ public class KitSetIndexArgument extends CommandArgument {
         int previousIndex = kits.indexOf(kit);
 
         if (newIndex == previousIndex) {
-            sender.sendMessage(ChatColor.RED + "Index of kit " + kit.getName() + " is already " + newIndex + '.');
+            sender.sendMessage(ChatColor.RED + "Index of kit " + kit.getDisplayName() + " is already " + newIndex + '.');
             return true;
         }
 
         kits.remove(kit);
         kits.add(newIndex, kit);
 
-        sender.sendMessage(ChatColor.AQUA + "Set the index of kit " + args[1] + " from " + previousIndex + " to " + newIndex + '.');
+        sender.sendMessage(ChatColor.AQUA + "Set the index of kit " + kit.getDisplayName() + " from " + previousIndex + " to " + newIndex + '.');
         return true;
     }
 

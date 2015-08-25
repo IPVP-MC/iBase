@@ -6,7 +6,6 @@ import com.doctordark.util.Config;
 import com.doctordark.util.GenericUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -83,22 +82,24 @@ public class FlatFileKitManager implements KitManager, Listener {
         }
     }
 
+    private static final int INV_WIDTH = 9;
+
     @Override
     public Inventory getGui(Player player) {
         UUID uuid = player.getUniqueId();
-        Inventory inventory = Bukkit.createInventory(player, ((kits.size() + 8) / 9 * 9), ChatColor.BLUE + "Kit Selector");
+        Inventory inventory = Bukkit.createInventory(player, (kits.size() + INV_WIDTH - 1) / INV_WIDTH * INV_WIDTH, ChatColor.BLUE + "Kit Selector");
         for (Kit kit : kits) {
             ItemStack stack = kit.getImage();
             String description = kit.getDescription();
 
-            int curUses = plugin.getUserManager().getUser(uuid).getKitUses(kit);
-            int maxUses = kit.getMaximumUses();
-
-            List<String> lore = Lists.newArrayList();
-            if (player.hasPermission(kit.getPermission())) {
-                lore.add(kit.isEnabled() ? ChatColor.YELLOW + DurationFormatUtils.formatDurationWords(kit.getDelayMillis(), true, true) + " cooldown" : ChatColor.RED + "Disabled");
+            final List<String> lore;
+            String kitPermission = kit.getPermission();
+            if (kitPermission == null || player.hasPermission(kitPermission)) {
+                lore = Lists.newArrayList();
+                lore.add(kit.isEnabled() ? ChatColor.YELLOW + kit.getDelayWords() + " cooldown" : ChatColor.RED + "Disabled");
+                int maxUses = kit.getMaximumUses();
                 if (maxUses != UNLIMITED_USES) {
-                    lore.add(ChatColor.YELLOW + "Used " + curUses + '/' + maxUses + " times.");
+                    lore.add(ChatColor.YELLOW + "Used " + plugin.getUserManager().getUser(uuid).getKitUses(kit) + '/' + maxUses + " times.");
                 }
 
                 if (description != null) {
@@ -107,9 +108,9 @@ public class FlatFileKitManager implements KitManager, Listener {
                         lore.add(ChatColor.WHITE + part);
                     }
                 }
-            } else lore.add(ChatColor.RED + "You do not own this kit.");
+            } else lore = Lists.newArrayList(ChatColor.RED + "You do not own this kit.");
 
-            ItemStack cloned = stack.clone();
+            ItemStack cloned = stack.clone(); //TODO: cloning necessary?
             ItemMeta meta = cloned.getItemMeta();
             meta.setDisplayName(ChatColor.GREEN + kit.getName());
             meta.setLore(lore);

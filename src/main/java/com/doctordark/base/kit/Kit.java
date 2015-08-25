@@ -2,7 +2,9 @@ package com.doctordark.base.kit;
 
 import com.doctordark.base.kit.event.KitApplyEvent;
 import com.doctordark.util.GenericUtils;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -37,8 +39,13 @@ public class Kit implements ConfigurationSerializable {
     protected Collection<PotionEffect> effects;
     protected ItemStack image;
     protected boolean enabled = true;
+
     protected long delayMillis;
+    protected String delayWords;
+
     protected long minPlaytimeMillis;
+    protected String minPlaytimeWords;
+
     protected int maximumUses;
 
     /**
@@ -88,20 +95,20 @@ public class Kit implements ConfigurationSerializable {
     public Kit(Map<String, Object> map) {
         this.uniqueID = UUID.fromString((String) map.get("uniqueID"));
 
-        this.name = (String) map.get("name");
-        this.description = (String) map.get("description");
-        this.enabled = (boolean) (Boolean) map.get("enabled");
-        this.effects = GenericUtils.createList(map.get("effects"), PotionEffect.class);
+        this.setName((String) map.get("name"));
+        this.setDescription((String) map.get("description"));
+        this.setEnabled((Boolean) map.get("enabled"));
+        this.setEffects(GenericUtils.createList(map.get("effects"), PotionEffect.class));
 
         List<ItemStack> items = GenericUtils.createList(map.get("items"), ItemStack.class);
-        this.items = items.toArray(new ItemStack[items.size()]);
+        this.setItems(items.toArray(new ItemStack[items.size()]));
 
         List<ItemStack> armour = GenericUtils.createList(map.get("armour"), ItemStack.class);
-        this.armour = armour.toArray(new ItemStack[armour.size()]);
+        this.setArmour(armour.toArray(new ItemStack[armour.size()]));
 
         this.setImage((ItemStack) map.get("image"));
-        this.delayMillis = Long.parseLong((String) map.get("delay"));
-        this.maximumUses = (Integer) map.get("maxUses");
+        this.setDelayMillis(Long.parseLong((String) map.get("delay")));
+        this.setMaximumUses((Integer) map.get("maxUses"));
     }
 
     @Override
@@ -135,6 +142,15 @@ public class Kit implements ConfigurationSerializable {
      * @return the name
      */
     public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets the display name of this {@link Kit}.
+     *
+     * @return the friendly display name
+     */
+    public String getDisplayName() {
         return name;
     }
 
@@ -180,6 +196,7 @@ public class Kit implements ConfigurationSerializable {
      * @param items the items to set
      */
     public void setItems(ItemStack[] items) {
+        // Deep clone the array //TODO: necessary?
         int length = items.length;
         this.items = new ItemStack[length];
         for (int i = 0; i < length; i++) {
@@ -203,6 +220,7 @@ public class Kit implements ConfigurationSerializable {
      * @param armour the armour to set
      */
     public void setArmour(ItemStack[] armour) {
+        // Deep clone the array //TODO: necessary?
         int length = armour.length;
         this.armour = new ItemStack[length];
         for (int i = 0; i < length; i++) {
@@ -278,13 +296,22 @@ public class Kit implements ConfigurationSerializable {
         return delayMillis;
     }
 
+    public String getDelayWords() {
+        return DurationFormatUtils.formatDurationWords(delayMillis, true, true);
+    }
+
     /**
      * Sets the delay for using this {@link Kit} in milliseconds.
      *
      * @param delayMillis the delay to set in milliseconds
      */
     public void setDelayMillis(long delayMillis) {
-        this.delayMillis = delayMillis;
+        if (this.delayMillis != delayMillis) {
+            Preconditions.checkArgument(minPlaytimeMillis >= 0L, "Minimum delay millis cannot be negative");
+
+            this.delayMillis = delayMillis;
+            this.delayWords = DurationFormatUtils.formatDurationWords(delayMillis, true, true);
+        }
     }
 
     /**
@@ -296,13 +323,22 @@ public class Kit implements ConfigurationSerializable {
         return minPlaytimeMillis;
     }
 
+    public String getMinPlaytimeWords() {
+        return minPlaytimeWords;
+    }
+
     /**
      * Sets the minimum playing time in milliseconds before a {@link Player} can use this {@link Kit}.
      *
      * @param minPlaytimeMillis the time in milliseconds to set
      */
     public void setMinPlaytimeMillis(long minPlaytimeMillis) {
-        this.minPlaytimeMillis = minPlaytimeMillis;
+        if (this.minPlaytimeMillis != minPlaytimeMillis) {
+            Preconditions.checkArgument(minPlaytimeMillis >= 0L, "Minimum playtime millis cannot be negative");
+
+            this.minPlaytimeMillis = minPlaytimeMillis;
+            this.minPlaytimeWords = DurationFormatUtils.formatDurationWords(minPlaytimeMillis, true, true);
+        }
     }
 
     /**
@@ -320,6 +356,7 @@ public class Kit implements ConfigurationSerializable {
      * @param maximumUses the maximum uses to set
      */
     public void setMaximumUses(int maximumUses) {
+        Preconditions.checkArgument(maximumUses >= 0, "Maximum uses cannot be negative");
         this.maximumUses = maximumUses;
     }
 
@@ -353,11 +390,13 @@ public class Kit implements ConfigurationSerializable {
             player.setItemOnCursor(new ItemStack(Material.AIR, 1));
         }
 
-        PlayerInventory inventory = player.getInventory();
         player.addPotionEffects(effects);
 
+        PlayerInventory inventory = player.getInventory();
         Location location = player.getLocation();
         World world = player.getWorld();
+
+        // Fill the inventory
         for (ItemStack item : items) {
             if (item == null || item.getType() == Material.AIR) continue;
 
@@ -367,6 +406,7 @@ public class Kit implements ConfigurationSerializable {
             }
         }
 
+        // Fill the armour
         for (int i = Math.min(3, armour.length); i >= 0; i--) {
             ItemStack stack = armour[i];
             if (stack == null || stack.getType() == Material.AIR) {
@@ -384,6 +424,7 @@ public class Kit implements ConfigurationSerializable {
             }
         }
 
+        // The kit was safely equipped.
         if (inform) {
             player.sendMessage(ChatColor.AQUA + "Kit " + ChatColor.GREEN + name + ChatColor.AQUA + " has been applied.");
         }

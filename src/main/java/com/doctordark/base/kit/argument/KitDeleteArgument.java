@@ -48,7 +48,6 @@ public class KitDeleteArgument extends CommandArgument {
 
         KitRemoveEvent event = new KitRemoveEvent(kit);
         Bukkit.getPluginManager().callEvent(event);
-
         if (event.isCancelled()) {
             return true;
         }

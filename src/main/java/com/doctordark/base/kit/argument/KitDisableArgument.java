@@ -46,8 +46,9 @@ public class KitDisableArgument extends CommandArgument {
 
         boolean newEnabled = !kit.isEnabled();
         kit.setEnabled(newEnabled);
+        sender.sendMessage(ChatColor.AQUA + "Kit " + kit.getDisplayName() + " has been " +
+                (newEnabled ? ChatColor.GREEN + "enabled" : ChatColor.RED + "disabled") + ChatColor.AQUA + '.');
 
-        sender.sendMessage(ChatColor.AQUA + "Kit " + kit.getName() + " has been " + (newEnabled ? ChatColor.GREEN + "enabled" : ChatColor.RED + "disabled") + ChatColor.AQUA + '.');
         return true;
     }
 

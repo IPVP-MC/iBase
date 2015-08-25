@@ -56,20 +56,17 @@ public class KitCreateArgument extends CommandArgument {
         }
 
         Player player = (Player) sender;
-        PlayerInventory inventory = player.getInventory();
-
-        kit = new Kit(args[1], (args.length >= 3 ? args[2] : null), inventory, player.getActivePotionEffects());
+        kit = new Kit(args[1], (args.length >= 3 ? args[2] : null), player.getInventory(), player.getActivePotionEffects());
 
         KitCreateEvent event = new KitCreateEvent(kit);
         Bukkit.getPluginManager().callEvent(event);
-
         if (event.isCancelled()) {
             return true;
         }
 
         plugin.getKitManager().createKit(kit);
 
-        sender.sendMessage(ChatColor.GRAY + "Created kit '" + kit.getName() + "'.");
+        sender.sendMessage(ChatColor.GRAY + "Created kit '" + kit.getDisplayName() + "'.");
         return true;
     }
 }

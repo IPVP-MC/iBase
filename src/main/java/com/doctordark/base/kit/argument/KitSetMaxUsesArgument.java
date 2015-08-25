@@ -60,8 +60,9 @@ public class KitSetMaxUsesArgument extends CommandArgument {
         }
 
         kit.setMaximumUses(amount);
+        sender.sendMessage(ChatColor.GRAY + "Set maximum uses of kit " + kit.getDisplayName() + " to " +
+                (amount == FlatFileKitManager.UNLIMITED_USES ? "unlimited" : amount) + '.');
 
-        sender.sendMessage(ChatColor.GRAY + "Set maximum uses of kit " + kit.getName() + " to " + (amount == FlatFileKitManager.UNLIMITED_USES ? "unlimited" : amount) + '.');
         return true;
     }
 

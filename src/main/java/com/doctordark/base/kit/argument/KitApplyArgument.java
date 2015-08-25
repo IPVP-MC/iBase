@@ -54,9 +54,9 @@ public class KitApplyArgument extends CommandArgument {
         }
 
         if (kit.applyTo(target, true, true)) {
-            sender.sendMessage(ChatColor.GRAY + "Applied kit '" + kit.getName() + "' to '" + target.getName() + "'.");
+            sender.sendMessage(ChatColor.GRAY + "Applied kit '" + kit.getDisplayName() + "' to '" + target.getName() + "'.");
         } else {
-            sender.sendMessage(ChatColor.RED + "Failed to apply kit " + kit.getName() + " to " + target.getName() + '.');
+            sender.sendMessage(ChatColor.RED + "Failed to apply kit " + kit.getDisplayName() + " to " + target.getName() + '.');
             return true;
         }
 

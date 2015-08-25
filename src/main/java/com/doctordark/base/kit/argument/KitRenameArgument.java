@@ -54,7 +54,6 @@ public class KitRenameArgument extends CommandArgument {
 
         KitRenameEvent event = new KitRenameEvent(kit, kit.getName(), args[2]);
         Bukkit.getPluginManager().callEvent(event);
-
         if (event.isCancelled()) {
             return true;
         }
