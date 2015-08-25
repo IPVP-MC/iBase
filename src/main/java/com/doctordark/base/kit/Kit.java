@@ -29,17 +29,17 @@ public class Kit implements ConfigurationSerializable {
 
     private static final ItemStack DEFAULT_IMAGE = new ItemStack(Material.EMERALD, 1);
 
-    private final UUID uniqueID;
-    private String name;
-    private String description;
-    private ItemStack[] items;
-    private ItemStack[] armour;
-    private Collection<PotionEffect> effects;
-    private ItemStack image;
-    private boolean enabled = true;
-    private long delayMillis;
-    private long minPlaytimeMillis;
-    private int maximumUses;
+    protected final UUID uniqueID;
+    protected String name;
+    protected String description;
+    protected ItemStack[] items;
+    protected ItemStack[] armour;
+    protected Collection<PotionEffect> effects;
+    protected ItemStack image;
+    protected boolean enabled = true;
+    protected long delayMillis;
+    protected long minPlaytimeMillis;
+    protected int maximumUses;
 
     /**
      * Constructs a new {@link Kit} from scratch.
@@ -325,10 +325,11 @@ public class Kit implements ConfigurationSerializable {
 
     /**
      * Gets the permission required to use this {@link Kit}.
+     * <p>If this permission is null, the kit can be used regardless</p>
      *
      * @return the {@link Kit} permission
      */
-    public final String getPermission() {
+    public String getPermission() {
         return "base.kit." + name;
     }
 
