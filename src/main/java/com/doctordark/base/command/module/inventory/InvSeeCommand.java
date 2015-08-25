@@ -88,8 +88,9 @@ public class InvSeeCommand extends BaseCommand implements Listener {
             return Collections.emptyList();
         }
 
-        List<String> results = new ArrayList<>();
-        for (InventoryType type : InventoryType.values()) {
+        InventoryType[] values = InventoryType.values();
+        List<String> results = new ArrayList<>(values.length);
+        for (InventoryType type : values) {
             results.add(type.name());
         }
 
