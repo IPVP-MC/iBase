@@ -348,7 +348,11 @@ public class Kit implements ConfigurationSerializable {
         }
 
         // Prevent duping items.
-        player.closeInventory();
+        ItemStack cursor = player.getItemOnCursor();
+        if (cursor != null && cursor.getType() != Material.AIR) {
+            player.setItemOnCursor(new ItemStack(Material.AIR, 1));
+        }
+
         PlayerInventory inventory = player.getInventory();
         player.addPotionEffects(effects);
 
