@@ -12,7 +12,7 @@ import java.util.List;
 public class CraftCommand extends BaseCommand {
 
     public CraftCommand() {
-        super("craft", "Opens a workbench inventory.", "base.command.workbench");
+        super("craft", "Opens a workbench inventory.");
         setAliases(new String[]{"workbench", "wbench"});
         setUsage("/(command)");
     }

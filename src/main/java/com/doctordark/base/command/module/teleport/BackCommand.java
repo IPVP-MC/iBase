@@ -25,7 +25,7 @@ public class BackCommand extends BaseCommand implements Listener {
     private final BasePlugin plugin;
 
     public BackCommand(BasePlugin plugin) {
-        super("back", "Go to a players last known location.", "base.command.back");
+        super("back", "Go to a players last known location.");
         setUsage("/(command) [playerName]");
         Bukkit.getPluginManager().registerEvents(this, this.plugin = plugin);
     }

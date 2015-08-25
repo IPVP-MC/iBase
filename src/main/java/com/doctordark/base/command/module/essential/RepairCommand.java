@@ -23,7 +23,7 @@ import java.util.Set;
 public class RepairCommand extends BaseCommand {
 
     public RepairCommand() {
-        super("repair", "Allows repairing of damaged tools for a player.", "base.command.repair");
+        super("repair", "Allows repairing of damaged tools for a player.");
         this.setUsage("/(command) <playerName> [all]");
     }
 

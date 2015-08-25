@@ -18,7 +18,7 @@ public class VanishCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public VanishCommand(BasePlugin plugin) {
-        super("vanish", "Hide from other players.", "base.command.vanish");
+        super("vanish", "Hide from other players.");
         setAliases(new String[]{"v", "vis", "vanish", "invis"});
         setUsage("/(command) [playerName]");
         this.plugin = plugin;

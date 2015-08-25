@@ -16,7 +16,7 @@ import java.util.Objects;
 public class TopCommand extends BaseCommand {
 
     public TopCommand() {
-        super("top", "Teleports to the highest safe spot.", "base.command.top");
+        super("top", "Teleports to the highest safe spot.");
         setUsage("/(command)");
     }
 

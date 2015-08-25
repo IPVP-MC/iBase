@@ -11,7 +11,7 @@ import java.lang.management.ManagementFactory;
 public class UptimeCommand extends BaseCommand {
 
     public UptimeCommand() {
-        super("uptime", "Check the uptime of the server.", "base.command.uptime");
+        super("uptime", "Check the uptime of the server.");
         setUsage("/(command)");
     }
 

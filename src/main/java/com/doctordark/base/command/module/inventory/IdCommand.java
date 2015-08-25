@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 public class IdCommand extends BaseCommand {
 
     public IdCommand() {
-        super("id", "Checks the ID/name of an item.", "base.command.id");
+        super("id", "Checks the ID/name of an item.");
         setUsage("/(command) [itemName]");
     }
 

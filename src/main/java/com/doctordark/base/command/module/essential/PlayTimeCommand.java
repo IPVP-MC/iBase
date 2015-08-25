@@ -22,7 +22,7 @@ public class PlayTimeCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public PlayTimeCommand(BasePlugin plugin) {
-        super("playtime", "Check the playtime of another player.", "base.command.playtime");
+        super("playtime", "Check the playtime of another player.");
         this.setAliases(new String[]{"pt", "bb"});
         this.setUsage("/(command) [playerName]");
         this.plugin = plugin;

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class RemoveEntityCommand extends BaseCommand {
 
     public RemoveEntityCommand() {
-        super("removeentity", "Removes all of a specific entity.", "base.command.removeentity");
+        super("removeentity", "Removes all of a specific entity.");
         setUsage("/(command) <worldName> <entityType> [removeCustomNamed] [radius]");
     }
 

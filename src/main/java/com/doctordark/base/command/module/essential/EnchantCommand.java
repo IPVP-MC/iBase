@@ -19,7 +19,7 @@ import java.util.List;
 public class EnchantCommand extends BaseCommand {
 
     public EnchantCommand() {
-        super("enchant", "Unsafely enchant an item.", "base.command.enchant");
+        super("enchant", "Unsafely enchant an item.");
         this.setUsage("/(command) <enchantment> <level> [playerName]");
     }
 
@@ -67,12 +67,12 @@ public class EnchantCommand extends BaseCommand {
         }
 
         int maxLevel = enchantment.getMaxLevel();
-        if (level > maxLevel && !sender.hasPermission(command.getPermission() + ".abovelevel")) {
+        if (level > maxLevel && !sender.hasPermission(command.getPermission() + ".abovemaxlevel")) {
             sender.sendMessage(ChatColor.RED + "The maximum enchantment level for " + enchantment.getName() + " is " + maxLevel + '.');
             return true;
         }
 
-        if (!enchantment.canEnchantItem(stack) && !sender.hasPermission("base.command.enchant.anyitem")) {
+        if (!enchantment.canEnchantItem(stack) && !sender.hasPermission(command.getPermission() + ".anyitem")) {
             sender.sendMessage(ChatColor.RED + "Enchantment " + enchantment.getName() + " cannot be applied to that item.");
             return true;
         }
@@ -100,7 +100,7 @@ public class EnchantCommand extends BaseCommand {
                     results.add(enchantment.getName());
                 }
 
-                return getCompletions(args, results);
+                return BukkitUtils.getCompletions(args, results);
             case 3:
                 return null;
             default:

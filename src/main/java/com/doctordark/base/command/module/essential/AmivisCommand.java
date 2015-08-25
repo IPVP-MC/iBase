@@ -20,7 +20,7 @@ public class AmivisCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public AmivisCommand(BasePlugin plugin) {
-        super("amivis", "Check if a player is visible.", "base.command.amivis");
+        super("amivis", "Check if a player is visible.");
         this.setUsage("/(command) <playerName> [targetName]");
         this.plugin = plugin;
     }

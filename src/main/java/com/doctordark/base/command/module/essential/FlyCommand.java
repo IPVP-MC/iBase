@@ -17,7 +17,7 @@ import java.util.List;
 public class FlyCommand extends BaseCommand {
 
     public FlyCommand() {
-        super("fly", "Toggles flight mode for a player.", "base.command.fly");
+        super("fly", "Toggles flight mode for a player.");
         this.setUsage("/(command) <playerName>");
     }
 

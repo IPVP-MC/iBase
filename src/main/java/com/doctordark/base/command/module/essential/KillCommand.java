@@ -20,7 +20,7 @@ import java.util.List;
 public class KillCommand extends BaseCommand {
 
     public KillCommand() {
-        super("kill", "Kills a player.", "base.command.kill");
+        super("kill", "Kills a player.");
         this.setAliases(new String[]{"slay"});
         this.setUsage("/(command) <playerName>");
     }

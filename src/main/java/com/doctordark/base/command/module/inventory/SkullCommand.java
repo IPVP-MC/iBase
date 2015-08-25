@@ -1,6 +1,7 @@
 package com.doctordark.base.command.module.inventory;
 
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.util.BukkitUtils;
 import com.google.common.base.Enums;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -35,7 +36,7 @@ public class SkullCommand extends BaseCommand {
     }
 
     public SkullCommand() {
-        super("skull", "Spawns a player head skull item.", "base.command.skull");
+        super("skull", "Spawns a player head skull item.");
         this.setAliases(new String[]{"head", "playerhead"});
         this.setUsage("/(command) <playerName>");
     }
@@ -82,6 +83,6 @@ public class SkullCommand extends BaseCommand {
             }
         }
 
-        return getCompletions(args, completions);
+        return BukkitUtils.getCompletions(args, completions);
     }
 }

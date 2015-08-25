@@ -17,7 +17,7 @@ import java.util.List;
 public class TeleportAllCommand extends BaseCommand {
 
     public TeleportAllCommand() {
-        super("teleportall", "Teleport all players to yourself.", "base.command.teleportall");
+        super("teleportall", "Teleport all players to yourself.");
         this.setAliases(new String[]{"tpall"});
         this.setUsage("/(command)");
     }

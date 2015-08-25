@@ -15,7 +15,7 @@ import java.util.List;
 public class EntitiesCommand extends BaseCommand {
 
     public EntitiesCommand() {
-        super("entities", "Checks the entity count in environments.", "base.command.entities");
+        super("entities", "Checks the entity count in environments.");
         setUsage("/(command) <playerName>");
     }
 

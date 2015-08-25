@@ -10,6 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,11 +19,10 @@ import java.util.List;
  */
 public abstract class ArgumentExecutor implements CommandExecutor, TabCompleter {
 
+    protected final List<CommandArgument> arguments = new ArrayList<>();
     protected final String label;
-    protected final List<CommandArgument> arguments;
 
     public ArgumentExecutor(String label) {
-        this.arguments = Lists.newArrayList();
         this.label = label;
     }
 

@@ -138,7 +138,7 @@ public class KitListener implements Listener {
             return;
         }
 
-        String kitPermission = kit.getPermission();
+        String kitPermission = kit.getPermissionNode();
         if (kitPermission != null && !player.hasPermission(kitPermission)) {
             event.setCancelled(true);
             player.sendMessage(ChatColor.RED + "You do not have permission to use this kit.");

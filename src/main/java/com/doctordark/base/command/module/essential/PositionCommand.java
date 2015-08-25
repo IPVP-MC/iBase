@@ -18,7 +18,7 @@ import java.util.List;
 public class PositionCommand extends BaseCommand {
 
     public PositionCommand() {
-        super("position", "Checks the position of a player.", "base.command.position");
+        super("position", "Checks the position of a player.");
         this.setUsage("/(command) <playerName>");
     }
 

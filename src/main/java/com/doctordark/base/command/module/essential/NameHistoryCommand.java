@@ -21,7 +21,7 @@ public class NameHistoryCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public NameHistoryCommand(BasePlugin plugin) {
-        super("namehistory", "Checks name change histories of players.", "base.command.namehistory");
+        super("namehistory", "Checks name change histories of players.");
         setUsage("/(command) <player>");
         this.plugin = plugin;
     }

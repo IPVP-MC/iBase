@@ -16,7 +16,7 @@ import java.util.List;
 public class CopyInvCommand extends BaseCommand {
 
     public CopyInvCommand() {
-        super("copyinv", "Clears a players inventory.", "base.command.copyinv");
+        super("copyinv", "Clears a players inventory.");
         this.setAliases(new String[]{"cloneinv", "cloneinventory", "copyinventory", "invcopy", "inventorycopy", "invclone", "inventoryclone"});
         this.setUsage("/(command) <playerName>");
     }

@@ -12,7 +12,7 @@ public class RulesCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public RulesCommand(BasePlugin plugin) {
-        super("rules", "Shows the server rules.", "base.command.rules");
+        super("rules", "Shows the server rules.");
         setUsage("/(command)");
         this.plugin = plugin;
     }

@@ -26,7 +26,7 @@ public class IpHistoryCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public IpHistoryCommand(BasePlugin plugin) {
-        super("iphistory", "Checks data about IP addresses or players.", "base.command.iphistory");
+        super("iphistory", "Checks data about IP addresses or players.");
         setUsage("/(command) <player|address>");
         this.plugin = plugin;
     }

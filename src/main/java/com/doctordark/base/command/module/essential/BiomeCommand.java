@@ -17,7 +17,7 @@ import java.util.List;
 public class BiomeCommand extends BaseCommand {
 
     public BiomeCommand() {
-        super("biome", "Checks a players biome.", "base.command.biome");
+        super("biome", "Checks a players biome.");
         setUsage("/(command) [playerName]");
     }
 

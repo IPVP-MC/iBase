@@ -17,7 +17,7 @@ public class SlowChatCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public SlowChatCommand(BasePlugin plugin) {
-        super("slowchat", "Slows the chat down for non-staff.", "base.command.slowchat");
+        super("slowchat", "Slows the chat down for non-staff.");
         setAliases(new String[]{"slow"});
         setUsage("/(command)");
         this.plugin = plugin;

@@ -43,7 +43,7 @@ public class SimpleCommandManager implements CommandManager {
                     pluginCommand.setExecutor(command);
                     pluginCommand.setTabCompleter(command);
                     pluginCommand.setUsage(command.getUsage());
-                    pluginCommand.setPermission(command.getPermission());
+                    pluginCommand.setPermission("base.command." + command.getName());
                     pluginCommand.setPermissionMessage(PERMISSION_MESSAGE);
                 }
             }

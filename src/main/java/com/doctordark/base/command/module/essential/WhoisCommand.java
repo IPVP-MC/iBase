@@ -23,7 +23,7 @@ public class WhoisCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public WhoisCommand(BasePlugin plugin) {
-        super("whois", "Check information about a player.", "base.command.whois");
+        super("whois", "Check information about a player.");
         this.plugin = plugin;
         this.setUsage("/(command) [playerName]");
     }

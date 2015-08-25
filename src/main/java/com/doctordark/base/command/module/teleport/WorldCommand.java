@@ -1,6 +1,7 @@
 package com.doctordark.base.command.module.teleport;
 
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.util.BukkitUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
@@ -22,7 +23,7 @@ import java.util.List;
 public class WorldCommand extends BaseCommand {
 
     public WorldCommand() {
-        super("world", "Change current world.", "base.command.world");
+        super("world", "Change current world.");
         this.setAliases(new String[]{"changeworld", "switchworld"});
         this.setUsage("/(command) <worldName>");
     }
@@ -75,6 +76,6 @@ public class WorldCommand extends BaseCommand {
             results.add(world.getName());
         }
 
-        return getCompletions(args, results);
+        return BukkitUtils.getCompletions(args, results);
     }
 }

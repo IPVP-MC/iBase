@@ -10,8 +10,6 @@ commands:
   autore:
     aliases: [autorestart]
     description: Handle server restarts safely.
-  autosave:
-    description: Handle automatic server saves.
   announcements:
     description: Management of auto-announcements.
   back:

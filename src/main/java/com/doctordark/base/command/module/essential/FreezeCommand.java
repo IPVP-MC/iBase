@@ -40,7 +40,7 @@ public class FreezeCommand extends BaseCommand implements Listener {
     private long serverFrozenMillis;
 
     public FreezeCommand(BasePlugin plugin) {
-        super("freeze", "Freezes a player from moving", "base.command.freeze");
+        super("freeze", "Freezes a player from moving");
         this.setUsage("/(command) <all|playerName> [duration] [reason]");
         this.defaultFreezeDuration = TimeUnit.MINUTES.toMillis(5L);
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);

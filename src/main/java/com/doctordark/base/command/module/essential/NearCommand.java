@@ -15,7 +15,7 @@ import java.util.List;
 public class NearCommand extends BaseCommand {
 
     public NearCommand() {
-        super("near", "Count entities near a player.", "base.command.near");
+        super("near", "Count entities near a player.");
         setUsage("/(command) <playerName> <radius>");
     }
 

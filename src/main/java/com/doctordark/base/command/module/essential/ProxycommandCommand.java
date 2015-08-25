@@ -25,7 +25,7 @@ public class ProxycommandCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public ProxycommandCommand(BasePlugin plugin) {
-        super("proxycommand", "Used to execute a command from the proxy.", "base.command.proxycommand");
+        super("proxycommand", "Used to execute a command from the proxy.");
         setUsage("/(command) <command args..>");
         this.plugin = plugin;
 

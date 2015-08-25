@@ -16,7 +16,7 @@ import java.util.List;
 public class RenameCommand extends BaseCommand {
 
     public RenameCommand() {
-        super("rename", "Rename your held item.", "base.command.near");
+        super("rename", "Rename your held item.");
         setUsage("/(command) <newItemName>");
     }
 

@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class EnderChestCommand extends BaseCommand {
 
     public EnderChestCommand() {
-        super("enderchest", "Open an enderchest.", "base.command.enderchest");
+        super("enderchest", "Open an enderchest.");
         setAliases(new String[]{"echest"});
         setUsage("/(command)");
     }

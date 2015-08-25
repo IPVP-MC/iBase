@@ -28,7 +28,7 @@ public class MessageSpyCommand extends BaseCommand {
     private final CommandWrapper handler;
 
     public MessageSpyCommand(final BasePlugin plugin) {
-        super("messagespy", "Spies on the PM's of a player.", "base.command.messagespy");
+        super("messagespy", "Spies on the PM's of a player.");
         this.setAliases(new String[]{"ms", "msgspy", "pmspy", "whisperspy", "privatemessagespy", "tellspy"});
         this.setUsage("/(command) <list|add|del|clear> [playerName]");
 

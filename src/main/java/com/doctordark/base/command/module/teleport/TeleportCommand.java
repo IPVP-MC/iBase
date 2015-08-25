@@ -24,7 +24,7 @@ public class TeleportCommand extends BaseCommand {
     static final int MIN_COORD = -30000000;
 
     public TeleportCommand() {
-        super("teleport", "Teleport to a player or position.", "base.command.teleport");
+        super("teleport", "Teleport to a player or position.");
         this.setUsage("/(command) (<playerName> [otherPlayerName]) | (x y z)");
     }
 

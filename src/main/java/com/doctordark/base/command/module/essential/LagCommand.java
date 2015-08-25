@@ -17,7 +17,7 @@ public class LagCommand extends BaseCommand {
     private static final double MAXIMUM_TPS = 20.0D;
 
     public LagCommand() {
-        super("lag", "Checks the lag of the server.", "base.command.lag");
+        super("lag", "Checks the lag of the server.");
         setUsage("/(command)");
     }
 
@@ -38,7 +38,7 @@ public class LagCommand extends BaseCommand {
         sender.sendMessage(colour + "Server TPS is currently at " + (Math.round(tps * 10000) / 10000.0D) + '.');
         sender.sendMessage(colour + "Server lag is currently at " + (Math.round(lag * 10000) / 10000.0D) + '%');
 
-        if (sender.hasPermission(getPermission() + ".memory")) {
+        if (sender.hasPermission(command.getPermission() + ".memory")) {
             Runtime runtime = Runtime.getRuntime();
             sender.sendMessage(colour + "Available Processors: " + runtime.availableProcessors());
             sender.sendMessage(colour + "Max Memory: " + (runtime.maxMemory() / MEGABYTE) + "MB");

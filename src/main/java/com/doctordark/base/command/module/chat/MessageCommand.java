@@ -19,7 +19,7 @@ import java.util.Set;
 public class MessageCommand extends BaseCommand {
 
     public MessageCommand(BasePlugin plugin) {
-        super("message", "Sends a message to a recipient(s).", "base.command.message");
+        super("message", "Sends a message to a recipient(s).");
         setAliases(new String[]{"msg", "m", "whisper", "w", "tell"});
         setUsage("/(command) <playerName> [text...]");
     }

@@ -38,7 +38,6 @@ import com.doctordark.util.cuboid.Cuboid;
 import com.doctordark.util.cuboid.NamedCuboid;
 import com.doctordark.util.itemdb.ItemDb;
 import com.doctordark.util.itemdb.SimpleItemDb;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -64,6 +63,8 @@ public class BasePlugin extends JavaPlugin {
     private SignHandler signHandler;
     private UserManager userManager;
     private WarpManager warpManager;
+
+    private KitExecutor kitExecutor;
 
     @Override
     public void onEnable() {
@@ -139,7 +140,11 @@ public class BasePlugin extends JavaPlugin {
         commandManager.registerAll(new InventoryModule());
         commandManager.registerAll(new TeleportModule(this));
 
-        getCommand("kit").setExecutor(new KitExecutor(this));
+        getCommand("kit").setExecutor(kitExecutor = new KitExecutor(this));
+    }
+
+    public KitExecutor getKitExecutor() {
+        return kitExecutor;
     }
 
     private void registerListeners() {

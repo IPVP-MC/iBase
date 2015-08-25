@@ -76,7 +76,7 @@ public class KitExecutor extends ArgumentExecutor {
         if (argument == null || (permission != null && !sender.hasPermission(permission))) {
             Kit kit = plugin.getKitManager().getKit(args[0]);
             if (sender instanceof Player && kit != null) {
-                String kitPermission = kit.getPermission();
+                String kitPermission = kit.getPermissionNode();
                 if (kitPermission == null || sender.hasPermission(kitPermission)) {
                     Player player = (Player) sender;
                     kit.applyTo(player, false, true);
@@ -101,7 +101,7 @@ public class KitExecutor extends ArgumentExecutor {
         List<String> previous = super.onTabComplete(sender, command, label, args);
         List<String> kitNames = new ArrayList<>();
         for (Kit kit : plugin.getKitManager().getKits()) {
-            String permission = kit.getPermission();
+            String permission = kit.getPermissionNode();
             if (permission == null || sender.hasPermission(permission)) {
                 kitNames.add(kit.getName());
             }

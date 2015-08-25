@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 public class MoreCommand extends BaseCommand {
 
     public MoreCommand() {
-        super("more", "Sets your item to its maximum amount.", "base.command.more");
+        super("more", "Sets your item to its maximum amount.");
         setUsage("/(command)");
     }
 

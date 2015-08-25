@@ -12,7 +12,7 @@ import org.bukkit.inventory.PlayerInventory;
 public class HatCommand extends BaseCommand {
 
     public HatCommand() {
-        super("hat", "Wear something on your head.", "base.command.hat");
+        super("hat", "Wear something on your head.");
         setUsage("/(command)");
     }
 

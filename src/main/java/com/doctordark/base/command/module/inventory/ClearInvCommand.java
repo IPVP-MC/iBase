@@ -20,8 +20,8 @@ import java.util.List;
 public class ClearInvCommand extends BaseCommand {
 
     public ClearInvCommand() {
-        super("ci", "Clears a players inventory.", "base.command.clearinv");
-        this.setAliases(new String[]{"inventorysee", "inventory"});
+        super("ci", "Clears a players inventory.");
+        this.setAliases(new String[]{"clear", "clearinventory"});
         this.setUsage("/(command) <playerName>");
     }
 

@@ -21,7 +21,7 @@ public class FeedCommand extends BaseCommand {
     private static final int MAX_HUNGER = 20;
 
     public FeedCommand() {
-        super("feed", "Feeds a player.", "base.command.feed");
+        super("feed", "Feeds a player.");
         this.setUsage("/(command) <playerName>");
     }
 

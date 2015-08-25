@@ -15,7 +15,7 @@ public class BroadcastCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public BroadcastCommand(BasePlugin plugin) {
-        super("broadcast", "Broadcasts a message to the server.", "base.command.broadcast");
+        super("broadcast", "Broadcasts a message to the server.");
         setAliases(new String[]{"bc"});
         setUsage("/(command) <text..>");
         this.plugin = plugin;

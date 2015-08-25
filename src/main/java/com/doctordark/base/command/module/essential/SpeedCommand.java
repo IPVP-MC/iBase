@@ -18,7 +18,7 @@ public class SpeedCommand extends BaseCommand {
     private static final float DEFAULT_WALK_SPEED = 2.0F;
 
     public SpeedCommand() {
-        super("speed", "Sets the fly/walk speed of a player.", "base.command.speed");
+        super("speed", "Sets the fly/walk speed of a player.");
         setUsage("/(command) <fly|walk> <speedMultiplier|reset> [playerName]");
     }
 
@@ -100,9 +100,9 @@ public class SpeedCommand extends BaseCommand {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         switch (args.length) {
             case 1:
-                return getCompletions(args, COMPLETIONS_FIRST);
+                return BukkitUtils.getCompletions(args, COMPLETIONS_FIRST);
             case 2:
-                return getCompletions(args, COMPLETIONS_SECOND);
+                return BukkitUtils.getCompletions(args, COMPLETIONS_SECOND);
             case 3:
                 return null;
             default:

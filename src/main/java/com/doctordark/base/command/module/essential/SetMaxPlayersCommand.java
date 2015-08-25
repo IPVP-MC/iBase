@@ -12,7 +12,7 @@ public class SetMaxPlayersCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public SetMaxPlayersCommand(BasePlugin plugin) {
-        super("setmaxplayers", "Sets the max player cap.", "base.command.setmaxplayers");
+        super("setmaxplayers", "Sets the max player cap.");
         setAliases(new String[]{"setplayercap"});
         setUsage("/(command) <amount>");
         this.plugin = plugin;

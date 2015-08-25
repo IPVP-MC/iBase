@@ -13,7 +13,7 @@ public class ToggleMessagesCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public ToggleMessagesCommand(BasePlugin plugin) {
-        super("togglemessages", "Toggles private messages.", "base.command.togglemessages");
+        super("togglemessages", "Toggles private messages.");
         setAliases(new String[]{"togglepm", "toggleprivatemessages"});
         setUsage("/(command)");
         this.plugin = plugin;

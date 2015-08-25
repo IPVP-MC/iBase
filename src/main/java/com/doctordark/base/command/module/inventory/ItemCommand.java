@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 public class ItemCommand extends BaseCommand {
 
     public ItemCommand() {
-        super("item", "Spawns an item.", "base.command.item");
+        super("item", "Spawns an item.");
         setAliases(new String[]{"i", "get"});
         setUsage("/(command) <itemName> [quantity]");
     }

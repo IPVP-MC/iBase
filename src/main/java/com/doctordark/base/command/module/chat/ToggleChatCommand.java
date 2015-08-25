@@ -13,7 +13,7 @@ public class ToggleChatCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public ToggleChatCommand(BasePlugin plugin) {
-        super("togglechat", "Toggles global chat visibility.", "base.command.togglechat");
+        super("togglechat", "Toggles global chat visibility.");
         setAliases(new String[]{"tgc", "toggleglobalchat"});
         setUsage("/(command)");
         this.plugin = plugin;

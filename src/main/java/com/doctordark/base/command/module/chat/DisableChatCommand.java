@@ -18,7 +18,7 @@ public class DisableChatCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public DisableChatCommand(BasePlugin plugin) {
-        super("disablechat", "Disables the chat for non-staff.", "base.command.disablechat");
+        super("disablechat", "Disables the chat for non-staff.");
         setAliases(new String[]{"mutechat", "restrictchat", "mc", "rc"});
         setUsage("/(command)");
         this.plugin = plugin;

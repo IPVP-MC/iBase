@@ -42,7 +42,7 @@ public class KitListArgument extends CommandArgument {
         List<String> kitNames = new ArrayList<>();
 
         for (Kit kit : kits) {
-            String permission = kit.getPermission();
+            String permission = kit.getPermissionNode();
             if (permission == null || sender.hasPermission(permission)) {
                 kitNames.add(ChatColor.GREEN + kit.getDisplayName());
             }

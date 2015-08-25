@@ -27,7 +27,7 @@ public class SeenCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public SeenCommand(BasePlugin plugin) {
-        super("seen", "Check when a player was last seen.", "base.command.seen");
+        super("seen", "Check when a player was last seen.");
         setUsage("/(command)");
         this.plugin = plugin;
         this.format = FastDateFormat.getInstance("dd/MM/yyyy HH:mm", Locale.ENGLISH);

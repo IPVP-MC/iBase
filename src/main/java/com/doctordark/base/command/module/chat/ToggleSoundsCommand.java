@@ -18,7 +18,7 @@ public class ToggleSoundsCommand extends BaseCommand implements Listener {
     private final BasePlugin plugin;
 
     public ToggleSoundsCommand(BasePlugin plugin) {
-        super("sounds", "Toggles messaging sounds.", "base.command.sounds");
+        super("sounds", "Toggles messaging sounds.");
         setAliases(new String[]{"pmsounds", "togglepmsounds", "messagingsounds"});
         setUsage("/(command) [playerName]");
         (this.plugin = plugin).getServer().getPluginManager().registerEvents(this, plugin);

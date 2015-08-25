@@ -23,7 +23,7 @@ public class ReplyCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public ReplyCommand(BasePlugin plugin) {
-        super("reply", "Replies to the last conversing player.", "base.command.reply");
+        super("reply", "Replies to the last conversing player.");
         this.setAliases(new String[]{"r", "respond"});
         this.setUsage("/(command) <message>");
         this.plugin = plugin;

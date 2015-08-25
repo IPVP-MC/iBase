@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 public class BroadcastRawCommand extends BaseCommand {
 
     public BroadcastRawCommand() {
-        super("broadcastraw", "Broadcasts a raw message to the server.", "base.command.broadcastrwa");
+        super("broadcastraw", "Broadcasts a raw message to the server.");
         setAliases(new String[]{"bcraw", "raw", "rawcast"});
         setUsage("/(command) <text..>");
     }

@@ -18,7 +18,7 @@ public class GlintCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public GlintCommand(BasePlugin plugin) {
-        super("glint", "Toggles enchantment glints.", "base.command.glint");
+        super("glint", "Toggles enchantment glints.");
         setUsage("/(command)");
         this.plugin = plugin;
     }

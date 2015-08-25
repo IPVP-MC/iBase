@@ -6,8 +6,6 @@ import com.doctordark.base.command.CommandWrapper;
 import com.doctordark.base.warp.Warp;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.command.CommandArgument;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -18,24 +16,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class WarpExecutor extends BaseCommand {
 
-    private final List<CommandArgument> arguments;
-    private final Map<UUID, BukkitRunnable> taskMap;
+    private final List<CommandArgument> arguments = new ArrayList<>(3);
+    private final Map<UUID, BukkitRunnable> taskMap = new HashMap<>();
     private final BasePlugin plugin;
 
     public WarpExecutor(BasePlugin plugin) {
-        super("globalwarp", "Teleport to locations on the server.", "base.command.warp");
+        super("globalwarp", "Teleport to locations on the server.");
         setAliases(new String[]{"gw"});
         setUsage("/(command)");
-
-        this.arguments = Lists.newArrayList();
-        this.taskMap = Maps.newHashMap();
 
         this.plugin = plugin;
         this.arguments.add(new WarpListArgument(plugin));
@@ -109,14 +106,14 @@ public class WarpExecutor extends BaseCommand {
 
         int count = 0;
         for (Entity entity : player.getNearbyEntities(radius, radius, radius)) {
-            if ((entity instanceof Player)) {
+            if (entity instanceof Player) {
                 count++;
             }
         }
 
         int delay = plugin.getWarpManager().getWarpDelaySeconds();
 
-        if ((delay <= 0) || (count <= 0)) {
+        if (delay <= 0 || count <= 0) {
             warpPlayer(player, warp);
             return false;
         }

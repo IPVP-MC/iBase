@@ -13,7 +13,7 @@ public class ClearChatCommand extends BaseCommand {
     private static final String[] CLEAR_MESSAGE = new String[CHAT_HEIGHT];
 
     public ClearChatCommand() {
-        super("clearchat", "Clears the server chat for players.", "base.command.clearchat");
+        super("clearchat", "Clears the server chat for players.");
         this.setAliases(new String[]{"cc"});
         this.setUsage("/(command)");
     }

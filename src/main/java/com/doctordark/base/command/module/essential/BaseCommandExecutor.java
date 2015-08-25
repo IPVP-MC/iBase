@@ -12,7 +12,7 @@ public class BaseCommandExecutor extends BaseCommand {
     private final BasePlugin plugin;
 
     public BaseCommandExecutor(BasePlugin plugin) {
-        super("base", "Reloads the base plugin.", "base.command.base");
+        super("base", "Reloads the base plugin.");
         setAliases(new String[]{"baseplugin"});
         setUsage("/(command) <reload|toggleprotocollib>");
         this.plugin = plugin;

@@ -19,7 +19,7 @@ public class StaffChatCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public StaffChatCommand(BasePlugin plugin) {
-        super("staffchat", "Enters staff chat mode.", "base.command.staffchat");
+        super("staffchat", "Enters staff chat mode.");
         setAliases(new String[]{"sc", "ac"});
         setUsage("/(command) [playerName]");
         this.plugin = plugin;
@@ -44,7 +44,7 @@ public class StaffChatCommand extends BaseCommand {
             target = participator;
         } else {
             Player targetPlayer = Bukkit.getPlayerExact(args[0]);
-            if (targetPlayer == null || !canSee(sender, targetPlayer) || !sender.hasPermission(getPermission() + ".others")) {
+            if (targetPlayer == null || !canSee(sender, targetPlayer) || !sender.hasPermission(command.getPermission() + ".others")) {
                 String message = StringUtils.join(args, ' ');
                 String format = ChatColor.AQUA + String.format(Locale.ENGLISH, "%1$s: %2$s", sender.getName(), message);
 

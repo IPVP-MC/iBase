@@ -12,7 +12,7 @@ public class ToggleStaffChatCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public ToggleStaffChatCommand(BasePlugin plugin) {
-        super("togglestaffchat", "Toggles staff chat visibility.", "base.command.togglestaffchat");
+        super("togglestaffchat", "Toggles staff chat visibility.");
         setAliases(new String[]{"tsc", "togglesc"});
         setUsage("/(command)");
         this.plugin = plugin;

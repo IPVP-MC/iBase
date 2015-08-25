@@ -12,7 +12,7 @@ import java.util.List;
 public class TeleportHereCommand extends BaseCommand {
 
     public TeleportHereCommand() {
-        super("teleporthere", "Teleport to a player to your position.", "base.command.teleport");
+        super("teleporthere", "Teleport to a player to your position.");
         setAliases(new String[]{"tphere"});
         setUsage("/(command) <playerName>");
     }

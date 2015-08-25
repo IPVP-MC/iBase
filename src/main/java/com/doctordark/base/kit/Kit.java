@@ -16,6 +16,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.permissions.Permission;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.Arrays;
@@ -364,10 +365,20 @@ public class Kit implements ConfigurationSerializable {
      * Gets the permission required to use this {@link Kit}.
      * <p>If this permission is null, the kit can be used regardless</p>
      *
-     * @return the {@link Kit} permission
+     * @return the {@link Kit} permission, or null
      */
-    public String getPermission() {
+    public String getPermissionNode() {
         return "base.kit." + name;
+    }
+
+    /**
+     * Gets the {@link Permission} required to use this {@link Kit}.
+     *
+     * @return the {@link Kit} {@link Permission}, or null
+     */
+    public Permission getBukkitPermission() {
+        String node = getPermissionNode();
+        return node == null ? null : new Permission(node);
     }
 
     /**

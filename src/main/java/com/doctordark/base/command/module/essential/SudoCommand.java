@@ -1,6 +1,8 @@
 package com.doctordark.base.command.module.essential;
 
+import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.util.BukkitUtils;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -8,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +18,7 @@ import java.util.List;
 public class SudoCommand extends BaseCommand {
 
     public SudoCommand() {
-        super("sudo", "Forces a player to run command.", "base.command.sudo");
+        super("sudo", "Forces a player to run command.");
         setUsage("/(command) <force> <all|playerName> <command args...> \n[Warning!] Forcing will give player temporary OP until executed.");
     }
 
@@ -68,7 +71,6 @@ public class SudoCommand extends BaseCommand {
             results.add("false");
         } else if (args.length == 2) {
             results.add("ALL");
-
             Player senderPlayer = sender instanceof Player ? ((Player) sender) : null;
             for (Player target : Bukkit.getOnlinePlayers()) {
                 if (senderPlayer == null || senderPlayer.canSee(target)) {
@@ -77,7 +79,7 @@ public class SudoCommand extends BaseCommand {
             }
         }
 
-        return getCompletions(args, results);
+        return BukkitUtils.getCompletions(args, results);
     }
 
     /**

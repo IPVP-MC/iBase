@@ -21,7 +21,7 @@ public class AutoRestartCommand extends BaseCommand {
     private final CommandWrapper handler;
 
     public AutoRestartCommand(BasePlugin plugin) {
-        super("autore", "Allows management of server restarts.", "base.command.autore");
+        super("autore", "Allows management of server restarts.");
         setAliases(new String[]{"autorestart"});
         setUsage("/(command) <cancel|time|schedule>");
 

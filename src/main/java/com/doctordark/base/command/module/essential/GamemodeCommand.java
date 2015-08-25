@@ -19,7 +19,7 @@ import java.util.Locale;
 public class GamemodeCommand extends BaseCommand {
 
     public GamemodeCommand() {
-        super("gamemode", "Sets a gamemode for a player.", "base.command.gamemode");
+        super("gamemode", "Sets a gamemode for a player.");
         this.setAliases(new String[]{"gm"});
         this.setUsage("/(command) <modeName> [playerName]");
     }
@@ -76,7 +76,7 @@ public class GamemodeCommand extends BaseCommand {
             results.add(mode.name());
         }
 
-        return getCompletions(args, results);
+        return BukkitUtils.getCompletions(args, results);
     }
 
     /**

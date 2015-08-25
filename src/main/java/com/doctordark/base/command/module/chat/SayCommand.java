@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 public class SayCommand extends BaseCommand {
 
     public SayCommand() {
-        super("say", "Say a messaging to the server.", "base.command.say");
+        super("say", "Say a messaging to the server.");
         setUsage("/(command) <message>");
     }
 

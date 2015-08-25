@@ -13,7 +13,7 @@ public class StopLagCommand extends BaseCommand {
     private final BasePlugin plugin;
 
     public StopLagCommand(BasePlugin plugin) {
-        super("stoplag", "Decrease the server lag.", "base.command.stoplag");
+        super("stoplag", "Decrease the server lag.");
         this.plugin = plugin;
         this.setUsage("/(command)");
     }

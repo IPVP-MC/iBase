@@ -19,7 +19,7 @@ import java.util.List;
 public class HealCommand extends BaseCommand {
 
     public HealCommand() {
-        super("heal", "Heals a player.", "base.command.heal");
+        super("heal", "Heals a player.");
         this.setUsage("/(command) <playerName>");
     }
 

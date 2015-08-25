@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 public class GiveCommand extends BaseCommand {
 
     public GiveCommand() {
-        super("give", "Gives an item to a player.", "base.command.give");
+        super("give", "Gives an item to a player.");
         setUsage("/(command) <playerName> <itemName> [quantity]");
     }
 
