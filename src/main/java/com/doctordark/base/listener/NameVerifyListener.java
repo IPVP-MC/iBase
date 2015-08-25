@@ -1,7 +1,6 @@
 package com.doctordark.base.listener;
 
 import com.doctordark.base.BasePlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

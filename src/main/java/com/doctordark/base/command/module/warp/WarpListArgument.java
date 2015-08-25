@@ -1,4 +1,4 @@
-package com.doctordark.base.command.module.teleport.warp;
+package com.doctordark.base.command.module.warp;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.warp.Warp;

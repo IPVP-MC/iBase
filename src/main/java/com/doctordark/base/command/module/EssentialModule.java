@@ -39,7 +39,7 @@ import com.doctordark.base.command.module.essential.SudoCommand;
 import com.doctordark.base.command.module.essential.UptimeCommand;
 import com.doctordark.base.command.module.essential.VanishCommand;
 import com.doctordark.base.command.module.essential.WhoisCommand;
-import com.doctordark.base.command.module.teleport.warp.WarpExecutor;
+import com.doctordark.base.command.module.warp.WarpExecutor;
 
 public class EssentialModule extends BaseCommandModule {
 

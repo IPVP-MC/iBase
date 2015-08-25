@@ -1,10 +1,11 @@
-package com.doctordark.base.command.module.teleport.warp;
+package com.doctordark.base.command.module.warp;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.warp.Warp;
+import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.command.CommandArgument;
+import com.google.common.collect.Lists;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -13,14 +14,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class WarpSetArgument extends CommandArgument {
+public class WarpRemoveArgument extends CommandArgument {
 
     private final BasePlugin plugin;
 
-    public WarpSetArgument(BasePlugin plugin) {
-        super("set", "Sets a new server warps", "base.command.warp.argument.set");
+    public WarpRemoveArgument(BasePlugin plugin) {
+        super("del", "Deletes a new server warp");
         this.plugin = plugin;
-        this.aliases = new String[]{"create", "make"};
+        this.aliases = new String[]{"delete", "remove", "unset"};
         this.permission = "base.command.warp.argument." + getName();
     }
 
@@ -32,7 +33,7 @@ public class WarpSetArgument extends CommandArgument {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This command is only executable by players.");
+            sender.sendMessage(ChatColor.RED + "Only players can delete warps.");
             return true;
         }
 
@@ -41,25 +42,32 @@ public class WarpSetArgument extends CommandArgument {
             return true;
         }
 
-        if (plugin.getWarpManager().getWarp(args[1]) != null) {
-            sender.sendMessage(ChatColor.RED + "There is already a warp named " + args[1] + '.');
+        Warp warp = plugin.getWarpManager().getWarp(args[1]);
+
+        if (warp == null) {
+            sender.sendMessage(ChatColor.RED + "There is not a warp named " + args[1] + '.');
             return true;
         }
 
         Collection<Warp> warps = plugin.getWarpManager().getWarps();
+        warps.remove(warp);
 
-        Player player = (Player) sender;
-        Location location = player.getLocation();
-
-        Warp warp = new Warp(args[1], location);
-        warps.add(warp);
-
-        sender.sendMessage(ChatColor.GRAY + "Created a global warp named " + warp.getName() + '.');
+        sender.sendMessage(ChatColor.GRAY + "Removed global warp named " + warp.getName() + '.');
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return Collections.emptyList();
+        if (args.length != 2) {
+            return Collections.emptyList();
+        }
+
+        Collection<Warp> warps = plugin.getWarpManager().getWarps();
+        List<String> warpNames = Lists.newArrayListWithCapacity(warps.size());
+        for (Warp warp : warps) {
+            warpNames.add(warp.getName());
+        }
+
+        return BukkitUtils.getCompletions(args, warpNames);
     }
 }

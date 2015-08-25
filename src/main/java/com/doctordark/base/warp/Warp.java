@@ -5,7 +5,6 @@ import org.apache.commons.lang3.Validate;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Warp extends PersistableLocation implements ConfigurationSerializable {

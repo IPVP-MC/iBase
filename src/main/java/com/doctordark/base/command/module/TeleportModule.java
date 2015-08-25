@@ -8,7 +8,7 @@ import com.doctordark.base.command.module.teleport.TeleportCommand;
 import com.doctordark.base.command.module.teleport.TeleportHereCommand;
 import com.doctordark.base.command.module.teleport.TopCommand;
 import com.doctordark.base.command.module.teleport.WorldCommand;
-import com.doctordark.base.command.module.teleport.warp.WarpExecutor;
+import com.doctordark.base.command.module.warp.WarpExecutor;
 
 public class TeleportModule extends BaseCommandModule {
 

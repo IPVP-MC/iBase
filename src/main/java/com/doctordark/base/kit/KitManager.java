@@ -5,7 +5,6 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Manager used to handle all of the {@link Kit}s.

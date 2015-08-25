@@ -1,7 +1,7 @@
 package com.doctordark.base.listener;
 
 import com.doctordark.base.BasePlugin;
-import com.doctordark.base.command.module.chat.event.PlayerMessageEvent;
+import com.doctordark.base.event.PlayerMessageEvent;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.user.ServerParticipator;
 import com.doctordark.util.BukkitUtils;

@@ -1,4 +1,4 @@
-package com.doctordark.base.command.module.chat.event;
+package com.doctordark.base.event;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.user.BaseUser;

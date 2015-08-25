@@ -2,7 +2,7 @@ package com.doctordark.base.command.module.chat;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.base.command.module.chat.event.PlayerMessageEvent;
+import com.doctordark.base.event.PlayerMessageEvent;
 import com.doctordark.base.user.BaseUser;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
