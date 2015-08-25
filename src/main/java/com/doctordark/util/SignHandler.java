@@ -104,17 +104,17 @@ public class SignHandler implements Listener {
     }
 
     /**
-     * Gets the {@link com.doctordark.hcfnew.util.SignHandler.SignChange}s shown to a {@link Player}.
+     * Gets the {@link SignChange}s shown to a {@link Player}.
      *
      * @param player the {@link Player} to get for
-     * @return collection of {@link com.doctordark.hcfnew.util.SignHandler.SignChange}s
+     * @return collection of {@link SignChange}s
      */
     public Collection<SignChange> getSignChanges(Player player) {
         return signUpdateMap.get(player.getUniqueId());
     }
 
     /**
-     * Cancels {@link com.doctordark.hcfnew.util.SignHandler.SignChange}s for a {@link Sign}.
+     * Cancels {@link SignChange}s for a {@link Sign}.
      *
      * @param sign the {@link Sign} to cancel for, or null to cancel all
      */
@@ -131,7 +131,7 @@ public class SignHandler implements Listener {
     }
 
     /**
-     * Cancels {@link com.doctordark.hcfnew.util.SignHandler.SignChange}s for a {@link Player}.
+     * Cancels {@link SignChange}s for a {@link Player}.
      *
      * @param player      the {@link Player} to cancel for
      * @param sign        the {@link Sign} to cancel for, or null to cancel all
@@ -159,7 +159,7 @@ public class SignHandler implements Listener {
     /**
      * Represents a change in faking the lines of a {@link Sign} for a {@link Player}.
      */
-    private static class SignChange {
+    private static final class SignChange {
 
         public BukkitRunnable runnable;
         public final Sign sign;

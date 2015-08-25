@@ -87,10 +87,12 @@ public final class InventoryUtils {
         return counter;
     }
 
+    //TODO: Javadocs
     public static boolean isEmpty(Inventory inventory) {
         return isEmpty(inventory, true);
     }
 
+    //TODO: Javadocs
     public static boolean isEmpty(Inventory inventory, boolean checkArmour) {
         boolean result = true;
         ItemStack[] contents = inventory.getContents();

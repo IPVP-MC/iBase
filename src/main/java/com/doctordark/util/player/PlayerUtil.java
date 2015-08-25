@@ -17,7 +17,6 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 
-import java.util.Date;
 import java.util.Map;
 
 
@@ -38,16 +37,19 @@ public class PlayerUtil {
                     Player player = event.getPlayer();
                     Location location = frozen.get(player);
                     if (location != null) {
-                        if (to.getBlockX() != location.getBlockX() || to.getBlockZ() != location.getBlockZ() ||
-                                Math.abs(to.getBlockY() - location.getBlockY()) >= 2) {
+                        if (to.getBlockX() != location.getBlockX() || to.getBlockZ() != location.getBlockZ() || Math.abs(to.getBlockY() - location.getBlockY()) >= 2) {
                             location.setYaw(to.getYaw());
                             location.setPitch(to.getPitch());
                             event.setTo(location);
-                            if(lastSent.containsKey(player) && new Date().getTime() - lastSent.get(player) <= 3000) {
+
+                            long millis = System.currentTimeMillis();
+                            Long lastSentMillis = lastSent.get(player);
+                            if (lastSentMillis != null && millis - lastSentMillis <= 3000) {
                                 return;
                             }
-                            player.sendMessage(ChatColor.YELLOW + "You are currently " + ChatColor.AQUA + "frozen" +
-                                    ChatColor.YELLOW + "!");
+
+                            lastSent.put(player, millis);
+                            player.sendMessage(ChatColor.YELLOW + "You are currently " + ChatColor.AQUA + "frozen" + ChatColor.YELLOW + "!");
                         }
                     }
                 }
@@ -55,7 +57,14 @@ public class PlayerUtil {
 
             @EventHandler
             public void onQuit(PlayerQuitEvent event) {
-                frozen.remove(event.getPlayer());
+                Player player = event.getPlayer();
+                frozen.remove(player);
+                lastSent.remove(player);
+
+                PlayerCache playerCache = playerCaches.remove(player);
+                if (playerCache != null) {
+                    playerCache.apply(player);
+                }
             }
         }, BasePlugin.getPlugin());
     }

@@ -97,7 +97,6 @@ public class Config extends YamlConfiguration {
 
         if (fileName != null ? !fileName.equals(config.fileName) : config.fileName != null) return false;
         return !(plugin != null ? !plugin.equals(config.plugin) : config.plugin != null);
-
     }
 
     @Override

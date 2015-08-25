@@ -12,6 +12,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+/**
+ * Credit for this class: https://gist.github.com/graywolf336/8153678
+ */
 public class InventorySerialisation {
 
     /**

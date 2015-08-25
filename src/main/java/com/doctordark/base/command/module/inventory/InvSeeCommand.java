@@ -57,7 +57,9 @@ public class InvSeeCommand extends BaseCommand implements Listener {
         Inventory inventory = null;
         for (InventoryType type : this.types) {
             if (type.name().equalsIgnoreCase(args[0])) {
-                inventories.putIfAbsent(type, inventory = Bukkit.createInventory(player, type));
+                Inventory inventoryRevert;
+                inventory = inventories.putIfAbsent(type, inventoryRevert = Bukkit.createInventory(player, type));
+                if (inventory == null) inventory = inventoryRevert;
                 break;
             }
         }

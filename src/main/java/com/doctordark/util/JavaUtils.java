@@ -146,6 +146,7 @@ public final class JavaUtils {
 
     /**
      * Parses a string describing measures of time (e.g. "1d 1m 1s") to milliseconds
+     * <p>Source: http://stackoverflow.com/questions/4015196/is-there-a-java-library-that-converts-strings-describing-measures-of-time-e-g</p>
      *
      * @param input the string to parse
      * @return the parsed time in milliseconds
@@ -175,6 +176,9 @@ public final class JavaUtils {
         return result;
     }
 
+    /**
+     * <p>Source: http://stackoverflow.com/questions/4015196/is-there-a-java-library-that-converts-strings-describing-measures-of-time-e-g</p>
+     */
     private static Long convert(int value, char unit) {
         switch (unit) {
             case 'M':

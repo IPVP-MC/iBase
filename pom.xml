@@ -4,8 +4,8 @@
     <groupId>com.doctordark.base</groupId>
     <artifactId>base</artifactId>
     <name>Base</name>
-    <version>3.1-SNAPSHOT</version>
-    <description>Base brings general commands to Minecraft servers.</description>
+    <version>3.2-SNAPSHOT</version>
+    <description>Base brings general commands to Spigot servers providing Essential features and an API.</description>
 
     <repositories>
         <repository>

@@ -10,6 +10,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 @SuppressWarnings("rawtypes")
+/**
+ * Source: https://gist.github.com/aadnk/9632795
+ */
 public class MapSorting {
 
     // Building block - extract key from entry

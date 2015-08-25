@@ -30,7 +30,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.ChatPaginator;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -85,22 +87,18 @@ public final class BukkitUtils {
     }
 
     public static int countColoursUsed(String id, boolean ignoreDuplicates) {
-        List<ChatColor> found = Lists.newArrayList();
-
-        int count = 0;
         ChatColor[] values = ChatColor.values();
         List<Character> charList = Lists.newArrayListWithCapacity(values.length);
         for (ChatColor colour : values) {
             charList.add(colour.getChar());
         }
 
+        int count = 0;
+        Set<ChatColor> found = new HashSet<>();
         for (int i = 1; i < id.length(); i++) {
             if (charList.contains(id.charAt(i)) && id.charAt(i - 1) == '&') {
                 ChatColor colour = ChatColor.getByChar(id.charAt(i));
-                if (!found.contains(colour)) {
-                    found.add(colour);
-                    count++;
-                } else if (ignoreDuplicates) {
+                if (found.add(colour) || ignoreDuplicates) {
                     count++;
                 }
             }
@@ -231,16 +229,14 @@ public final class BukkitUtils {
     /**
      * Checks if a {@link Location} is within a specific distance of another {@link Location}.
      *
-     * @param location1 the location to check for {@link Location}
-     * @param location2 the other {@link Location}
-     * @param distance  the distance to check for
+     * @param location the location to check for {@link Location}
+     * @param other    the other {@link Location}
+     * @param distance the distance to check for
      * @return true if the {@link Location} is within the distance
      */
-    public static boolean isWithinX(Location location1, Location location2, int distance) {
-        World world1 = location1.getWorld();
-        World world2 = location2.getWorld();
-        return world1.equals(world2) && ((Math.abs(location2.getX() - location1.getX()) <= distance) && (Math.abs(location2.getZ() - location1.getZ()) <= distance));
-
+    public static boolean isWithinX(Location location, Location other, int distance) {
+        return location.getWorld().equals(other.getWorld()) &&
+                Math.abs(other.getX() - location.getX()) <= distance && Math.abs(other.getZ() - location.getZ()) <= distance;
     }
 
     /**

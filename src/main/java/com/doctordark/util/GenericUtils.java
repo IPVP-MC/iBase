@@ -9,6 +9,8 @@ import java.util.Set;
 
 /**
  * Utility class for managing Generics in Java.
+ *
+ * Some of the source has been taken from: http://stackoverflow.com/questions/509076/how-do-i-address-unchecked-cast-warnings
  */
 public final class GenericUtils {
 
@@ -96,20 +98,17 @@ public final class GenericUtils {
             Map<?, ?> input = (Map<?, ?>) object;
             String keyClassName = keyClass.getSimpleName();
             String valueClassName = valueClass.getSimpleName();
-
             for (Object key : input.keySet().toArray()) {
-                if ((key == null) || (keyClass.isAssignableFrom(keyClass))) {
-                    Object value = input.get(key);
-                    if ((value == null) || (valueClass.isAssignableFrom(valueClass))) {
-                        K k = keyClass.cast(key);
-                        V v = valueClass.cast(value);
-                        output.put(k, v);
-                    } else {
-                        throw new AssertionError("Cannot cast to HashMap: " + keyClassName + ", " + keyClassName + ". Value " + value + " is not a " + keyClassName);
-                    }
-                } else {
+                if (key != null && !keyClass.isAssignableFrom(key.getClass())) {
+                    throw new AssertionError("Cannot cast to HashMap: " + keyClassName + ", " + keyClassName + ". Value " + valueClassName + " is not a " + keyClassName);
+                }
+
+                Object value = input.get(key);
+                if (value != null && !valueClass.isAssignableFrom(value.getClass())) {
                     throw new AssertionError("Cannot cast to HashMap: " + valueClassName + ", " + valueClassName + ". Key " + key + " is not a " + valueClassName);
                 }
+
+                output.put(keyClass.cast(key), valueClass.cast(value));
             }
         }
 
