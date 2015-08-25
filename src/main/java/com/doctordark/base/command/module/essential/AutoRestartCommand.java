@@ -2,9 +2,9 @@ package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
-import com.doctordark.base.command.CommandWrapper;
 import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
+import com.doctordark.util.command.CommandWrapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
