@@ -1,5 +1,6 @@
 package com.doctordark.base.listener;
 
+import com.doctordark.base.BasePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,6 +13,12 @@ import java.util.regex.Pattern;
 public class NameVerifyListener implements Listener {
 
     private static final Pattern NAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{1,16}$");
+
+    private final BasePlugin plugin;
+
+    public NameVerifyListener(BasePlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
