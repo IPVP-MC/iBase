@@ -360,6 +360,8 @@ public class Kit implements ConfigurationSerializable {
         World world = player.getWorld();
         for (ItemStack item : items) {
             if (item == null || item.getType() == Material.AIR) continue;
+
+            item = item.clone(); // cloning necessary?
             for (Map.Entry<Integer, ItemStack> excess : inventory.addItem(item.clone()).entrySet()) {
                 world.dropItemNaturally(location, excess.getValue());
             }
@@ -371,12 +373,14 @@ public class Kit implements ConfigurationSerializable {
                 continue;
             }
 
-            int armourSlot = (i + 36);
+            int armourSlot = i + 36;
             ItemStack previous = inventory.getItem(armourSlot);
+
+            stack = stack.clone();  // cloning necessary?
             if (previous != null && previous.getType() != Material.AIR) {
-                world.dropItemNaturally(location, stack.clone());
+                world.dropItemNaturally(location, stack);
             } else {
-                inventory.setItem(armourSlot, stack.clone());
+                inventory.setItem(armourSlot, stack);
             }
         }
 
