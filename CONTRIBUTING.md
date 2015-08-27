@@ -3,10 +3,11 @@
   the process significantly.
 * **Target Java 6 for source and compilation.** Make sure to mark methods with
   ` @Override` that override methods of parent classes, or that implement
-  methods of interfaces (Java 6+).
+  methods of interfaces (Java 6+). Java 8 can be used, but it is preferred that Java 6 or 7
+  is used in favour.
 * **Use only spaces for indentation.** Our indents are 4-spaces long, and tabs
   are unacceptable.
-* **Wrap code to a 89 column limit.** We do this to make side by side diffs
+* **Wrap code to a 90 column limit.** We do this to make side by side diffs
   and other such tasks easier. Ignore this guideline if it makes the code
   too unreadable.
 * **Write complete Javadocs.** Do so only for public methods, and make sure
@@ -19,6 +20,8 @@
   code in several places, that's bad.
 * **Keep commit summaries under 70 characters.** For more details, place two
   new lines after the summary line and write away!
+* **Keep commit summaries descriptive, don't bulk commit.** Type in what has been changed,
+and optionally what JIRA issue it addresses.
 * **Test your code.** We're not interested in broken code, for the obvious reasons.
 * **Write unit tests.** While this is strictly optional, we recommend it for
   complicated algorithms.
@@ -49,13 +52,11 @@ Example
 -------
 
 This is **GOOD:**
-
     if (var.func(param1, param2)) {
         // do things
     }
 
 This is **EXTREMELY BAD:**
-
     if(var.func( param1, param2 ))
     {
         // do things

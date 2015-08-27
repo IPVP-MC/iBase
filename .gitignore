@@ -20,7 +20,12 @@
 /bin
 /dist
 /manifest.mf
+/MANIFEST.MF
+/META-INF/MANIFEST.MF
 git.properties
+.ssh
+key
+key.pub
 
 # Mac Filesystem Dust
 .DS_Store

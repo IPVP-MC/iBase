@@ -384,8 +384,8 @@ public class Kit implements ConfigurationSerializable {
     /**
      * Applies this {@link Kit} to a {@link Player} with specific conditions.
      *
-     * @param player        the {@link Player} to apply to
-     * @param force         if it should ignore conditions
+     * @param player the {@link Player} to apply to
+     * @param force  if it should ignore conditions
      * @return true if the {@link Kit} was successfully applied
      */
     public boolean applyTo(Player player, boolean force, boolean inform) {

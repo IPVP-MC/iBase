@@ -1,5 +1,6 @@
 package com.doctordark.util.player;
 
+import com.google.common.collect.Sets;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -7,17 +8,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.Collection;
+import java.util.UUID;
 
-/**
- * Created by J on 7/16/2015.
- */
 public class PlayerCache {
-    public String player;
-    public Location loc;
+
+    public UUID playerUUID;
+    public Location location;
     public GameMode gameMode;
     public boolean allowFlight;
     public boolean flying;
-    public ItemStack[] inv;
+    public ItemStack[] inventory;
     public ItemStack[] armor;
     public double health;
     public int food;
@@ -26,30 +26,30 @@ public class PlayerCache {
     public int fireTicks;
     public Collection<PotionEffect> potions;
 
-    public PlayerCache(Player player){
-        this.player = player.getName();
-        this.loc = player.getLocation();
+    public PlayerCache(Player player) {
+        this.playerUUID = player.getUniqueId();
+        this.location = player.getLocation();
         this.gameMode = player.getGameMode();
         this.allowFlight = player.getAllowFlight();
         this.flying = player.isFlying();
-        this.inv = player.getInventory().getContents();
+        this.inventory = player.getInventory().getContents();
         this.armor = player.getInventory().getArmorContents();
         this.health = player.getHealth();
         this.food = player.getFoodLevel();
         this.level = player.getLevel();
         this.xp = player.getExp();
         this.fireTicks = player.getFireTicks();
-        this.potions = player.getActivePotionEffects();
+        this.potions = Sets.newHashSet(player.getActivePotionEffects());
     }
 
-    public PlayerCache(Location loc, GameMode gameMode, boolean allowFlight, boolean flying, ItemStack[] inv, ItemStack[] armor,
+    public PlayerCache(Location location, GameMode gamemode, boolean allowFlight, boolean flying, ItemStack[] inventory, ItemStack[] armor,
                        double health, int food, int level, float xp, int fireTicks, Collection<PotionEffect> potions) {
-        this.loc = loc;
-        this.gameMode = gameMode;
+        this.location = location;
+        this.gameMode = gamemode;
         this.allowFlight = allowFlight;
         this.flying = flying;
-        this.inv = inv;
-        this.armor = armor;
+        this.inventory = inventory; // InventoryUtils#deepClone necessary?
+        this.armor = armor; // InventoryUtils#deepClone necessary?
         this.health = health;
         this.food = food;
         this.level = level;
@@ -60,13 +60,14 @@ public class PlayerCache {
 
     public void apply(Player player) {
         PlayerUtil.wipe(player);
-        if(loc!=null) {
-            player.teleport(loc);
+        if (location != null) {
+            player.teleport(location);
         }
+
         player.setGameMode(gameMode);
         player.setAllowFlight(allowFlight);
         player.setFlying(flying);
-        player.getInventory().setContents(inv);
+        player.getInventory().setContents(inventory);
         player.getInventory().setArmorContents(armor);
         player.setHealth(health);
         player.setFoodLevel(food);
@@ -74,7 +75,7 @@ public class PlayerCache {
         player.setExp(xp);
         player.setFireTicks(fireTicks);
         player.getActivePotionEffects().clear();
-        for(PotionEffect effect : potions){
+        for (PotionEffect effect : potions) {
             player.addPotionEffect(effect);
         }
     }

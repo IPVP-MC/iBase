@@ -9,7 +9,7 @@ import java.util.Set;
 
 /**
  * Utility class for managing Generics in Java.
- *
+ * <p>
  * Some of the source has been taken from: http://stackoverflow.com/questions/509076/how-do-i-address-unchecked-cast-warnings
  */
 public final class GenericUtils {

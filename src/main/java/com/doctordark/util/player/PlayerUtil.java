@@ -21,13 +21,12 @@ import org.bukkit.potion.PotionEffect;
 
 import java.util.Map;
 
-/**
- * Created by J on 7/16/2015.
- */
 public class PlayerUtil {
+
     private static final Map<Player, Location> frozen = Maps.newHashMap();
     private static final Map<Player, PlayerCache> playerCaches = Maps.newHashMap();
     private static final TObjectLongMap<Player> lastSent = new TObjectLongHashMap<>();
+
     static {
         Bukkit.getPluginManager().registerEvents(new Listener() {
             @EventHandler
@@ -75,7 +74,7 @@ public class PlayerUtil {
         packet.getClientCommands().writeSafely(0, EnumWrappers.ClientCommand.PERFORM_RESPAWN);
         try {
             ProtocolLibrary.getProtocolManager().recieveClientPacket(player, packet);
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -92,7 +91,7 @@ public class PlayerUtil {
         player.setGameMode(GameMode.SURVIVAL);
         player.setAllowFlight(false);
         player.setFlying(false);
-        for(PotionEffect pe : player.getActivePotionEffects()) {
+        for (PotionEffect pe : player.getActivePotionEffects()) {
             player.removePotionEffect(pe.getType());
         }
     }

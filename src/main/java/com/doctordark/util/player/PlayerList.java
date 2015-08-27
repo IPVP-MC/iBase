@@ -9,14 +9,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Created by J on 7/16/2015.
- */
 public class PlayerList implements Iterable<Player> {
-    private List<UUID> playerUniqueIds = Lists.newArrayList();
-    private List<Player> playerList = Lists.newArrayList();
 
-    public PlayerList() {}
+    private final List<UUID> playerUniqueIds;
+    private final List<Player> playerList = Lists.newArrayList();
+
+    public PlayerList() {
+        this.playerUniqueIds = Lists.newArrayList();
+    }
 
     public PlayerList(Collection<UUID> col) {
         this.playerUniqueIds = Lists.newArrayList(col);
@@ -29,17 +29,13 @@ public class PlayerList implements Iterable<Player> {
 
             @Override
             public boolean hasNext() {
-                if(playerUniqueIds.size() == 0)
-                    return false;
-                if(index >= playerUniqueIds.size())
-                    return false;
-                return true;
+                return !playerUniqueIds.isEmpty() && index < playerUniqueIds.size();
             }
 
             @Override
             public Player next() {
                 index++;
-                return getPlayers().get(index-1);
+                return getPlayers().get(index - 1);
             }
 
             @Override

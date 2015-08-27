@@ -197,9 +197,9 @@ public enum ParticleEffect {
     /**
      * Displays this {@link ParticleEffect} as a sphere to a {@link Player}
      *
-     * @param player    the {@link Player} to show
-     * @param location  the {@link Location} of the center
-     * @param radius    the radius of the sphere
+     * @param player   the {@link Player} to show
+     * @param location the {@link Location} of the center
+     * @param radius   the radius of the sphere
      */
     public void sphere(@Nullable Player player, Location location, float radius) {
         sphere(player, location, radius, 20f, 2);
