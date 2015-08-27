@@ -29,11 +29,11 @@ public class VanishCommand extends BaseCommand {
         final Player target;
         if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
             target = BukkitUtils.playerWithNameOrUUID(args[0]);
-        } else if (!(sender instanceof Player)) {
+        } else if (sender instanceof Player) {
+            target = (Player) sender;
+        } else {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
-        } else {
-            target = (Player) sender;
         }
 
         if (target == null || (sender instanceof Player && !((Player) sender).canSee(target))) {

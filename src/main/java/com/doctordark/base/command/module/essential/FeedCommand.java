@@ -43,11 +43,11 @@ public class FeedCommand extends BaseCommand {
             }
 
             target = BukkitUtils.playerWithNameOrUUID(args[0]);
-        } else if (!(sender instanceof Player)) {
+        } else if (sender instanceof Player) {
+            target = (Player) sender;
+        } else {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
-        } else {
-            target = (Player) sender;
         }
 
         if (target == null || !canSee(sender, target)) {

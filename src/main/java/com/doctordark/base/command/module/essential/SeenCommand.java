@@ -38,11 +38,11 @@ public class SeenCommand extends BaseCommand {
         final OfflinePlayer target;
         if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
             target = BukkitUtils.offlinePlayerWithNameOrUUID(args[0]);
-        } else if (!(sender instanceof Player)) {
+        } else if (sender instanceof Player) {
+            target = (Player) sender;
+        } else {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
-        } else {
-            target = (Player) sender;
         }
 
         if (!target.hasPlayedBefore()) {
