@@ -1,5 +1,6 @@
 package com.doctordark.util;
 
+import com.google.common.base.Predicate;
 import net.minecraft.server.v1_7_R4.MathHelper;
 import net.minecraft.server.v1_7_R4.Packet;
 import net.minecraft.server.v1_7_R4.PacketPlayOutWorldParticles;
@@ -171,7 +172,7 @@ public enum ParticleEffect {
      * @param amount   the amount of particles to show
      */
     public void broadcast(Location location, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
-        this.broadcast(location, offsetX, offsetY, offsetZ, speed, amount, null);
+        this.broadcast(location, offsetX, offsetY, offsetZ, speed, amount, null, null);
     }
 
     /**
@@ -186,9 +187,27 @@ public enum ParticleEffect {
      * @param source   the source of this {@link ParticleEffect} or null
      */
     public void broadcast(Location location, float offsetX, float offsetY, float offsetZ, float speed, int amount, @Nullable Entity source) {
+        this.broadcast(location, offsetX, offsetY, offsetZ, speed, amount, source, null);
+    }
+
+    /**
+     * Send this {@link ParticleEffect} to all online {@link Player}s
+     *
+     * @param location  the {@link Location} to show at
+     * @param offsetX   the x range of the particle effect
+     * @param offsetY   the y range of the particle effect
+     * @param offsetZ   the z range of the particle effect
+     * @param speed     the speed (or color depending on the effect)
+     * @param amount    the amount of particles to show
+     * @param source    the source of this {@link ParticleEffect} or null
+     * @param predicate the predicate to apply to determine if the player should see it
+     */
+    public void broadcast(Location location, float offsetX, float offsetY, float offsetZ, float speed, int amount,
+                          @Nullable Entity source, @Nullable Predicate<Player> predicate) {
+
         Packet packet = createPacket(location, offsetX, offsetY, offsetZ, speed, amount);
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (source == null || player.canSee(source)) {
+            if ((source == null || player.canSee(source)) && (predicate == null || predicate.apply(player))) {
                 ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
             }
         }
