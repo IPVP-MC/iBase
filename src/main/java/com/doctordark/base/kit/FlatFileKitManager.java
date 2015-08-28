@@ -96,7 +96,12 @@ public class FlatFileKitManager implements KitManager, Listener {
             String kitPermission = kit.getPermissionNode();
             if (kitPermission == null || player.hasPermission(kitPermission)) {
                 lore = Lists.newArrayList();
-                lore.add(kit.isEnabled() ? ChatColor.YELLOW + kit.getDelayWords() + " cooldown" : ChatColor.RED + "Disabled");
+                if (kit.isEnabled()) {
+                    if (kit.getDelayMillis() > 0L) {
+                        lore.add(ChatColor.YELLOW + kit.getDelayWords() + " cooldown");
+                    }
+                } else lore.add(ChatColor.RED + "Disabled");
+
                 int maxUses = kit.getMaximumUses();
                 if (maxUses != UNLIMITED_USES) {
                     lore.add(ChatColor.YELLOW + "Used " + plugin.getUserManager().getUser(uuid).getKitUses(kit) + '/' + maxUses + " times.");
