@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 /**
  * An {@link CommandArgument} used to set the description of a {@link Kit}.
  */
-public class KitDescriptionArgument extends CommandArgument {
+public class KitSetDescriptionArgument extends CommandArgument {
 
     private final BasePlugin plugin;
 
-    public KitDescriptionArgument(BasePlugin plugin) {
-        super("setdesc", "Sets the description of a kit");
+    public KitSetDescriptionArgument(BasePlugin plugin) {
+        super("setdescription", "Sets the description of a kit");
         this.plugin = plugin;
-        this.aliases = new String[]{"setdescription"};
+        this.aliases = new String[]{"setdesc"};
         this.permission = "base.command.kit.argument." + getName();
     }
 
@@ -51,7 +51,7 @@ public class KitDescriptionArgument extends CommandArgument {
             return true;
         }
 
-        String description = StringUtils.join(args, ' ', 2, args.length);
+        String description = ChatColor.translateAlternateColorCodes('&', StringUtils.join(args, ' ', 2, args.length));
         kit.setDescription(description);
 
         sender.sendMessage(ChatColor.YELLOW + "Set description of kit " + kit.getDisplayName() + " to " + description + '.');

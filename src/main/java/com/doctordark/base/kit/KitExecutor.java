@@ -4,7 +4,7 @@ import com.doctordark.base.BasePlugin;
 import com.doctordark.base.kit.argument.KitApplyArgument;
 import com.doctordark.base.kit.argument.KitCreateArgument;
 import com.doctordark.base.kit.argument.KitDeleteArgument;
-import com.doctordark.base.kit.argument.KitDescriptionArgument;
+import com.doctordark.base.kit.argument.KitSetDescriptionArgument;
 import com.doctordark.base.kit.argument.KitDisableArgument;
 import com.doctordark.base.kit.argument.KitGuiArgument;
 import com.doctordark.base.kit.argument.KitListArgument;
@@ -41,7 +41,7 @@ public class KitExecutor extends ArgumentExecutor {
         addArgument(new KitApplyArgument(plugin));
         addArgument(new KitCreateArgument(plugin));
         addArgument(new KitDeleteArgument(plugin));
-        addArgument(new KitDescriptionArgument(plugin));
+        addArgument(new KitSetDescriptionArgument(plugin));
         addArgument(new KitDisableArgument(plugin));
         addArgument(new KitGuiArgument(plugin));
         addArgument(new KitListArgument(plugin));
