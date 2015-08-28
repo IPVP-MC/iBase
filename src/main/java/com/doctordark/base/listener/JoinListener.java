@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class JoinListener implements Listener {
 
-    private static final int MAX_ACCOUNTS_PER_IP = 3;
+    private static final int MAX_ACCOUNTS_PER_IP = 3; //TODO:
     private final BasePlugin plugin;
 
     public JoinListener(BasePlugin plugin) {
@@ -26,6 +26,6 @@ public class JoinListener implements Listener {
 
         BaseUser baseUser = plugin.getUserManager().getUser(uuid);
         baseUser.tryLoggingName(player);
-        baseUser.tryLoggingAddress(player.getAddress().getHostString());
+        baseUser.tryLoggingAddress(player.getAddress().getAddress().getHostName());
     }
 }
