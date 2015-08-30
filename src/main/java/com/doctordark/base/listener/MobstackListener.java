@@ -42,12 +42,17 @@ public class MobstackListener implements Listener {
     private final Table<CoordinatePair, EntityType, Integer> naturalSpawnStacks = HashBasedTable.create();
     private final TObjectIntMap<Location> spawnerStacks = new TObjectIntHashMap<>(); // key is the spawner location and value is the representing entity ID.
 
+    private final BasePlugin plugin;
+
+    public MobstackListener(BasePlugin plugin) {
+        this.plugin = plugin;
+    }
+
     private CoordinatePair fromLocation(Location location) {
         return new CoordinatePair(location.getWorld(),
                 NATURAL_STACK_RADIUS * Math.round(location.getBlockX() / NATURAL_STACK_RADIUS),
                 NATURAL_STACK_RADIUS * Math.round(location.getBlockZ() / NATURAL_STACK_RADIUS));
     }
-
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerTemptEntity(PlayerTemptEntityEvent event) {
@@ -65,7 +70,7 @@ public class MobstackListener implements Listener {
             return;
         }
 
-        LivingEntity chosen = BasePlugin.getPlugin().getRandom().nextBoolean() ? event.getFirstParent() : event.getSecondParent();
+        LivingEntity chosen = plugin.getRandom().nextBoolean() ? event.getFirstParent() : event.getSecondParent();
         Integer stackedQuantity = getStackedQuantity(chosen);
         if (stackedQuantity == null) stackedQuantity = 1;
 

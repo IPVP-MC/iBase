@@ -20,7 +20,7 @@ public class BaseCommandExecutor extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        boolean useProtocolLib = BasePlugin.getPlugin().getServerHandler().useProtocolLib;
+        boolean useProtocolLib = plugin.getServerHandler().useProtocolLib;
         if (args.length < 1) {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
             sender.sendMessage(ChatColor.RED + " - " + ChatColor.YELLOW + "ProtocolLib: " + useProtocolLib);
@@ -42,8 +42,10 @@ public class BaseCommandExecutor extends BaseCommand {
 
         if (args[0].equalsIgnoreCase("toggleprotocollib")) {
             boolean newUseProtocolLib = !useProtocolLib;
-            BasePlugin.getPlugin().getServerHandler().useProtocolLib = newUseProtocolLib;
-            Command.broadcastCommandMessage(sender, ChatColor.GOLD + plugin.getDescription().getFullName() + " is " + (newUseProtocolLib ? "now" : "no longer") + " using ProtocolLib.");
+            plugin.getServerHandler().useProtocolLib = newUseProtocolLib;
+            Command.broadcastCommandMessage(sender, ChatColor.GOLD + plugin.getDescription().getFullName() + " is " +
+                    (newUseProtocolLib ? "now" : "no longer") + " using ProtocolLib.");
+
             return true;
         }
 

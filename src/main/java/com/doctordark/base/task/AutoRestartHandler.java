@@ -100,7 +100,7 @@ public class AutoRestartHandler {
     public void scheduleRestart(final long millis, final String reason) {
         this.cancelRestart();
         this.reason = reason;
-        this.current = MinecraftServer.currentTick + (millis / 50L);
+        this.current = MinecraftServer.currentTick + 20 + (millis / 50L);
         this.task = new BukkitRunnable() {
             @Override
             public void run() {
@@ -120,6 +120,6 @@ public class AutoRestartHandler {
                             (reason.isEmpty()) ? "." : " [" + ChatColor.GRAY + reason + ChatColor.RED + "]."));
                 }
             }
-        }.runTaskTimer(plugin, 1L, 20L);
+        }.runTaskTimer(plugin, 20L, 20L);
     }
 }

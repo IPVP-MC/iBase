@@ -154,7 +154,7 @@ public class BasePlugin extends JavaPlugin {
         manager.registerEvents(new DecreasedLagListener(this), this);
         manager.registerEvents(new JoinListener(this), this);
         manager.registerEvents(new KitListener(this), this);
-        manager.registerEvents(new MobstackListener(), this);
+        manager.registerEvents(new MobstackListener(this), this);
         manager.registerEvents(new NameVerifyListener(this), this);
         manager.registerEvents(new PingListener(), this);
         manager.registerEvents(playTimeManager = new PlayTimeManager(this), this);

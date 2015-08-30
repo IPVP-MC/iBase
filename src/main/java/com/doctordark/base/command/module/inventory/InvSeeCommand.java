@@ -29,11 +29,11 @@ public class InvSeeCommand extends BaseCommand implements Listener {
 
     private final Map<InventoryType, Inventory> inventories = new EnumMap<>(InventoryType.class);
 
-    public InvSeeCommand() {
+    public InvSeeCommand(BasePlugin plugin) {
         super("invsee", "View the inventory of a player.");
         setAliases(new String[]{"inventorysee", "inventory", "inv"});
         setUsage("/(command) <inventoryType|playerName>");
-        Bukkit.getPluginManager().registerEvents(this, BasePlugin.getPlugin());
+        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @Override

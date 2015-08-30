@@ -62,7 +62,7 @@ public class KitSetImageArgument extends CommandArgument {
 
         kit.setImage(stack);
         sender.sendMessage(ChatColor.AQUA + "Set image of kit " + ChatColor.YELLOW + kit.getDisplayName() + ChatColor.AQUA + " to " +
-                ChatColor.YELLOW + BasePlugin.getPlugin().getItemDb().getName(stack) + ChatColor.AQUA + '.');
+                ChatColor.YELLOW + plugin.getItemDb().getName(stack) + ChatColor.AQUA + '.');
 
         return true;
     }
