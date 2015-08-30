@@ -34,7 +34,7 @@ public class EntitiesCommand extends BaseCommand {
                     if (amount >= 20) {
                         sender.sendMessage(ChatColor.YELLOW + " " + entityType.name() + " with " + amount);
                     }
-                } catch (Exception ignored) {
+                } catch (ClassCastException ignored) {
                 }
             }
         }

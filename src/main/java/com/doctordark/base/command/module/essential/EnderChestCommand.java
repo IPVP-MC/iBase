@@ -34,8 +34,7 @@ public class EnderChestCommand extends BaseCommand {
             return true;
         }
 
-        Player player = (Player) sender;
-        player.openInventory(target.getEnderChest());
+        ((Player) sender).openInventory(target.getEnderChest());
         return true;
     }
 }

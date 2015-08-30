@@ -297,6 +297,12 @@ public class Kit implements ConfigurationSerializable {
         return delayMillis;
     }
 
+    /**
+     * Gets the delay for using this {@link Kit} formatted based on
+     * {@link DurationFormatUtils#formatDurationWords(long, boolean, boolean)}.
+     *
+     * @return the formatted delay string
+     */
     public String getDelayWords() {
         return DurationFormatUtils.formatDurationWords(delayMillis, true, true);
     }
@@ -316,7 +322,8 @@ public class Kit implements ConfigurationSerializable {
     }
 
     /**
-     * Gets the minimum playing time in milliseconds before a {@link Player} can use this {@link Kit}.
+     * Gets the minimum playing time in milliseconds before a
+     * {@link Player} can use this {@link Kit}.
      *
      * @return the time in milliseconds
      */
@@ -324,6 +331,12 @@ public class Kit implements ConfigurationSerializable {
         return minPlaytimeMillis;
     }
 
+    /**
+     * Gets the minimum playtime for using this {@link Kit} formatted based on
+     * {@link DurationFormatUtils#formatDurationWords(long, boolean, boolean)}.
+     *
+     * @return the minimum playtime string
+     */
     public String getMinPlaytimeWords() {
         return minPlaytimeWords;
     }
@@ -395,17 +408,18 @@ public class Kit implements ConfigurationSerializable {
             return false;
         }
 
-        // Prevent duping items.
-        ItemStack cursor = player.getItemOnCursor();
-        if (cursor != null && cursor.getType() != Material.AIR) {
-            player.setItemOnCursor(new ItemStack(Material.AIR, 1));
-        }
-
         player.addPotionEffects(effects);
 
-        PlayerInventory inventory = player.getInventory();
+        // Prevent duping items.
+        ItemStack cursor = player.getItemOnCursor();
         Location location = player.getLocation();
         World world = player.getWorld();
+        if (cursor != null && cursor.getType() != Material.AIR) {
+            player.setItemOnCursor(new ItemStack(Material.AIR, 1));
+            world.dropItemNaturally(location, cursor);
+        }
+
+        PlayerInventory inventory = player.getInventory();
 
         // Fill the inventory
         for (ItemStack item : items) {

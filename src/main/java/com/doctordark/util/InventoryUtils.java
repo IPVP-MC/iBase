@@ -1,5 +1,6 @@
 package com.doctordark.util;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
@@ -24,6 +25,24 @@ public final class InventoryUtils {
     public static final int MAXIMUM_DOUBLE_CHEST_SIZE = MAXIMUM_SINGLE_CHEST_SIZE * 2;
 
     private InventoryUtils() {
+    }
+
+    /**
+     * Deep clones an array of {@link ItemStack}s calling {@link ItemStack#clone()}
+     * for each non-null entry.
+     *
+     * @param origin the array to clone
+     * @return deep cloned array.
+     */
+    public static ItemStack[] deepClone(ItemStack[] origin) {
+        Preconditions.checkNotNull(origin, "Origin cannot be null");
+        ItemStack[] cloned = new ItemStack[origin.length];
+        for (int i = 0; i < origin.length; i++) {
+            ItemStack next = origin[i];
+            cloned[i] = next == null ? null : next.clone();
+        }
+
+        return cloned;
     }
 
     /**

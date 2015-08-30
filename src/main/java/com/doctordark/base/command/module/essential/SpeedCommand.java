@@ -14,8 +14,8 @@ import java.util.List;
 
 public class SpeedCommand extends BaseCommand {
 
-    private static final float DEFAULT_FLIGHT_SPEED = 1.0F;
-    private static final float DEFAULT_WALK_SPEED = 2.0F;
+    private static final float DEFAULT_FLIGHT_SPEED = 2.0F;
+    private static final float DEFAULT_WALK_SPEED = 1.0F;
 
     public SpeedCommand() {
         super("speed", "Sets the fly/walk speed of a player.");

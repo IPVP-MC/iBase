@@ -131,6 +131,6 @@ public class TeleportCommand extends BaseCommand {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return (args.length == 1 || args.length == 2) ? null : Collections.<String>emptyList();
+        return args.length == 1 || args.length == 2 ? null : Collections.<String>emptyList();
     }
 }

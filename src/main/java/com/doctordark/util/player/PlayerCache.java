@@ -1,5 +1,6 @@
 package com.doctordark.util.player;
 
+import com.doctordark.util.InventoryUtils;
 import com.google.common.collect.Sets;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -48,8 +49,8 @@ public class PlayerCache {
         this.gameMode = gamemode;
         this.allowFlight = allowFlight;
         this.flying = flying;
-        this.inventory = inventory; // InventoryUtils#deepClone necessary?
-        this.armor = armor; // InventoryUtils#deepClone necessary?
+        this.inventory = InventoryUtils.deepClone(inventory);
+        this.armor = InventoryUtils.deepClone(armor);
         this.health = health;
         this.food = food;
         this.level = level;

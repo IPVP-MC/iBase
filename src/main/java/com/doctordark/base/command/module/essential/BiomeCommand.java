@@ -5,7 +5,6 @@ import com.doctordark.base.command.BaseCommand;
 import com.doctordark.util.BukkitUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -39,8 +38,7 @@ public class BiomeCommand extends BaseCommand {
         }
 
         Location location = target.getLocation();
-        World world = location.getWorld();
-        Biome biome = world.getBiome(location.getBlockX(), location.getBlockZ());
+        Biome biome = location.getWorld().getBiome(location.getBlockX(), location.getBlockZ());
 
         sender.sendMessage(ChatColor.YELLOW + target.getName() + " is in the " + biome.name() + " biome.");
         return true;

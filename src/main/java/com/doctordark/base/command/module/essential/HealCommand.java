@@ -3,6 +3,7 @@ package com.doctordark.base.command.module.essential;
 import com.doctordark.base.BaseConstants;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.util.BukkitUtils;
+import com.google.common.collect.ImmutableSet;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -10,13 +11,22 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Command used for healing of players.
  */
 public class HealCommand extends BaseCommand {
+
+    private static final Set<PotionEffectType> HEALING_REMOVEABLE_POTION_EFFECTS = ImmutableSet.of(
+            PotionEffectType.SLOW,
+            PotionEffectType.SLOW_DIGGING,
+            PotionEffectType.POISON,
+            PotionEffectType.WEAKNESS
+    );
 
     public HealCommand() {
         super("heal", "Heals a player.");
@@ -25,48 +35,46 @@ public class HealCommand extends BaseCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        final Player target;
+        Player onlyTarget = null;
+        final Collection<Player> targets;
         if (args.length > 0 && sender.hasPermission(command.getPermission() + ".others")) {
             if (args[0].equalsIgnoreCase("all") && sender.hasPermission(command.getPermission() + ".all")) {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.removePotionEffect(PotionEffectType.SLOW);
-                    player.removePotionEffect(PotionEffectType.POISON);
-                    player.removePotionEffect(PotionEffectType.WEAKNESS);
-                    player.setHealth(player.getMaxHealth());
+                targets = ImmutableSet.copyOf(Bukkit.getOnlinePlayers());
+            } else {
+                if ((onlyTarget = BukkitUtils.playerWithNameOrUUID(args[0])) == null || !canSee(sender, onlyTarget)) {
+                    sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
+                    return true;
                 }
 
-                Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Healed all online players.");
-                return true;
+                targets = ImmutableSet.of(onlyTarget);
             }
-
-            target = BukkitUtils.playerWithNameOrUUID(args[0]);
         } else if (sender instanceof Player) {
-            target = (Player) sender;
+            targets = ImmutableSet.of((Player) sender);
         } else {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
         }
 
-        if (target == null || !canSee(sender, target)) {
-            sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
+        double maxHealth;
+
+        if (onlyTarget != null && (maxHealth = onlyTarget.getHealth()) == onlyTarget.getMaxHealth()) {
+            sender.sendMessage(ChatColor.RED + onlyTarget.getName() + " already has full health (" + maxHealth + ").");
             return true;
         }
 
-        double maxHealth = target.getMaxHealth();
-
-        if (target.getHealth() == maxHealth) {
-            sender.sendMessage(ChatColor.RED + target.getName() + " already has full health.");
-            return true;
+        for (Player target : targets) {
+            target.setHealth(target.getMaxHealth());
+            for (PotionEffectType type : HEALING_REMOVEABLE_POTION_EFFECTS) {
+                target.removePotionEffect(type);
+            }
         }
 
-        target.setHealth(maxHealth);
-
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Healed player " + target.getName() + '.');
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Healed " + (onlyTarget == null ? "all online players" : "player " + onlyTarget.getName()) + '.');
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return (args.length == 1) ? null : Collections.<String>emptyList();
+        return args.length == 1 ? null : Collections.<String>emptyList();
     }
 }

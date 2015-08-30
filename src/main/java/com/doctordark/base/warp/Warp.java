@@ -39,4 +39,22 @@ public class Warp extends PersistableLocation implements ConfigurationSerializab
         Validate.notNull(name, "Warp name cannot be null");
         this.name = name;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Warp warp = (Warp) o;
+
+        return !(name != null ? !name.equals(warp.name) : warp.name != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
 }

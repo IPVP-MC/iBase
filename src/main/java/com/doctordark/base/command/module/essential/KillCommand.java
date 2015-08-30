@@ -70,6 +70,6 @@ public class KillCommand extends BaseCommand {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        return (args.length == 1 && sender.hasPermission(command.getPermission() + ".others")) ? null : Collections.<String>emptyList();
+        return args.length == 1 && sender.hasPermission(command.getPermission() + ".others") ? null : Collections.<String>emptyList();
     }
 }

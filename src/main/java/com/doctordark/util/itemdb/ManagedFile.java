@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -44,7 +46,7 @@ public class ManagedFile {
         try (InputStreamReader reader = new InputStreamReader(ManagedFile.class.getResourceAsStream(resourceName), StandardCharsets.UTF_8)) {
             final MessageDigest digest = getDigest();
             try (DigestOutputStream digestStream = new DigestOutputStream(new FileOutputStream(file), digest)) {
-                try (OutputStreamWriter writer = new OutputStreamWriter(digestStream)) {
+                try (OutputStreamWriter writer = new OutputStreamWriter(digestStream, StandardCharsets.UTF_8)) {
                     final char[] buffer = new char[BUFFER_SIZE];
                     do {
                         final int length = reader.read(buffer);
@@ -61,7 +63,7 @@ public class ManagedFile {
                     final BigInteger hashInt = new BigInteger(1, digest.digest());
                     digestStream.on(false);
                     digestStream.write('#');
-                    digestStream.write(hashInt.toString(16).getBytes());
+                    digestStream.write(hashInt.toString(16).getBytes(StandardCharsets.UTF_8));
                 }
             }
         }
@@ -77,7 +79,7 @@ public class ManagedFile {
 
     public List<String> getLines() {
         try {
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getPath()), StandardCharsets.UTF_8)) {
                 final List<String> lines = new ArrayList<>();
                 do {
                     final String line = reader.readLine();

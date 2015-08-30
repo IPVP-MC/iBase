@@ -5,6 +5,7 @@ import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.user.ServerParticipator;
 import com.doctordark.util.BukkitUtils;
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,7 +14,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import sun.net.util.IPAddressUtil;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,6 +31,10 @@ public class IpHistoryCommand extends BaseCommand {
         this.plugin = plugin;
     }
 
+    /**
+     * @deprecated use Mojang API instead in an async task.
+     */
+    @Deprecated
     private Set<String> getSharingPlayerNames(String ipAddress) {
         Set<String> sharingNames = new HashSet<>();
         for (ServerParticipator participator : plugin.getUserManager().getParticipators().values()) {
@@ -111,11 +115,13 @@ public class IpHistoryCommand extends BaseCommand {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("player", "address");
+            return COMPLETIONS_FIRST;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("player")) {
             return null;
         } else {
             return Collections.emptyList();
         }
     }
+
+    private static final List<String> COMPLETIONS_FIRST = ImmutableList.of("player", "address");
 }
