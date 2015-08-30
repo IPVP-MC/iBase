@@ -137,7 +137,7 @@ public class BasePlugin extends JavaPlugin {
         commandManager = new SimpleCommandManager(this); //TODO: Configurable
         commandManager.registerAll(new ChatModule(this));
         commandManager.registerAll(new EssentialModule(this));
-        commandManager.registerAll(new InventoryModule());
+        commandManager.registerAll(new InventoryModule(this));
         commandManager.registerAll(new TeleportModule(this));
 
         getCommand("kit").setExecutor(kitExecutor = new KitExecutor(this));

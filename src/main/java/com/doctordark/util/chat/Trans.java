@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
+@Deprecated
 public class Trans extends ChatMessage {
 
     public Trans() {

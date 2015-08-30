@@ -2,6 +2,7 @@ package com.doctordark.util.chat;
 
 import net.minecraft.server.v1_7_R4.EnumClickAction;
 
+@Deprecated
 public enum ClickAction {
 
     OPEN_URL(EnumClickAction.OPEN_URL),

@@ -2,6 +2,7 @@ package com.doctordark.util.chat;
 
 import net.minecraft.server.v1_7_R4.EnumHoverAction;
 
+@Deprecated
 public enum HoverAction {
 
     SHOW_TEXT(EnumHoverAction.SHOW_TEXT),

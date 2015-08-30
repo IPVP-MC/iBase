@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Collection;
 
+@Deprecated
 public class TextUtils {
 
     public static Text join(Collection<Text> textCollection, String delimiter) {
