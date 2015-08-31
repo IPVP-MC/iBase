@@ -43,7 +43,7 @@ public class FeedCommand extends BaseCommand {
                 targets = ImmutableSet.of(onlyTarget);
             }
         } else if (sender instanceof Player) {
-            targets = ImmutableSet.of((Player) sender);
+            targets = ImmutableSet.of(onlyTarget = (Player) sender);
         } else {
             sender.sendMessage(ChatColor.RED + "Usage: " + getUsage(label));
             return true;
