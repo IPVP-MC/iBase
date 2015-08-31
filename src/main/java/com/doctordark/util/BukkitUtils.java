@@ -1,5 +1,6 @@
 package com.doctordark.util;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
@@ -44,12 +45,23 @@ public final class BukkitUtils {
     private BukkitUtils() {
     }
 
-    // String for a straight line in Bukkit.
-    private static final String STRAIGHT_LINE_TEMPLATE;
-    public static final String STRAIGHT_LINE_DEFAULT;
-
     private static final ImmutableMap<ChatColor, DyeColor> CHAT_DYE_COLOUR_MAP;
     private static final ImmutableSet<PotionEffectType> DEBUFF_TYPES;
+
+    /**
+     * The default amount of tab completion entries to limit to.
+     */
+    private static final int DEFAULT_COMPLETION_LIMIT = 80;
+
+    /**
+     * Internal use only
+     */
+    private static final String STRAIGHT_LINE_TEMPLATE;
+
+    /**
+     * The default straight line string wrapped across the Minecraft font width.
+     */
+    public static final String STRAIGHT_LINE_DEFAULT;
 
     static {
         STRAIGHT_LINE_TEMPLATE = ChatColor.STRIKETHROUGH.toString() + StringUtils.repeat("-", 256);
@@ -107,15 +119,18 @@ public final class BukkitUtils {
         return count;
     }
 
-    private static final int COMPLETION_LIMIT = 80;
-
     public static List<String> getCompletions(String[] args, List<String> input) {
-        return getCompletions(args, input, COMPLETION_LIMIT);
+        return getCompletions(args, input, DEFAULT_COMPLETION_LIMIT);
     }
 
     public static List<String> getCompletions(String[] args, List<String> input, int limit) {
+        Preconditions.checkNotNull(args);
+        Preconditions.checkArgument(args.length != 0);
+
         String argument = args[(args.length - 1)];
-        return input.stream().filter(string -> string.regionMatches(true, 0, argument, 0, argument.length())).limit(limit).collect(Collectors.toList());
+        return input.stream().filter(string ->
+                string.regionMatches(true, 0, argument, 0, argument.length())).
+                limit(limit).collect(Collectors.toList());
     }
 
     /**
@@ -126,7 +141,8 @@ public final class BukkitUtils {
      * @return the resulted display name
      */
     public static String getDisplayName(CommandSender sender) {
-        return (sender instanceof Player) ? ((Player) sender).getDisplayName() : sender.getName();
+        Preconditions.checkNotNull(sender);
+        return sender instanceof Player ? ((Player) sender).getDisplayName() : sender.getName();
     }
 
     /**
@@ -136,6 +152,7 @@ public final class BukkitUtils {
      * @return the time in milliseconds
      */
     public static long getIdleTime(Player player) {
+        Preconditions.checkNotNull(player);
         long idleTime = ((CraftPlayer) player).getHandle().x();
         return idleTime > 0L ? MinecraftServer.ar() - idleTime : 0L;
     }
@@ -208,22 +225,25 @@ public final class BukkitUtils {
     /**
      * Gets a {@link Player} with the name or {@link java.util.UUID} of given String.
      *
-     * @param id the id to search
+     * @param string a string reference to search for
      * @return the found {@link Player} or null
      */
-    public static Player playerWithNameOrUUID(String id) {
-        return JavaUtils.isUUID(id) ? Bukkit.getPlayer(UUID.fromString(id)) : Bukkit.getPlayer(id);
+    public static Player playerWithNameOrUUID(String string) {
+        if (string == null) return null;
+        return JavaUtils.isUUID(string) ? Bukkit.getPlayer(UUID.fromString(string)) : Bukkit.getPlayer(string);
     }
 
     /**
      * Gets a {@link OfflinePlayer} with the name or {@link java.util.UUID} of given String.
      *
-     * @param id the id to search
-     * @return the found {@link OfflinePlayer} or null
+     * @param string a string reference to search for
+     * @return the found {@link OfflinePlayer} or {@code null}
+     * @deprecated use of {@link Bukkit#getOfflinePlayer(String)}
      */
     @Deprecated
-    public static OfflinePlayer offlinePlayerWithNameOrUUID(String id) {
-        return JavaUtils.isUUID(id) ? Bukkit.getOfflinePlayer(UUID.fromString(id)) : Bukkit.getOfflinePlayer(id);
+    public static OfflinePlayer offlinePlayerWithNameOrUUID(String string) {
+        if (string == null) return null;
+        return JavaUtils.isUUID(string) ? Bukkit.getOfflinePlayer(UUID.fromString(string)) : Bukkit.getOfflinePlayer(string);
     }
 
     /**
@@ -234,7 +254,7 @@ public final class BukkitUtils {
      * @param distance the distance to check for
      * @return true if the {@link Location} is within the distance
      */
-    public static boolean isWithinX(Location location, Location other, int distance) {
+    public static boolean isWithinX(Location location, Location other, double distance) {
         return location.getWorld().equals(other.getWorld()) &&
                 Math.abs(other.getX() - location.getX()) <= distance && Math.abs(other.getZ() - location.getZ()) <= distance;
     }
@@ -306,14 +326,12 @@ public final class BukkitUtils {
      * @return true if the {@link ThrownPotion} is a debuff
      */
     public static boolean isDebuff(ThrownPotion thrownPotion) {
-        boolean result = false;
         for (PotionEffect effect : thrownPotion.getEffects()) {
             if (isDebuff(effect)) {
-                result = true;
-                break;
+                return true;
             }
         }
 
-        return result;
+        return false;
     }
 }

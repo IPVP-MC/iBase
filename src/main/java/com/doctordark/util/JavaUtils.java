@@ -2,13 +2,14 @@ package com.doctordark.util;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
-import com.google.common.collect.Iterables;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -17,25 +18,9 @@ import java.util.regex.Pattern;
  */
 public final class JavaUtils {
 
-    private static final Pattern UUID_PATTERN;
-
-    static {
-        UUID_PATTERN = Pattern.compile("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[34][0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}");
-    }
-
-    private JavaUtils() {
-    }
-
     /**
-     * Checks if an {@link String} is a {@link java.util.UUID}.
-     *
-     * @param input the input to check
-     * @return true if the input is a {@link java.util.UUID}
+     * Character matcher used to test if a string reference is ASCII
      */
-    public static boolean isUUID(String input) {
-        return UUID_PATTERN.matcher(input).find();
-    }
-
     private static final CharMatcher CHAR_MATCHER_ASCII = CharMatcher.inRange('0', '9').
             or(CharMatcher.inRange('a', 'z')).
             or(CharMatcher.inRange('A', 'Z')).
@@ -43,105 +28,129 @@ public final class JavaUtils {
             precomputed();
 
     /**
-     * Returns the given string if it is alphanumeric.
+     * Regex pattern to validate a UUID.
+     */
+    private static final Pattern UUID_PATTERN = Pattern.compile("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[34][0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}");
+
+    /**
+     * The default amount of decimal places to format a number to.
+     */
+    private static final int DEFAULT_NUMBER_FORMAT_DECIMAL_PLACES = 5;
+
+    private JavaUtils() {
+    }
+
+    /**
+     * Checks if a given String is a UUID.
      *
-     * @param string the string to test
-     * @return true if it is alphanumeric
+     * @param string a string reference to check
+     * @return {@code true} if the given String is a UUID
+     */
+    public static boolean isUUID(String string) {
+        return UUID_PATTERN.matcher(string).find();
+    }
+
+    /**
+     * Checks if a given string is alphanumeric.
+     *
+     * @param string a string reference to check
+     * @return {@code true} if the given String is alphanumeric
      */
     public static boolean isAlphanumeric(String string) {
         return CHAR_MATCHER_ASCII.matchesAllOf(string);
     }
 
     /**
-     * Returns the given collection if it has an object that contains a
-     * non case-sensitive string.
+     * Checks if an Iterable contains a search character, handling {@code null}.
      *
-     * @param collection the collection to test
-     * @param string     the string to test
-     * @return true if the collection contains string
+     * @param elements the {@code Iterable} to check, entries may be null
+     * @param string   the string to find
+     * @return true if the iterable contains string
      */
-    public static boolean containsIgnoreCase(Collection<?> collection, String string) {
-        boolean result = false;
-        for (Object object : collection) {
-            final String next;
-            if (object instanceof String) {
-                next = (String) object;
-            } else {
-                next = String.valueOf(object);
-            }
-
-            if (StringUtils.containsIgnoreCase(next, string)) {
-                result = true;
-                break;
+    public static boolean containsIgnoreCase(Iterable<? extends String> elements, String string) {
+        for (String element : elements) {
+            if (StringUtils.containsIgnoreCase(element, string)) {
+                return true;
             }
         }
 
-        return result;
+        return false;
     }
 
     /**
-     * Joins a collection of strings together using {@link Joiner#join(Iterable)} as a base
-     * with the last object using and instead of a comma.
+     * Formats a Number with {@link JavaUtils#DEFAULT_NUMBER_FORMAT_DECIMAL_PLACES} amount of decimal
+     * places using {@link RoundingMode#HALF_DOWN} for calculating.
      *
-     * @param collection     the collection to join
-     * @param commaBeforeAnd if a comma should be shown before the and
-     * @return the returned list or empty string is collection is null or empty
-     */
-    public static String andJoin(Collection<String> collection, boolean commaBeforeAnd) {
-        if (collection == null || collection.isEmpty()) {
-            return "";
-        }
-
-        String last = Iterables.getLast(collection, null);
-        collection.remove(last);
-
-        StringBuilder builder = new StringBuilder(Joiner.on(", ").join(collection));
-        if (commaBeforeAnd) {
-            builder.append(',');
-        }
-
-        return builder.append(" and ").append(last).toString();
-    }
-
-    /**
-     * Formats a number to 5 decimal places using {@link RoundingMode#HALF_DOWN}.
-     *
-     * @param number the number to format
-     * @return the formatted string
+     * @param number the {@link Number} to format
+     * @return a {@code string} that has been formatted
      */
     public static String format(Number number) {
-        return format(number, 5);
+        return format(number, DEFAULT_NUMBER_FORMAT_DECIMAL_PLACES);
     }
 
     /**
-     * Formats a number with a given amount of decimal places using
-     * {@link RoundingMode#HALF_DOWN}.
+     * Formats a Number with a given amount of decimal places using {@link RoundingMode#HALF_DOWN}
+     * for calculating.
      *
-     * @param number        the number to format
-     * @param decimalPlaces the decimal places
-     * @return the formatted string
+     * @param number        the {@link Number} to format
+     * @param decimalPlaces the decimal places to format to
+     * @return a {@code string} that has been formatted
      */
     public static String format(Number number, int decimalPlaces) {
         return format(number, decimalPlaces, RoundingMode.HALF_DOWN);
     }
 
     /**
-     * Formats a number with a given amount of decimal places and a RoundingMode.
+     * Formats a Number with a given amount of decimal places and a RoundingMode
+     * to use for calculating.
      *
-     * @param number        the number to format
-     * @param decimalPlaces the decimal places
-     * @param roundingMode  the rounding mode
-     * @return the formatted string
+     * @param number        the {@link Number} to format
+     * @param decimalPlaces the decimal places to format to
+     * @param roundingMode  the {@link RoundingMode} for calculating
+     * @return a {@code string} that has been formatted
      */
     public static String format(Number number, int decimalPlaces, RoundingMode roundingMode) {
         Validate.notNull(number, "The number cannot be null");
-        double doubleValue = number.doubleValue();
-        if (doubleValue == 0.0D) {
-            return "0";
-        } else {
-            BigDecimal bigDecimal = new BigDecimal(Double.toString(doubleValue));
-            return bigDecimal.setScale(decimalPlaces, roundingMode).stripTrailingZeros().toPlainString();
+        return new BigDecimal(number.toString()).setScale(decimalPlaces, roundingMode).stripTrailingZeros().toPlainString();
+    }
+
+    //TODO: The following below needs to be cleaned up and/or rewritten.
+
+    /**
+     * Joins a collection of strings together using {@link Joiner#join(Iterable)} as a base
+     * with the last object using 'and' just before instead of the selected delimiter as a comma.
+     *
+     * @param collection         the collection to join
+     * @param delimiterBeforeAnd if the delimiterBeforeAnd should be shown before the 'and' text
+     * @return the returned list or empty string is collection is null or empty
+     */
+    public static String andJoin(Collection<String> collection, boolean delimiterBeforeAnd) {
+        return JavaUtils.andJoin(collection, delimiterBeforeAnd, ", ");
+    }
+
+    /**
+     * Joins a collection of strings together using {@link Joiner#join(Iterable)} as a base
+     * with the last object using 'and' just before instead of the selected delimiter.
+     *
+     * @param collection         the collection to join
+     * @param delimiterBeforeAnd if the delimiterBeforeAnd should be shown before the 'and' text
+     * @param delimiter          the delimiter to join with
+     * @return the returned list or empty string is collection is null or empty
+     */
+    public static String andJoin(Collection<String> collection, boolean delimiterBeforeAnd, String delimiter) {
+        if (collection == null || collection.isEmpty()) {
+            return "";
         }
+
+        List<String> contents = new ArrayList<>(collection);
+        String last = contents.remove(contents.size() - 1);
+
+        StringBuilder builder = new StringBuilder(Joiner.on(delimiter).join(contents));
+        if (delimiterBeforeAnd) {
+            builder.append(',');
+        }
+
+        return builder.append(" and ").append(last).toString();
     }
 
     /**

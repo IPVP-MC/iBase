@@ -2,7 +2,6 @@ package com.doctordark.base.task;
 
 import com.doctordark.base.BasePlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collections;
@@ -21,7 +20,7 @@ public class AnnouncementHandler extends BukkitRunnable {
         List<String> announcements = this.plugin.getServerHandler().getAnnouncements();
         if (!announcements.isEmpty()) {
             String next = announcements.get(0);
-            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', next));
+            Bukkit.broadcastMessage(next);
             Collections.rotate(announcements, -1);
         }
     }
