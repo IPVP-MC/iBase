@@ -51,11 +51,11 @@ public class CuboidBlockIterator implements Iterator<Block> {
     public Block next() {
         Block block = world.getBlockAt(baseX + x, baseY + y, baseZ + z);
 
-        if (x++ >= sizeX) {
+        if (++x >= sizeX) {
             x = 0;
-            if (y++ >= sizeY) {
+            if (++y >= sizeY) {
                 y = 0;
-                z++;
+                ++z;
             }
         }
 
