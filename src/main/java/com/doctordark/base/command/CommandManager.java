@@ -9,6 +9,7 @@ public interface CommandManager {
      * Checks if a {@link BaseCommand} is held by this {@link CommandManager}.
      *
      * @param command the {@link BaseCommand} to check
+     * @return true if this manager contains the command
      */
     boolean containsCommand(BaseCommand command);
 

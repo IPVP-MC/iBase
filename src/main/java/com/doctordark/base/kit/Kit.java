@@ -399,6 +399,7 @@ public class Kit implements ConfigurationSerializable {
      *
      * @param player the {@link Player} to apply to
      * @param force  if it should ignore conditions
+     * @param inform if a message should be sent informing about the apply
      * @return true if the {@link Kit} was successfully applied
      */
     public boolean applyTo(Player player, boolean force, boolean inform) {

@@ -40,7 +40,8 @@ public interface ItemDb {
     /**
      * Gets an item with a given id and quantity.
      *
-     * @param id the id to search
+     * @param id       the id to search
+     * @param quantity the quantity to get with
      * @return item with given id and quantity
      */
     ItemStack getItem(String id, int quantity);

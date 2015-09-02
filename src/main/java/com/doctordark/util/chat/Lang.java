@@ -1,5 +1,6 @@
 package com.doctordark.util.chat;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.Maps;
 import net.minecraft.server.v1_7_R4.Item;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
@@ -38,7 +39,8 @@ public class Lang {
      * This must be called after Craftbukkit loads, before you attempt to
      * access any other methods of this class.
      *
-     * @throws IOException
+     * @param lang the language to initialise with
+     * @throws IOException if could not access resource
      */
     public static void initialize(String lang) throws IOException {
         translations = Maps.newHashMap();
@@ -84,8 +86,7 @@ public class Lang {
     /**
      * get the translatable string representing the name of the provided item stack.
      * eg.
-     * Lang.translatableFromStack(new ItemStack(Material.INK_SACK, 1, 4))
-     * -> "item.dye.blue"
+     * Lang.translatableFromStack(new ItemStack(Material.INK_SACK, 1, 4)) = "item.dye.blue"
      *
      * @param stack - a Bukkit ItemStack
      * @return the translatable string representing the item name.
@@ -99,64 +100,46 @@ public class Lang {
     /**
      * get the name of the provided item translated to the server's language
      * eg.
-     * Lang.fromStack(new ItemStack(Material.INK_SACK, 1, 4))
-     * -> "Lapis Lazuli"
+     * Lang.fromStack(new ItemStack(Material.INK_SACK, 1, 4)) = "Lapis Lazuli"
      *
      * @param stack - a Bukkit ItemStack
      * @return translated name of the item.
      */
     public static String fromStack(ItemStack stack) {
         String node = translatableFromStack(stack);
-        String val = translations.get(node);
-        if (val == null) {
-            return node;
-        }
-        return val;
+        return MoreObjects.firstNonNull(translations.get(node), node);
     }
 
     /**
      * get the translatable string representing the name of the provided enchantment
      * eg.
-     * Lang.translatableFromEnchantment(Enchantment.DIG_SPEED)
-     * -> "enchantment.digging"
+     * Lang.translatableFromEnchantment(Enchantment.DIG_SPEED) = "enchantment.digging"
      *
      * @param ench - a Bukkit Enchantment
      * @return the translatable string representing the name of the enchantment.
      */
     public static String translatableFromEnchantment(Enchantment ench) {
-
         net.minecraft.server.v1_7_R4.Enchantment nms = net.minecraft.server.v1_7_R4.Enchantment.byId[ench.getId()];
-        if (nms == null) {
-            return ench.getName();
-        } else {
-            return nms.a();
-        }
+        return nms == null ? ench.getName() : nms.a();
     }
 
     /**
      * get the name of the provided enchantment translated to the server's language
      * eg.
-     * Lang.fromEnchantment(Enchantment.DIG_SPEED)
-     * -> "enchantment.digging"
+     * Lang.fromEnchantment(Enchantment.DIG_SPEED) = "enchantment.digging"
      *
      * @param ench - a Bukkit Enchantment
      * @return - translated name of the enchantment.
      */
     public static String fromEnchantment(Enchantment ench) {
         String node = translatableFromEnchantment(ench);
-        String val = translations.get(node);
-        if (val == null) {
-            return node;
-        }
-        return val;
+        return MoreObjects.firstNonNull(translations.get(node), node);
     }
-
 
     /**
      * get the translatable string representing the name of the provided potion effect.
      * eg.
-     * Lang.translatableFromEnchantment(PotionEffectType.FAST_DIGGING)
-     * -> "potion.digSpeed"
+     * Lang.translatableFromEnchantment(PotionEffectType.FAST_DIGGING) = "potion.digSpeed"
      *
      * @param effectType - a PotionEffectType
      * @return the translatable string representing the name of the potion effect.
@@ -169,8 +152,7 @@ public class Lang {
     /**
      * get the name of the provided Potion Effect translated to the server's language
      * eg.
-     * Lang.fromPotionEffectType(PotionEffectType.FAST_DIGGING)
-     * -> "potion.digSpeed"
+     * Lang.fromPotionEffectType(PotionEffectType.FAST_DIGGING) = "potion.digSpeed"
      *
      * @param effectType - a PotionEffectType
      * @return - translated name of the Potion Effect.
@@ -191,8 +173,7 @@ public class Lang {
      * if args are provided, the translated string must contain the same number of
      * placeholders, the args will be substituted using String.format()
      * eg.
-     * Lang.translate("record.nowPlaying", "My favourite Song");
-     * -> "Now playing: My Favourite Song"
+     * Lang.translate("record.nowPlaying", "My favourite Song") - "Now playing: My Favourite Song"
      *
      * @param key  - the translatable string. eg.
      * @param args - objects to be formatted into the translated string.

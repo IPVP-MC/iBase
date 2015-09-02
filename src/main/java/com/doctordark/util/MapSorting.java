@@ -34,6 +34,8 @@ public class MapSorting {
     /**
      * Sort the given map by the value in each entry.
      *
+     * @param <T> the key
+     * @param <V> the value
      * @param map - map of comparable values.
      * @return A new list with the sort result.
      */
@@ -44,6 +46,8 @@ public class MapSorting {
     /**
      * Sort the given map by the value in each entry.
      *
+     * @param <T>             the key
+     * @param <V>             the value
      * @param map             - map of comparable values.
      * @param valueComparator - object for comparing each values.
      * @return A new list with the sort result.
@@ -55,6 +59,8 @@ public class MapSorting {
     /**
      * Retrieve every key in the entry list in order.
      *
+     * @param <T>       the key
+     * @param <V>       the value
      * @param entryList - the entry list.
      * @return Every key in order.
      */
@@ -66,6 +72,8 @@ public class MapSorting {
      * Retrieve every value in the entry list in order.
      *
      * @param entryList - the entry list.
+     * @param <T>       the key
+     * @param <V>       the value
      * @return Every value in order.
      */
     public static <T, V> Iterable<V> values(List<Entry<T, V>> entryList) {

@@ -56,6 +56,7 @@ public class BossBarManager {
     /**
      * Checks if a {@link BossBar} is currently being shown to a {@link Player}.
      *
+     * @param player the {@link Player} to check for
      * @return true if the {@link Player} has a shown {@link BossBar}
      */
     public static boolean isShowingBossBar(Player player) {
@@ -95,8 +96,6 @@ public class BossBarManager {
     }
 
     /**
-     * Displays a {@link BossBar} that doesn't expire for a {@link Player}.
-     *
      * @see #showBossBar(BossBar, Player, long)
      */
     public static void showBossBar(BossBar bossBar, Player player) {

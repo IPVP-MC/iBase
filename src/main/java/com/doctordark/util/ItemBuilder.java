@@ -108,8 +108,6 @@ public class ItemBuilder {
     }
 
     /**
-     * Adds an enchantment to this item builder using unsafe calls.
-     *
      * @see ItemBuilder#enchant(Enchantment, int, boolean)
      */
     public ItemBuilder enchant(Enchantment enchantment, int level) {

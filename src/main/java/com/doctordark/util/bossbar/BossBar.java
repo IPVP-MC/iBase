@@ -28,7 +28,8 @@ public class BossBar {
     /**
      * Constructs a new {@link BossBar} with a given title and full health.
      *
-     * @param title the title to set
+     * @param location the {@link Location} to construct at
+     * @param title    the title to set
      */
     public BossBar(Location location, String title) {
         this(location, title, 100);
@@ -38,6 +39,7 @@ public class BossBar {
      * Constructs a new {@link BossBar} with a given title and
      * percentage of health.
      *
+     * @param location the {@link Location} to construct at
      * @param title   the title to set
      * @param percent the health percent to set
      */
