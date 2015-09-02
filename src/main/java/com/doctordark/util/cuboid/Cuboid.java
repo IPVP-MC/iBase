@@ -196,18 +196,28 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return the edges of this {@link Cuboid}
      */
     public List<Vector> edges() {
-        List<Vector> result = new ArrayList<>();
-        Vector v1 = getMinimumPoint().toVector();
-        Vector v2 = getMaximumPoint().toVector();
+        Vector v1 = getMinimumPoint();
+        Vector v2 = getMaximumPoint();
 
-        for (int x = v1.getBlockX(); x <= v2.getBlockX(); x++) {
+        final int startX = v1.getBlockX();
+        final int endX = v2.getBlockX();
+        final int startZ = v1.getBlockZ() + 1;
+        final int endZ = v2.getBlockZ();
+
+        int capacity = ((endX - startX) * 4) + ((endZ - startZ) * 4);
+        capacity += 4; // we do this because the second loop doesn't check '<=' but just '<'.
+
+        List<Vector> result = new ArrayList<>(capacity);
+        if (capacity <= 0) return result;
+
+        for (int x = startX; x <= endX; x++) {
             result.add(new Vector(x, v1.getBlockY(), v1.getBlockZ()));
             result.add(new Vector(x, v1.getBlockY(), v2.getBlockZ()));
             result.add(new Vector(x, v2.getBlockY(), v1.getBlockZ()));
             result.add(new Vector(x, v2.getBlockY(), v2.getBlockZ()));
         }
 
-        for (int z = v1.getBlockZ() + 1; z < v2.getBlockZ(); z++) {
+        for (int z = startZ; z < endZ; z++) {
             result.add(new Vector(v1.getBlockX(), v1.getBlockY(), z));
             result.add(new Vector(v1.getBlockX(), v2.getBlockY(), z));
             result.add(new Vector(v2.getBlockX(), v1.getBlockY(), z));
