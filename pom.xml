@@ -9,8 +9,8 @@
 
     <repositories>
         <repository>
-            <id>comphenix-repo</id>
-            <url>http://repo.comphenix.net/content/groups/public/</url>
+            <id>protocollib-repo</id>
+            <url>http://repo.dmulloy2.net/content/groups/public/</url>
         </repository>
         <repository>
             <id>confuser-repo</id>
@@ -23,17 +23,19 @@
             <groupId>pl.project13.maven</groupId>
             <artifactId>git-commit-id-plugin</artifactId>
             <version>2.1.15</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>LATEST</version>
-            <type>jar</type>
+            <version>3.6.4</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.confuser</groupId>
             <artifactId>BanManager</artifactId>
             <version>5.6.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Locally for now -->
@@ -41,11 +43,13 @@
             <groupId>org.github.paperspigot</groupId>
             <artifactId>paperspigot-api</artifactId>
             <version>1.7.10-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.github.paperspigot</groupId>
             <artifactId>paperspigot</artifactId>
             <version>1.7.10-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <!-- Locally for now -->
     </dependencies>
