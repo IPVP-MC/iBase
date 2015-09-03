@@ -151,7 +151,7 @@ public class MessageSpyCommand extends BaseCommand {
             }
 
             @SuppressWarnings("deprecation")
-            OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(args[1]);
+            OfflinePlayer offlineTarget = Bukkit.getOfflinePlayer(args[1]); //TODO: breaking, can hang main thread, async
 
             if (!offlineTarget.hasPlayedBefore() && offlineTarget.getPlayer() == null) {
                 sender.sendMessage(ChatColor.GOLD + "Player '" + ChatColor.WHITE + args[1] + ChatColor.GOLD + "' not found.");
@@ -235,7 +235,7 @@ public class MessageSpyCommand extends BaseCommand {
             }
 
             for (String spyingId : messageSpying) {
-                String name = Bukkit.getOfflinePlayer(UUID.fromString(spyingId)).getName();
+                String name = Bukkit.getOfflinePlayer(UUID.fromString(spyingId)).getName(); //TODO: breaking, can hang main thread, async
                 if (name == null) continue;
                 spyingNames.add(name);
             }

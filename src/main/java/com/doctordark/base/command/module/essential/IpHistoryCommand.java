@@ -36,6 +36,7 @@ public class IpHistoryCommand extends BaseCommand {
      */
     @Deprecated
     private Set<String> getSharingPlayerNames(String ipAddress) {
+        //TODO: Use Mojang API instead
         Set<String> sharingNames = new HashSet<>();
         for (ServerParticipator participator : plugin.getUserManager().getParticipators().values()) {
             if (participator instanceof BaseUser) {

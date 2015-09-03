@@ -243,7 +243,7 @@ public final class BukkitUtils {
     @Deprecated
     public static OfflinePlayer offlinePlayerWithNameOrUUID(String string) {
         if (string == null) return null;
-        return JavaUtils.isUUID(string) ? Bukkit.getOfflinePlayer(UUID.fromString(string)) : Bukkit.getOfflinePlayer(string);
+        return JavaUtils.isUUID(string) ? Bukkit.getOfflinePlayer(UUID.fromString(string)) : Bukkit.getOfflinePlayer(string); //TODO: breaking, can hang main thread, async
     }
 
     /**
