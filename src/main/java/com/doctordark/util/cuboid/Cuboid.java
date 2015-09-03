@@ -199,29 +199,33 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         Vector v1 = getMinimumPoint();
         Vector v2 = getMaximumPoint();
 
-        final int startX = v1.getBlockX();
-        final int endX = v2.getBlockX();
-        final int startZ = v1.getBlockZ() + 1;
-        final int endZ = v2.getBlockZ();
+        final int minX = v1.getBlockX();
+        final int maxX = v2.getBlockX();
+        final int minZ = v1.getBlockZ();
+        final int startX = minZ + 1;
+        final int maxZ = v2.getBlockZ();
 
-        int capacity = ((endX - startX) * 4) + ((endZ - startZ) * 4);
+        int capacity = ((maxX - minX) * 4) + ((maxZ - minZ) * 4);
         capacity += 4; // we do this because the second loop doesn't check '<=' but just '<'.
 
         List<Vector> result = new ArrayList<>(capacity);
         if (capacity <= 0) return result;
 
-        for (int x = startX; x <= endX; x++) {
-            result.add(new Vector(x, v1.getBlockY(), v1.getBlockZ()));
-            result.add(new Vector(x, v1.getBlockY(), v2.getBlockZ()));
-            result.add(new Vector(x, v2.getBlockY(), v1.getBlockZ()));
-            result.add(new Vector(x, v2.getBlockY(), v2.getBlockZ()));
+        final int minY = v1.getBlockY();
+        final int maxY = v1.getBlockY();
+
+        for (int x = minX; x <= maxX; x++) {
+            result.add(new Vector(x, minY, minZ));
+            result.add(new Vector(x, minY, maxZ));
+            result.add(new Vector(x, maxY, minZ));
+            result.add(new Vector(x, maxY, maxZ));
         }
 
-        for (int z = startZ; z < endZ; z++) {
-            result.add(new Vector(v1.getBlockX(), v1.getBlockY(), z));
-            result.add(new Vector(v1.getBlockX(), v2.getBlockY(), z));
-            result.add(new Vector(v2.getBlockX(), v1.getBlockY(), z));
-            result.add(new Vector(v2.getBlockX(), v2.getBlockY(), z));
+        for (int z = startX; z < maxZ; z++) {
+            result.add(new Vector(minX, minY, z));
+            result.add(new Vector(minX, maxY, z));
+            result.add(new Vector(maxX, minY, z));
+            result.add(new Vector(maxX, maxY, z));
         }
 
         return result;
@@ -655,7 +659,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return the {@link Cuboid} width
      */
     public int getWidth() {
-        return (getMaximumPoint().getBlockX() - getMinimumPoint().getBlockX() + 1);
+        return getMaximumPoint().getBlockX() - getMinimumPoint().getBlockX();
     }
 
     /**
@@ -664,7 +668,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return the {@link Cuboid} height
      */
     public int getHeight() {
-        return (getMaximumPoint().getBlockY() - getMinimumPoint().getBlockY() + 1);
+        return getMaximumPoint().getBlockY() - getMinimumPoint().getBlockY();
     }
 
     /**
@@ -673,7 +677,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return the {@link Cuboid} length
      */
     public int getLength() {
-        return (getMaximumPoint().getBlockZ() - getMinimumPoint().getBlockZ() + 1);
+        return getMaximumPoint().getBlockZ() - getMinimumPoint().getBlockZ();
     }
 
     /**
