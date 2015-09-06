@@ -1,7 +1,8 @@
 package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
-import com.google.common.collect.Lists;
+import com.google.common.base.Enums;
+import com.google.common.base.Optional;
 import com.google.common.primitives.Ints;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,6 +17,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,31 +37,23 @@ public class RemoveEntityCommand extends BaseCommand {
         }
 
         World world = Bukkit.getWorld(args[0]);
-        EntityType entityType;
-        try {
-            entityType = EntityType.valueOf(args[1]);
-        } catch (Exception ex) {
+        Optional<EntityType> optionalType = Enums.getIfPresent(EntityType.class, args[1].toUpperCase());
+
+        if (!optionalType.isPresent()) {
             sender.sendMessage(ChatColor.RED + "Not an entity named '" + args[1] + "'.");
             return true;
         }
+
+        EntityType entityType = optionalType.get();
 
         if (entityType == EntityType.PLAYER) {
             sender.sendMessage(ChatColor.RED + "You cannot remove " + entityType.name() + " entities!");
             return true;
         }
 
-        boolean removeCustomNamed = false;
-        if (args.length >= 3) {
-            try {
-                removeCustomNamed = Boolean.parseBoolean(args[2]);
-            } catch (Exception ex) {
-                sender.sendMessage(ChatColor.RED + "Usage: " + getUsage());
-                return true;
-            }
-        }
-
+        final boolean removeCustomNamed = args.length > 2 && Boolean.parseBoolean(args[2]);
         final Integer radius;
-        if (args.length >= 4) {
+        if (args.length > 3) {
             radius = Ints.tryParse(args[3]);
             if (radius == null) {
                 sender.sendMessage(ChatColor.RED + "'" + args[3] + "' is not a number.");
@@ -70,31 +64,33 @@ public class RemoveEntityCommand extends BaseCommand {
                 sender.sendMessage(ChatColor.RED + "Radius must be positive.");
                 return true;
             }
-        } else {
-            radius = 0;
-        }
+        } else radius = 0;
 
-        Location location = (sender instanceof Player) ? ((Player) sender).getLocation() : null;
+        final Location location = sender instanceof Player ? ((Player) sender).getLocation() : null;
 
         int removed = 0;
         for (Chunk chunk : world.getLoadedChunks()) {
             for (Entity entity : chunk.getEntities()) {
-                if (entity.getType() != entityType) continue;
-                if (radius == 0 || (location != null && location.distanceSquared(entity.getLocation()) <= radius)) {
-                    if (entity instanceof Tameable && ((Tameable) entity).isTamed()) continue;
-                    if (entity instanceof LivingEntity) {
-                        LivingEntity livingEntity = (LivingEntity) entity;
-                        if (!removeCustomNamed && livingEntity.getCustomName() != null) {
-                            continue;
+                if (entity.getType() == entityType) {
+                    if (radius == 0 || (location != null && location.distanceSquared(entity.getLocation()) <= radius)) {
+                        if (!removeCustomNamed) {
+                            if (entity instanceof Tameable && ((Tameable) entity).isTamed()) continue;
+                            if (entity instanceof LivingEntity) {
+                                LivingEntity livingEntity = (LivingEntity) entity;
+                                if (livingEntity.getCustomName() != null) {
+                                    continue;
+                                }
+                            }
                         }
-                    }
 
-                    entity.remove();
-                    removed++;
+                        entity.remove();
+                        removed++;
+                    }
                 }
             }
         }
-        sender.sendMessage(ChatColor.YELLOW + "Removed " + removed + " of " + entityType.name() + '.');
+
+        sender.sendMessage(ChatColor.YELLOW + "Removed " + removed + " of " + entityType.getName() + '.');
         return true;
     }
 
@@ -105,10 +101,13 @@ public class RemoveEntityCommand extends BaseCommand {
                 return Bukkit.getWorlds().stream().map(World::getName).collect(Collectors.toList());
             case 2:
                 EntityType[] entityTypes = EntityType.values();
-                List<String> results = Lists.newArrayListWithCapacity(entityTypes.length);
+                List<String> results = new ArrayList<>(entityTypes.length);
                 for (EntityType entityType : entityTypes) {
-                    results.add(entityType.getName());
+                    if (entityType != EntityType.PLAYER) {
+                        results.add(entityType.name());
+                    }
                 }
+
                 return results;
             default:
                 return Collections.emptyList();
