@@ -28,11 +28,13 @@ public class EntitiesCommand extends BaseCommand {
 
             EntityType[] types = EntityType.values();
             for (EntityType entityType : types) {
-                Class<? extends Entity> entityClass = entityType.getEntityClass();
-                if (entityClass != null) {
-                    int amount = world.getEntitiesByClass(entityClass).size();
-                    if (amount >= 20) {
-                        sender.sendMessage(ChatColor.YELLOW + " " + entityType.getName() + " with " + amount);
+                if (entityType != EntityType.UNKNOWN) {
+                    Class<? extends Entity> entityClass = entityType.getEntityClass();
+                    if (entityClass != null) {
+                        int amount = world.getEntitiesByClass(entityClass).size();
+                        if (amount >= 20) {
+                            sender.sendMessage(ChatColor.YELLOW + " " + entityType.getName() + " with " + amount);
+                        }
                     }
                 }
             }
