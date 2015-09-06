@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
 import java.util.Collection;
@@ -27,14 +28,12 @@ public class EntitiesCommand extends BaseCommand {
 
             EntityType[] types = EntityType.values();
             for (EntityType entityType : types) {
-                // Throws errors sometimes.
-
-                try {
-                    int amount = world.getEntitiesByClass(entityType.getEntityClass()).size();
+                Class<? extends Entity> entityClass = entityType.getEntityClass();
+                if (entityClass != null) {
+                    int amount = world.getEntitiesByClass(entityClass).size();
                     if (amount >= 20) {
-                        sender.sendMessage(ChatColor.YELLOW + " " + entityType.name() + " with " + amount);
+                        sender.sendMessage(ChatColor.YELLOW + " " + entityType.getName() + " with " + amount);
                     }
-                } catch (ClassCastException ignored) {
                 }
             }
         }
