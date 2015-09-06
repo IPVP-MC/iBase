@@ -155,14 +155,15 @@ public class ChatListener implements Listener {
         String recipientId = recipient.getUniqueId().toString();
 
         Collection<CommandSender> recipients = new HashSet<>(Bukkit.getOnlinePlayers());
+        recipients.remove(sender);
+        recipients.remove(recipient);
         recipients.add(Bukkit.getConsoleSender());
+        
         for (CommandSender target : recipients) {
-            if (!target.equals(sender) && !recipient.equals(sender)) {
-                ServerParticipator participator = plugin.getUserManager().getParticipator(target);
-                Set<String> messageSpying = participator.getMessageSpying();
-                if (messageSpying.contains("all") || messageSpying.contains(recipientId) || messageSpying.contains(senderId)) {
-                    target.sendMessage(String.format(Locale.ENGLISH, MESSAGE_SPY_FORMAT, sender.getName(), recipient.getName(), message));
-                }
+            ServerParticipator participator = plugin.getUserManager().getParticipator(target);
+            Set<String> messageSpying = participator.getMessageSpying();
+            if (messageSpying.contains("all") || messageSpying.contains(recipientId) || messageSpying.contains(senderId)) {
+                target.sendMessage(String.format(Locale.ENGLISH, MESSAGE_SPY_FORMAT, sender.getName(), recipient.getName(), message));
             }
         }
     }
