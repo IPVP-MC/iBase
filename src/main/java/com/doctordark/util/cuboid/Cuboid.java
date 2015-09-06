@@ -490,20 +490,15 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return a new {@link Cuboid} outset by the given {@link CuboidDirection} and amount
      */
     public Cuboid outset(CuboidDirection dir, int amount) {
-        Cuboid result = this;
-        while (true) {
-            switch (dir) {
-                case HORIZONTAL:
-                    return result.expand(CuboidDirection.NORTH, amount).expand(CuboidDirection.SOUTH, amount).expand(CuboidDirection.EAST, amount).expand(CuboidDirection.WEST, amount);
-                case VERTICAL:
-                    return result.expand(CuboidDirection.DOWN, amount).expand(CuboidDirection.UP, amount);
-                case BOTH:
-                    dir = CuboidDirection.VERTICAL;
-                    result = result.outset(CuboidDirection.HORIZONTAL, amount);
-                    continue;
-                default:
-                    throw new IllegalArgumentException("invalid direction " + dir);
-            }
+        switch (dir) {
+            case HORIZONTAL:
+                return expand(CuboidDirection.NORTH, amount).expand(CuboidDirection.SOUTH, amount).expand(CuboidDirection.EAST, amount).expand(CuboidDirection.WEST, amount);
+            case VERTICAL:
+                return expand(CuboidDirection.DOWN, amount).expand(CuboidDirection.UP, amount);
+            case BOTH:
+                return outset(CuboidDirection.HORIZONTAL, amount).outset(CuboidDirection.VERTICAL, amount);
+            default:
+                throw new IllegalArgumentException("invalid direction " + dir);
         }
     }
 
