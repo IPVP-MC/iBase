@@ -89,7 +89,8 @@ public class MobstackListener implements Listener {
         }
 
         CreatureSpawner spawner = event.getSpawner();
-        if (spawner.getWorld().getEnvironment() == World.Environment.THE_END) {
+        World world = spawner.getWorld();
+        if (world != null && world.getEnvironment() == World.Environment.THE_END) {
             return;
         }
 
@@ -180,7 +181,7 @@ public class MobstackListener implements Listener {
         if (stackedQuantity != null && stackedQuantity > 1) {
             // Spawn another entity in the killed entity's place.
             LivingEntity respawned = (LivingEntity) livingEntity.getWorld().spawnEntity(livingEntity.getLocation(), event.getEntityType());
-            setStackedQuantity(respawned, --stackedQuantity);
+            setStackedQuantity(respawned, Math.min(MAX_STACKED_QUANTITY, --stackedQuantity));
 
             // Always adultify.
             if (respawned instanceof Ageable) ((Ageable) respawned).setAdult();
