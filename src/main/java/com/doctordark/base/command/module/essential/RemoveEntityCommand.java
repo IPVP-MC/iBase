@@ -1,6 +1,7 @@
 package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
+import com.doctordark.util.BukkitUtils;
 import com.google.common.base.Enums;
 import com.google.common.base.Optional;
 import com.google.common.primitives.Ints;
@@ -103,12 +104,12 @@ public class RemoveEntityCommand extends BaseCommand {
                 EntityType[] entityTypes = EntityType.values();
                 List<String> results = new ArrayList<>(entityTypes.length);
                 for (EntityType entityType : entityTypes) {
-                    if (entityType != EntityType.PLAYER) {
+                    if (entityType != EntityType.UNKNOWN && entityType != EntityType.PLAYER) {
                         results.add(entityType.name());
                     }
                 }
 
-                return results;
+                return BukkitUtils.getCompletions(args, results);
             default:
                 return Collections.emptyList();
         }
