@@ -116,7 +116,7 @@ public class KitListener implements Listener {
                     fakeLines[3] = ChatColor.RED + "Check chat";
                 }
 
-                if (applied && plugin.getSignHandler().showLines(player, sign, fakeLines, 100L, false)) {
+                if (plugin.getSignHandler().showLines(player, sign, fakeLines, 100L, false) && applied) {
                     ParticleEffect.FIREWORK_SPARK.display(player, sign.getLocation().clone().add(0.5, 0.5, 0.5), 0.01F, 10);
                 }
             }
