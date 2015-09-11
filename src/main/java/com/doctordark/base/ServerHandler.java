@@ -1,7 +1,7 @@
 package com.doctordark.base;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -95,7 +95,7 @@ public class ServerHandler {
     }
 
     public boolean setMaxPlayers(int maxPlayers, boolean inject) {
-        Validate.isTrue(maxPlayers >= 0, "Max players cannot be negative");
+        Preconditions.checkArgument(maxPlayers >= 0, "Max players cannot be negative");
 
         this.maxPlayers = maxPlayers;
         Bukkit.setMaxPlayers(maxPlayers);

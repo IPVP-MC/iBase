@@ -1,10 +1,10 @@
 package com.doctordark.util;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import net.minecraft.server.v1_7_R4.MathHelper;
 import net.minecraft.server.v1_7_R4.Packet;
 import net.minecraft.server.v1_7_R4.PacketPlayOutWorldParticles;
-import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -234,10 +234,10 @@ public enum ParticleEffect {
      * @param intensity the number of particles at each location
      */
     public void sphere(@Nullable Player player, Location location, float radius, float density, int intensity) {
-        Validate.notNull(location, "Location cannot be null");
-        Validate.isTrue(radius >= 0, "Radius must be positive");
-        Validate.isTrue(density >= 0, "Density must be positive");
-        Validate.isTrue(intensity >= 0, "Intensity must be positive");
+        Preconditions.checkNotNull(location, "Location cannot be null");
+        Preconditions.checkArgument(radius >= 0, "Radius must be positive");
+        Preconditions.checkArgument(density >= 0, "Density must be positive");
+        Preconditions.checkArgument(intensity >= 0, "Intensity must be positive");
 
         float deltaPitch = 180 / density;
         float deltaYaw = 360 / density;
@@ -265,8 +265,8 @@ public enum ParticleEffect {
     }
 
     private PacketPlayOutWorldParticles createPacket(float x, float y, float z, float offsetX, float offsetY, float offsetZ, float speed, int amount) {
-        Validate.isTrue(speed >= 0, "Speed must be positive");
-        Validate.isTrue(amount > 0, "Cannot use less than one particle.");
+        Preconditions.checkArgument(speed >= 0, "Speed must be positive");
+        Preconditions.checkArgument(amount > 0, "Cannot use less than one particle.");
         return new PacketPlayOutWorldParticles(name, x, y, z, offsetX, offsetY, offsetZ, speed, amount);
     }
 }

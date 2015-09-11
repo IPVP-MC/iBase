@@ -4,7 +4,6 @@ import com.doctordark.base.BasePlugin;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import net.minecraft.server.v1_7_R4.PlayerConnection;
-import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -123,7 +122,7 @@ public class BossBarManager {
         if (ticks <= 0L) {
             bukkitTask = null;
         } else {
-            Validate.isTrue(BossBarManager.plugin != null, "Cannot start destroy runnable as plugin wasn't hooked correctly.");
+            Preconditions.checkArgument(BossBarManager.plugin != null, "Cannot start destroy runnable as plugin wasn't hooked correctly.");
             bukkitTask = new BukkitRunnable() {
                 @Override
                 public void run() {

@@ -1,7 +1,7 @@
 package com.doctordark.util.imagemessage;
 
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 import org.bukkit.entity.Player;
 import org.bukkit.util.ChatPaginator;
 
@@ -192,7 +192,7 @@ public class ImageMessage {
         } else if (string.length() == length) {
             return string;
         } else {
-            return StringUtils.repeat(" ", (length - string.length()) / 2) + string;
+            return Strings.repeat(' ', (length - string.length()) / 2) + string;
         }
     }
 

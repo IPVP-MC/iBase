@@ -1,10 +1,10 @@
 package com.doctordark.util.bossbar;
 
+import com.google.common.base.Preconditions;
 import net.minecraft.server.v1_7_R4.EntityEnderDragon;
 import net.minecraft.server.v1_7_R4.Packet;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityDestroy;
 import net.minecraft.server.v1_7_R4.PacketPlayOutSpawnEntityLiving;
-import org.apache.commons.lang3.Validate;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 
@@ -76,8 +76,8 @@ public class BossBar {
      * @param location the {@link Location} to set at
      */
     public void setLocation(Location location) {
-        Validate.notNull(location, "Location cannot be null");
-        Validate.notNull(location.getWorld(), "Location world cannot be null");
+        Preconditions.checkNotNull(location, "Location cannot be null");
+        Preconditions.checkNotNull(location.getWorld(), "Location world cannot be null");
 
         this.location = location;
         this.dragon.setLocation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
@@ -98,8 +98,8 @@ public class BossBar {
      * @param title the title to set
      */
     public void setTitle(String title) {
-        Validate.notNull(title, "Text cannot be null.");
-        Validate.isTrue(title.length() < MAX_TITLE_LENGTH, "Text cannot be longer than " + MAX_TITLE_LENGTH + " characters.");
+        Preconditions.checkNotNull(title, "Text cannot be null.");
+        Preconditions.checkArgument(title.length() < MAX_TITLE_LENGTH, "Text cannot be longer than " + MAX_TITLE_LENGTH + " characters.");
 
         this.title = title;
         this.dragon.setCustomName(title);
@@ -121,8 +121,8 @@ public class BossBar {
      * @param health the health to set
      */
     public void setHealth(float health) {
-        Validate.isTrue(health >= MIN_HEALTH, "Health of " + health + " is less than minimum health: " + MIN_HEALTH);
-        Validate.isTrue(health <= MAX_HEALTH, "Health of " + health + " is more than maximum health: " + MAX_HEALTH);
+        Preconditions.checkArgument(health >= MIN_HEALTH, "Health of " + health + " is less than minimum health: " + MIN_HEALTH);
+        Preconditions.checkArgument(health <= MAX_HEALTH, "Health of " + health + " is more than maximum health: " + MAX_HEALTH);
 
         this.health = health;
         this.dragon.setHealth(health);

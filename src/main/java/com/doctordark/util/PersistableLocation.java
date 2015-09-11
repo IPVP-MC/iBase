@@ -1,7 +1,6 @@
 package com.doctordark.util;
 
 import com.google.common.base.Preconditions;
-import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -115,8 +114,8 @@ public class PersistableLocation implements ConfigurationSerializable, Cloneable
      * @return the containing world
      */
     public World getWorld() {
-        Validate.notNull(this.worldUID, "World UUID cannot be null");
-        Validate.notNull(this.worldName, "World name cannot be null");
+        Preconditions.checkNotNull(this.worldUID, "World UUID cannot be null");
+        Preconditions.checkNotNull(this.worldName, "World name cannot be null");
 
         if (world == null) world = Bukkit.getWorld(this.worldUID);
         return world;

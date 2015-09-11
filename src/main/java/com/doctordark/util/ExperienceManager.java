@@ -1,6 +1,6 @@
 package com.doctordark.util;
 
-import org.apache.commons.lang3.Validate;
+import com.google.common.base.Preconditions;
 import org.bukkit.entity.Player;
 
 import java.lang.ref.WeakReference;
@@ -38,7 +38,7 @@ public class ExperienceManager {
      * @throws IllegalArgumentException if the player is null
      */
     public ExperienceManager(Player player) {
-        Validate.notNull(player, "Player cannot be null");
+        Preconditions.checkNotNull(player, "Player cannot be null");
         this.player = new WeakReference<>(player);
         this.playerName = player.getName();
     }
@@ -230,7 +230,7 @@ public class ExperienceManager {
         if (exp > xpTotalToReachLevel[xpTotalToReachLevel.length - 1]) {
             // need to extend the lookup tables
             int newMax = calculateLevelForExp(exp) * 2;
-            Validate.isTrue(newMax <= hardMaxLevel, "Level for exp " + exp + " > hard max level " + hardMaxLevel);
+            Preconditions.checkArgument(newMax <= hardMaxLevel, "Level for exp " + exp + " > hard max level " + hardMaxLevel);
             initLookupTables(newMax);
         }
         int pos = Arrays.binarySearch(xpTotalToReachLevel, exp);
@@ -245,7 +245,7 @@ public class ExperienceManager {
      * @throws IllegalArgumentException if the level is less than 0
      */
     public int getXpNeededToLevelUp(int level) {
-        Validate.isTrue(level >= 0, "Level may not be negative.");
+        Preconditions.checkArgument(level >= 0, "Level may not be negative.");
         return level > 30 ? 62 + (level - 30) * 7 : level >= 16 ? 17 + (level - 15) * 3 : 17;
     }
 
@@ -257,7 +257,7 @@ public class ExperienceManager {
      * @throws IllegalArgumentException if the level is less than 0 or greater than the current hard maximum
      */
     public int getXpForLevel(int level) {
-        Validate.isTrue(level >= 0 && level <= hardMaxLevel, "Invalid level " + level + "(must be in range 0.." + hardMaxLevel + ')');
+        Preconditions.checkArgument(level >= 0 && level <= hardMaxLevel, "Invalid level " + level + "(must be in range 0.." + hardMaxLevel + ')');
         if (level >= xpTotalToReachLevel.length) {
             initLookupTables(level * 2);
         }

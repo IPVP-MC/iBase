@@ -1,13 +1,12 @@
 package com.doctordark.util;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.server.v1_7_R4.MinecraftServer;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -64,7 +63,7 @@ public final class BukkitUtils {
     public static final String STRAIGHT_LINE_DEFAULT;
 
     static {
-        STRAIGHT_LINE_TEMPLATE = ChatColor.STRIKETHROUGH.toString() + StringUtils.repeat("-", 256);
+        STRAIGHT_LINE_TEMPLATE = ChatColor.STRIKETHROUGH.toString() + Strings.repeat("-", 256);
         STRAIGHT_LINE_DEFAULT = STRAIGHT_LINE_TEMPLATE.substring(0, ChatPaginator.GUARANTEED_NO_WRAP_CHAT_PAGE_WIDTH);
 
         CHAT_DYE_COLOUR_MAP = Maps.immutableEnumMap(ImmutableMap.<ChatColor, DyeColor>builder().
@@ -277,7 +276,7 @@ public final class BukkitUtils {
      * @return the highest {@link Location} from origin
      */
     public static Location getHighestLocation(Location origin, Location def) {
-        Validate.notNull(origin, "The location cannot be null");
+        Preconditions.checkNotNull(origin, "The location cannot be null");
 
         Location cloned = origin.clone();
         World world = cloned.getWorld();

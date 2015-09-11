@@ -2,8 +2,8 @@ package com.doctordark.util;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -110,7 +110,7 @@ public final class JavaUtils {
      * @return a {@code string} that has been formatted
      */
     public static String format(Number number, int decimalPlaces, RoundingMode roundingMode) {
-        Validate.notNull(number, "The number cannot be null");
+        Preconditions.checkNotNull(number, "The number cannot be null");
         return new BigDecimal(number.toString()).setScale(decimalPlaces, roundingMode).stripTrailingZeros().toPlainString();
     }
 

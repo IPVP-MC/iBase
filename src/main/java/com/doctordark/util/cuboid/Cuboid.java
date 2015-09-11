@@ -1,6 +1,6 @@
 package com.doctordark.util.cuboid;
 
-import org.apache.commons.lang3.Validate;
+import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -56,15 +56,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @param z2    Z co-ordinate of corner 2
      */
     public Cuboid(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
-        Validate.notNull(world, "World cannot be null");
-
-        this.worldName = world.getName();
-        this.x1 = Math.min(x1, x2);
-        this.x2 = Math.max(x1, x2);
-        this.y1 = Math.min(y1, y2);
-        this.y2 = Math.max(y1, y2);
-        this.z1 = Math.min(z1, z2);
-        this.z2 = Math.max(z1, z2);
+        this(Preconditions.checkNotNull(world).getName(), x1, y1, z1, x2, y2, z2);
     }
 
     /**
@@ -79,7 +71,7 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @param z2        Z co-ordinate of corner 2
      */
     private Cuboid(String worldName, int x1, int y1, int z1, int x2, int y2, int z2) {
-        Validate.notNull(worldName, "World name cannot be null");
+        Preconditions.checkNotNull(worldName, "World name cannot be null");
 
         this.worldName = worldName;
         this.x1 = Math.min(x1, x2);
@@ -98,9 +90,9 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @param second the other corner
      */
     public Cuboid(Location first, Location second) {
-        Validate.notNull(first, "Location 1 cannot be null");
-        Validate.notNull(second, "Location 2 cannot be null");
-        Validate.isTrue(first.getWorld().equals(second.getWorld()), "Locations must be on the same world");
+        Preconditions.checkNotNull(first, "Location 1 cannot be null");
+        Preconditions.checkNotNull(second, "Location 2 cannot be null");
+        Preconditions.checkArgument(first.getWorld().equals(second.getWorld()), "Locations must be on the same world");
 
         this.worldName = first.getWorld().getName();
         this.x1 = Math.min(first.getBlockX(), second.getBlockX());

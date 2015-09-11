@@ -20,7 +20,6 @@ import net.minecraft.util.gnu.trove.map.hash.TObjectIntHashMap;
 import net.minecraft.util.gnu.trove.map.hash.TObjectLongHashMap;
 import net.minecraft.util.gnu.trove.procedure.TObjectIntProcedure;
 import net.minecraft.util.gnu.trove.procedure.TObjectLongProcedure;
-import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -188,7 +187,7 @@ public class BaseUser extends ServerParticipator {
     public void tryLoggingAddress(String address) {
         Preconditions.checkNotNull(address, "Cannot log null address");
         if (!addressHistories.contains(address)) {
-            Validate.isTrue(InetAddresses.isInetAddress(address), "Not an Inet address");
+            Preconditions.checkArgument(InetAddresses.isInetAddress(address), "Not an Inet address");
             addressHistories.add(address);
         }
     }

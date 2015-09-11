@@ -2,8 +2,8 @@ package com.doctordark.base.event;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.user.BaseUser;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
-import org.apache.commons.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -46,8 +46,8 @@ public class PlayerMessageEvent extends Event implements Cancellable {
     }
 
     public void send() {
-        Validate.notNull(sender, "The sender cannot be null");
-        Validate.notNull(recipient, "The recipient cannot be null");
+        Preconditions.checkNotNull(sender, "The sender cannot be null");
+        Preconditions.checkNotNull(recipient, "The recipient cannot be null");
 
         BasePlugin plugin = BasePlugin.getPlugin();
         BaseUser sendingUser = plugin.getUserManager().getUser(sender.getUniqueId());

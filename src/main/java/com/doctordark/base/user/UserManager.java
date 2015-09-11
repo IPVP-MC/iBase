@@ -2,8 +2,8 @@ package com.doctordark.base.user;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.util.Config;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.MemorySection;
@@ -62,12 +62,11 @@ public class UserManager {
      * @return the {@link ServerParticipator} or null if not found
      */
     public ServerParticipator getParticipator(CommandSender sender) {
-        Validate.notNull(sender, "CommandSender cannot be null");
+        Preconditions.checkNotNull(sender, "CommandSender cannot be null");
         if (sender instanceof ConsoleCommandSender) {
             return console;
         } else if (sender instanceof Player) {
-            Player player = (Player) sender;
-            return participators.get(player.getUniqueId());
+            return participators.get(((Player) sender).getUniqueId());
         } else {
             return null;
         }
@@ -80,7 +79,7 @@ public class UserManager {
      * @return the returned {@link ServerParticipator}
      */
     public ServerParticipator getParticipator(UUID uuid) {
-        Validate.notNull(uuid, "Unique ID cannot be null");
+        Preconditions.checkNotNull(uuid, "Unique ID cannot be null");
         return participators.get(uuid);
     }
 
