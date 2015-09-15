@@ -6,7 +6,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -48,22 +47,17 @@ public class ManagedFile {
             try (DigestOutputStream digestStream = new DigestOutputStream(new FileOutputStream(file), digest)) {
                 try (OutputStreamWriter writer = new OutputStreamWriter(digestStream, StandardCharsets.UTF_8)) {
                     final char[] buffer = new char[BUFFER_SIZE];
-                    do {
-                        final int length = reader.read(buffer);
-                        if (length >= 0) {
-                            writer.write(buffer, 0, length);
-                        } else {
-                            break;
-                        }
+                    int length;
+                    while ((length = reader.read(buffer)) >= 0) {
+                        writer.write(buffer, 0, length);
                     }
 
-                    while (true);
                     writer.write("\n");
                     writer.flush();
-                    final BigInteger hashInt = new BigInteger(1, digest.digest());
+
                     digestStream.on(false);
                     digestStream.write('#');
-                    digestStream.write(hashInt.toString(16).getBytes(StandardCharsets.UTF_8));
+                    digestStream.write(new BigInteger(1, digest.digest()).toString(16).getBytes(StandardCharsets.UTF_8));
                 }
             }
         }
@@ -81,14 +75,11 @@ public class ManagedFile {
         try {
             try (BufferedReader reader = Files.newBufferedReader(Paths.get(file.getPath()), StandardCharsets.UTF_8)) {
                 final List<String> lines = new ArrayList<>();
-                do {
-                    final String line = reader.readLine();
-                    if (line == null) {
-                        break;
-                    } else {
-                        lines.add(line);
-                    }
-                } while (true);
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    lines.add(line);
+                }
+
                 return lines;
             }
         } catch (IOException ex) {
