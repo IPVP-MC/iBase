@@ -17,7 +17,7 @@ public class BroadcastCommand extends BaseCommand {
     public BroadcastCommand(BasePlugin plugin) {
         super("broadcast", "Broadcasts a message to the server.");
         setAliases(new String[]{"bc"});
-        setUsage("/(command) <text..>");
+        setUsage("/(command) [-p *perm*] <text..>");
         this.plugin = plugin;
     }
 
@@ -28,16 +28,31 @@ public class BroadcastCommand extends BaseCommand {
             return true;
         }
 
-        String message = StringUtils.join(args, ' ', 0, args.length);
+        final int position;
+        final String arg, requiredNode;
+        if (args.length > 2 && (arg = args[0]).startsWith("-p")) {
+            position = 1;
+            requiredNode = arg.substring(2, arg.length());
+        } else {
+            position = 0;
+            requiredNode = null;
+        }
+
+        String message = StringUtils.join(args, ' ', position, args.length);
 
         if (message.length() < 3) {
             sender.sendMessage(ChatColor.RED + "Broadcasts must be at least 3 characters.");
             return true;
         }
 
-        String format = plugin.getServerHandler().getBroadcastFormat();
+        message = ChatColor.translateAlternateColorCodes('&', String.format(Locale.ENGLISH, plugin.getServerHandler().getBroadcastFormat(), message));
 
-        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', String.format(Locale.ENGLISH, format, message)));
+        if (requiredNode != null) {
+            Bukkit.broadcast(message, requiredNode);
+        } else {
+            Bukkit.broadcastMessage(message);
+        }
+
         return true;
     }
 }

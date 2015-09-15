@@ -12,7 +12,7 @@ public class BroadcastRawCommand extends BaseCommand {
     public BroadcastRawCommand() {
         super("broadcastraw", "Broadcasts a raw message to the server.");
         setAliases(new String[]{"bcraw", "raw", "rawcast"});
-        setUsage("/(command) <text..>");
+        setUsage("/(command) [-p *perm*] <text..>");
     }
 
     @Override
@@ -22,14 +22,31 @@ public class BroadcastRawCommand extends BaseCommand {
             return true;
         }
 
-        String message = StringUtils.join(args, ' ', 0, args.length);
+        final int position;
+        final String arg, requiredNode;
+        if (args.length > 2 && (arg = args[0]).startsWith("-p")) {
+            position = 1;
+            requiredNode = arg.substring(2, arg.length());
+        } else {
+            position = 0;
+            requiredNode = null;
+        }
 
-        if (message.length() < 6) {
-            sender.sendMessage(ChatColor.RED + "Broadcasts must be at least 6 characters.");
+        String message = StringUtils.join(args, ' ', position, args.length);
+
+        if (message.length() < 3) {
+            sender.sendMessage(ChatColor.RED + "Broadcasts must be at least 3 characters.");
             return true;
         }
 
-        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', message));
+        message = ChatColor.translateAlternateColorCodes('&', message);
+
+        if (requiredNode != null) {
+            Bukkit.broadcast(message, requiredNode);
+        } else {
+            Bukkit.broadcastMessage(message);
+        }
+
         return true;
     }
 }
