@@ -829,21 +829,23 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         return world.getBlockAt(x1 + x, y1 + y, z1 + z);
     }
 
+    private static final int CHUNK_SIZE = 16;
+
     /**
      * Gets the {@link Chunk}s which are fully or partially contained in this {@link Cuboid}.
      *
      * @return list of {@link Chunk}s in this {@link Cuboid}
      */
     public List<Chunk> getChunks() {
-        List<Chunk> result = new ArrayList<>();
         World world = getWorld();
 
         int x1 = this.x1 & ~0xf;
         int x2 = this.x2 & ~0xf;
         int z1 = this.z1 & ~0xf;
         int z2 = this.z2 & ~0xf;
-        for (int x = x1; x <= x2; x += 16) {
-            for (int z = z1; z <= z2; z += 16) {
+        List<Chunk> result = new ArrayList<>(((x2 - x1) + CHUNK_SIZE) + ((z2 - z1) * CHUNK_SIZE));
+        for (int x = x1; x <= x2; x += CHUNK_SIZE) {
+            for (int z = z1; z <= z2; z += CHUNK_SIZE) {
                 result.add(world.getChunkAt(x >> 4, z >> 4));
             }
         }

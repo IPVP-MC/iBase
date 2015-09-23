@@ -60,6 +60,7 @@ public class KitRenameArgument extends CommandArgument {
 
         if (event.getOldName().equals(event.getNewName())) {
             sender.sendMessage(ChatColor.RED + "This kit is already called " + event.getNewName() + '.');
+            return true;
         }
 
         kit.setName(event.getNewName());

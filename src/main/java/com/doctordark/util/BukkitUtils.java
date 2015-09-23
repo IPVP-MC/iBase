@@ -284,9 +284,7 @@ public final class BukkitUtils {
         int y = world.getMaxHeight();
         int z = cloned.getBlockZ();
         while (y > origin.getBlockY()) {
-            y--;
-
-            Block block = world.getBlockAt(x, y, z);
+            Block block = world.getBlockAt(x, --y, z);
             if (!block.isEmpty()) {
                 Location next = block.getLocation();
                 next.setPitch(origin.getPitch());
