@@ -147,7 +147,7 @@ public final class JavaUtils {
 
         StringBuilder builder = new StringBuilder(Joiner.on(delimiter).join(contents));
         if (delimiterBeforeAnd) {
-            builder.append(',');
+            builder.append(delimiter);
         }
 
         return builder.append(" and ").append(last).toString();
@@ -158,14 +158,14 @@ public final class JavaUtils {
      * <p>Source: http://stackoverflow.com/questions/4015196/is-there-a-java-library-that-converts-strings-describing-measures-of-time-e-g</p>
      *
      * @param input the string to parse
-     * @return the parsed time in milliseconds
+     * @return the parsed time in milliseconds or -1 if could not
      */
-    public static Long parse(String input) {
+    public static long parse(String input) {
         if (input == null || input.isEmpty()) {
-            return null;
+            return -1L;
         }
 
-        Long result = null;
+        long result = 0L;
         StringBuilder number = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
@@ -174,9 +174,8 @@ public final class JavaUtils {
                 continue;
             }
 
-            String str = number.toString();
-            if (Character.isLetter(c) && !str.isEmpty()) {
-                if (result == null) result = 0L;
+            String str;
+            if (Character.isLetter(c) && !(str = number.toString()).isEmpty()) {
                 result += convert(Integer.parseInt(str), c);
                 number = new StringBuilder();
             }
@@ -188,8 +187,10 @@ public final class JavaUtils {
     /**
      * <p>Source: http://stackoverflow.com/questions/4015196/is-there-a-java-library-that-converts-strings-describing-measures-of-time-e-g</p>
      */
-    private static Long convert(int value, char unit) {
+    private static long convert(int value, char unit) {
         switch (unit) {
+            case 'y' | 'Y':
+                return value * TimeUnit.DAYS.toMillis(365L);
             case 'M':
                 return value * TimeUnit.DAYS.toMillis(30L);
             case 'd' | 'D':
@@ -201,7 +202,7 @@ public final class JavaUtils {
             case 's' | 'S':
                 return value * TimeUnit.SECONDS.toMillis(1L);
             default:
-                return null;
+                return -1L;
         }
     }
 }

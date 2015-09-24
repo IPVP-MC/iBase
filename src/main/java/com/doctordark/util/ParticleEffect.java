@@ -57,6 +57,8 @@ public enum ParticleEffect {
     TILECRACK("tilecrack", 34);
 
     private final String name;
+
+    @Deprecated
     private final int id;
 
     ParticleEffect(String name, int id) {
@@ -68,7 +70,9 @@ public enum ParticleEffect {
      * Gets the name of this {@link ParticleEffect}.
      *
      * @return the name
+     * @deprecated magic ID, when 1.8 update happens, update this
      */
+    @Deprecated
     String getName() {
         return name;
     }
@@ -77,7 +81,9 @@ public enum ParticleEffect {
      * Gets the ID of this {@link ParticleEffect}
      *
      * @return the ID
+     * @deprecated magic ID, when 1.8 update happens, update this
      */
+    @Deprecated
     public int getId() {
         return id;
     }

@@ -30,7 +30,8 @@ import java.util.regex.Pattern;
 
 public class SimpleItemDb implements ItemDb {
 
-    private static final Comparator<String> COMPARATOR = new Comparator<String>() {
+    private static final Comparator<String> STRING_LENGTH_COMPARATOR = new Comparator<String>() {
+
         @Override
         public int compare(String o1, String o2) {
             return o1.length() - o2.length();
@@ -38,7 +39,7 @@ public class SimpleItemDb implements ItemDb {
     };
 
     private final TObjectIntMap<String> items = new TObjectIntHashMap<>();
-    private final TreeMultimap<ItemData, String> names = TreeMultimap.create(Ordering.allEqual(), COMPARATOR);
+    private final TreeMultimap<ItemData, String> names = TreeMultimap.create(Ordering.allEqual(), STRING_LENGTH_COMPARATOR);
     private final Map<ItemData, String> primaryName = new HashMap<>();
     private final TObjectShortMap<String> durabilities = new TObjectShortHashMap<>();
     private final ManagedFile file;
