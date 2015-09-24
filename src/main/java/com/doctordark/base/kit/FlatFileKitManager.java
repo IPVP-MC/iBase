@@ -6,6 +6,7 @@ import com.doctordark.util.Config;
 import com.doctordark.util.GenericUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.ChatPaginator;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -28,8 +30,8 @@ public class FlatFileKitManager implements KitManager, Listener {
 
     private Config config;
 
-    private final Map<String, Kit> kitNameMap = Maps.newTreeMap(String.CASE_INSENSITIVE_ORDER);
-    private final Map<UUID, Kit> kitUUIDMap = Maps.newHashMap();
+    private final Map<String, Kit> kitNameMap = new CaseInsensitiveMap<>();
+    private final Map<UUID, Kit> kitUUIDMap = new HashMap<>();
 
     private List<Kit> kits;
     private final BasePlugin plugin;
