@@ -2,12 +2,12 @@ package com.doctordark.base.user;
 
 import com.doctordark.base.BasePlugin;
 import com.doctordark.util.GenericUtils;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -51,36 +51,37 @@ public abstract class ServerParticipator implements ConfigurationSerializable {
         this.ignoring.addAll(GenericUtils.createList(map.get("ignoring"), String.class));
         this.messageSpying.addAll(GenericUtils.createList(map.get("messageSpying"), String.class));
 
-        if (map.containsKey("lastRepliedTo")) {
-            this.lastRepliedTo = UUID.fromString((String) map.get("lastRepliedTo"));
+        Object object = map.get("lastRepliedTo");
+        if (object instanceof String) {
+            this.lastRepliedTo = UUID.fromString((String) object);
         }
 
-        if (map.containsKey("inStaffChat")) {
-            this.inStaffChat = (Boolean) map.get("inStaffChat");
+        if ((object = map.get("inStaffChat")) instanceof Boolean) {
+            this.inStaffChat = (Boolean) object;
         }
 
-        if (map.containsKey("globalChatVisible")) {
-            this.globalChatVisible = (Boolean) map.get("globalChatVisible");
+        if ((object = map.get("globalChatVisible")) instanceof Boolean) {
+            this.globalChatVisible = (Boolean) object;
         }
 
-        if (map.containsKey("staffChatVisible")) {
-            this.staffChatVisible = (Boolean) map.get("staffChatVisible");
+        if ((object = map.get("staffChatVisible")) instanceof Boolean) {
+            this.staffChatVisible = (Boolean) object;
         }
 
-        if (map.containsKey("messagesVisible")) {
-            this.messagesVisible = (Boolean) map.get("messagesVisible");
+        if ((object = map.get("messagesVisible")) instanceof Boolean) {
+            this.messagesVisible = (Boolean) object;
         }
 
-        if (map.containsKey("lastSpeakTimeMillis")) {
-            this.lastSpeakTimeMillis = Long.parseLong((String) map.get("lastSpeakTimeMillis"));
+        if ((object = map.get("lastSpeakTimeMillis")) instanceof String) {
+            this.lastSpeakTimeMillis = Long.parseLong((String) object);
         }
 
-        if (map.containsKey("lastReceivedMessageMillis")) {
-            this.lastReceivedMessageMillis = Long.parseLong((String) map.get("lastReceivedMessageMillis"));
+        if ((object = map.get("lastReceivedMessageMillis")) instanceof String) {
+            this.lastReceivedMessageMillis = Long.parseLong((String) object);
         }
 
-        if (map.containsKey("lastSentMessageMillis")) {
-            this.lastSentMessageMillis = Long.parseLong((String) map.get("lastSentMessageMillis"));
+        if ((object = map.get("lastSentMessageMillis")) instanceof String) {
+            this.lastSentMessageMillis = Long.parseLong((String) object);
         }
     }
 
@@ -88,8 +89,8 @@ public abstract class ServerParticipator implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("uniqueID", uniqueId.toString());
-        map.put("ignoring", Lists.newArrayList(ignoring));
-        map.put("messageSpying", Lists.newArrayList(messageSpying));
+        map.put("ignoring", new ArrayList<>(ignoring));
+        map.put("messageSpying", new ArrayList<>(messageSpying));
         if (lastRepliedTo != null) {
             map.put("lastRepliedTo", lastRepliedTo.toString());
         }
@@ -199,8 +200,7 @@ public abstract class ServerParticipator implements ConfigurationSerializable {
     }
 
     public void updateLastSpeakTime() {
-        BasePlugin plugin = BasePlugin.getPlugin();
-        long slowChatDelay = plugin.getServerHandler().getChatSlowedDelay() * 1000L;
+        long slowChatDelay = BasePlugin.getPlugin().getServerHandler().getChatSlowedDelay() * 1000L;
         this.lastSpeakTimeMillis = (System.currentTimeMillis() + slowChatDelay);
     }
 
