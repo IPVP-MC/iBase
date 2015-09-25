@@ -92,8 +92,8 @@ public class AutoRestartCommand extends BaseCommand {
                 return true;
             }
 
-            Long millis = JavaUtils.parse(args[1]);
-            if (millis == null) {
+            long millis = JavaUtils.parse(args[1]);
+            if (millis == -1L) {
                 sender.sendMessage(ChatColor.RED + "Invalid duration, use the correct format: 10m1s");
                 return true;
             }

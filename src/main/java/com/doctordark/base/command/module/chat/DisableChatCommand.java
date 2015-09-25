@@ -34,6 +34,10 @@ public class DisableChatCommand extends BaseCommand {
             newTicks = DEFAULT_DELAY;
         } else {
             newTicks = JavaUtils.parse(StringUtils.join(args, ' ', 0, args.length));
+            if (newTicks == -1L) {
+                sender.sendMessage(ChatColor.RED + "Invalid duration, use the correct format: 10m1s");
+                return true;
+            }
         }
 
         plugin.getServerHandler().setChatDisabledMillis(newTicks);

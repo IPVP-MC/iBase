@@ -47,9 +47,9 @@ public class KitSetDelayArgument extends CommandArgument {
             return true;
         }
 
-        Long duration = JavaUtils.parse(args[2]);
+        long duration = JavaUtils.parse(args[2]);
 
-        if (duration == null) {
+        if (duration == -1L) {
             sender.sendMessage(ChatColor.RED + "Invalid duration, use the correct format: 10m 1s");
             return true;
         }

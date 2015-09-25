@@ -63,8 +63,8 @@ public class FreezeCommand extends BaseCommand implements Listener {
             }
 
             freezeTicks = JavaUtils.parse(args[1]);
-            if (freezeTicks == null) {
-                sender.sendMessage(ChatColor.RED + "'" + args[1] + "' is not a valid time.");
+            if (freezeTicks == -1L) {
+                sender.sendMessage(ChatColor.RED + "Invalid duration, use the correct format: 10m1s");
                 return true;
             }
         }

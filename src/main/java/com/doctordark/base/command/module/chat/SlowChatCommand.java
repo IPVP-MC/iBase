@@ -33,8 +33,8 @@ public class SlowChatCommand extends BaseCommand {
             newTicks = DEFAULT_DELAY;
         } else {
             newTicks = JavaUtils.parse(args[0]);
-            if (newTicks == null) {
-                sender.sendMessage(ChatColor.RED + "'" + args[0] + "' is an invalid time format.");
+            if (newTicks == -1L) {
+                sender.sendMessage(ChatColor.RED + "Invalid duration, use the correct format: 10m1s");
                 return true;
             }
         }
