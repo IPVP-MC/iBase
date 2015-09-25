@@ -1,12 +1,12 @@
 package com.doctordark.util.itemdb;
 
 import com.doctordark.base.BasePlugin;
-import com.google.common.collect.Maps;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ItemData implements ConfigurationSerializable {
@@ -48,7 +48,7 @@ public class ItemData implements ConfigurationSerializable {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = Maps.newHashMap();
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put("itemType", material.name());
         map.put("itemData", itemData);
         return map;

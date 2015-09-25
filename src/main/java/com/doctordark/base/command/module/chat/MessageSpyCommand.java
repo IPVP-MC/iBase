@@ -8,7 +8,6 @@ import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
 import com.doctordark.util.command.CommandWrapper;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,6 +15,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -32,7 +32,7 @@ public class MessageSpyCommand extends BaseCommand {
         this.setAliases(new String[]{"ms", "msgspy", "pmspy", "whisperspy", "privatemessagespy", "tellspy"});
         this.setUsage("/(command) <list|add|del|clear> [playerName]");
 
-        List<CommandArgument> arguments = Lists.newArrayListWithCapacity(4);
+        List<CommandArgument> arguments = new ArrayList<>(4);
         arguments.add(new MessageSpyListArgument(plugin));
         arguments.add(new IgnoreClearArgument(plugin));
         arguments.add(new MessageSpyAddArgument(plugin));

@@ -6,6 +6,8 @@ import com.doctordark.base.warp.Warp;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.command.CommandArgument;
 import com.doctordark.util.command.CommandWrapper;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -66,10 +68,7 @@ public class WarpExecutor extends BaseCommand {
 
         List<String> results;
         if (args.length == 1) {
-            results = CommandWrapper.getAccessibleArgumentNames(sender, arguments);
-            for (Warp warp : plugin.getWarpManager().getWarps()) {
-                results.add(warp.getName());
-            }
+            results = Lists.newArrayList(Iterables.concat(CommandWrapper.getAccessibleArgumentNames(sender, arguments), plugin.getWarpManager().getWarpNames()));
         } else {
             CommandArgument argument = CommandWrapper.matchArgument(args[0], sender, arguments);
             if (argument == null) {
@@ -79,8 +78,7 @@ public class WarpExecutor extends BaseCommand {
             }
         }
 
-        if (results == null) return null;
-        return BukkitUtils.getCompletions(args, results);
+        return results == null ? null : BukkitUtils.getCompletions(args, results);
     }
 
     private boolean handleWarp(CommandSender sender, String[] args) {
@@ -111,9 +109,9 @@ public class WarpExecutor extends BaseCommand {
             }
         }
 
-        int delay = plugin.getWarpManager().getWarpDelaySeconds();
+        long warpDelayTicks = plugin.getWarpManager().getWarpDelayTicks();
 
-        if (delay <= 0 || count <= 0) {
+        if (warpDelayTicks <= 0 || count <= 0) {
             warpPlayer(player, warp);
             return false;
         }
@@ -125,10 +123,10 @@ public class WarpExecutor extends BaseCommand {
             }
         };
 
-        runnable.runTaskLater(plugin, 20L * delay);
+        runnable.runTaskLater(plugin, warpDelayTicks);
         taskMap.put(player.getUniqueId(), runnable);
 
-        sender.sendMessage(ChatColor.GRAY + "Players are nearby. Please wait " + DurationFormatUtils.formatDurationWords(delay * 1000, true, true) + '.');
+        sender.sendMessage(ChatColor.GRAY + "Players are nearby. Please wait " + plugin.getWarpManager().getWarpDelayWords() + '.');
         return true;
     }
 
@@ -136,8 +134,8 @@ public class WarpExecutor extends BaseCommand {
         BukkitRunnable runnable = taskMap.remove(player.getUniqueId());
         if (runnable != null) runnable.cancel();
 
-        Location location = warp.getLocation();
-        player.teleport(location, PlayerTeleportEvent.TeleportCause.COMMAND);
-        player.sendMessage(ChatColor.GRAY + "Warped to " + warp.getName() + '.');
+        if (player.teleport(warp.getLocation(), PlayerTeleportEvent.TeleportCause.COMMAND)) {
+            player.sendMessage(ChatColor.GRAY + "Warped to " + warp.getName() + '.');
+        }
     }
 }

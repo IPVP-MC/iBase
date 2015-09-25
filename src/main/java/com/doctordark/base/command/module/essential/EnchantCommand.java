@@ -2,7 +2,6 @@ package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.util.BukkitUtils;
-import com.google.common.collect.Lists;
 import com.google.common.primitives.Ints;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -13,6 +12,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -95,7 +95,7 @@ public class EnchantCommand extends BaseCommand {
         switch (args.length) {
             case 1:
                 Enchantment[] enchantments = Enchantment.values();
-                List<String> results = Lists.newArrayListWithCapacity(enchantments.length);
+                List<String> results = new ArrayList<>(enchantments.length);
                 for (Enchantment enchantment : enchantments) {
                     results.add(enchantment.getName());
                 }

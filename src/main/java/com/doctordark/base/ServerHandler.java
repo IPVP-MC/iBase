@@ -1,17 +1,15 @@
 package com.doctordark.base;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ServerHandler {
 
-    private final List<String> announcements = Lists.newArrayList();
-    private final List<String> serverRules = Lists.newArrayList();
+    private final List<String> announcements = new ArrayList<>();
+    private final List<String> serverRules = new ArrayList<>();
 
     public boolean useProtocolLib;
     private int announcementDelay;

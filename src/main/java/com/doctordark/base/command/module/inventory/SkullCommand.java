@@ -5,7 +5,6 @@ import com.doctordark.util.BukkitUtils;
 import com.google.common.base.Enums;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -75,7 +75,7 @@ public class SkullCommand extends BaseCommand {
             return Collections.emptyList();
         }
 
-        List<String> completions = Lists.newArrayList(SKULL_NAMES);
+        List<String> completions = new ArrayList<>(SKULL_NAMES);
         Player senderPlayer = sender instanceof Player ? (Player) sender : null;
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (senderPlayer == null || senderPlayer.canSee(player)) {

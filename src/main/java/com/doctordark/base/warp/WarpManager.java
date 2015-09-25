@@ -1,20 +1,32 @@
 package com.doctordark.base.warp;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface WarpManager {
 
-    Warp getWarp(String id);
+    Collection<String> getWarpNames();
 
-    List<Warp> getWarps();
+    Collection<Warp> getWarps();
+
+    Warp getWarp(String warpName);
 
     boolean containsWarp(Warp warp);
 
     void createWarp(Warp warp);
 
-    void removeWarp(Warp warp);
+    /**
+     * Removes a {@link Warp}.
+     *
+     * @param warpName the name of warp to remove
+     * @return the removed warp
+     */
+    Warp removeWarp(String warpName);
 
-    int getWarpDelaySeconds();
+    String getWarpDelayWords();
+
+    long getWarpDelayMillis();
+
+    long getWarpDelayTicks();
 
     int getNearbyPlayerRadiusCancel();
 

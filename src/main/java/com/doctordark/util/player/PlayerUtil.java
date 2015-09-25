@@ -19,12 +19,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerUtil {
 
-    private static final Map<Player, Location> frozen = Maps.newHashMap();
-    private static final Map<Player, PlayerCache> playerCaches = Maps.newHashMap();
+    private static final Map<Player, Location> frozen = new HashMap<>();
+    private static final Map<Player, PlayerCache> playerCaches = new HashMap<>();
     private static final TObjectLongMap<Player> lastSent = new TObjectLongHashMap<>();
 
     static {

@@ -1,7 +1,6 @@
 package com.doctordark.util.command;
 
 import com.doctordark.util.BukkitUtils;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -11,6 +10,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -87,7 +87,7 @@ public class CommandWrapper implements CommandExecutor, TabCompleter {
     }
 
     public static List<String> getAccessibleArgumentNames(CommandSender sender, Collection<CommandArgument> arguments) {
-        List<String> results = Lists.newArrayList();
+        List<String> results = new ArrayList<>();
         for (CommandArgument argument : arguments) {
             String permission = argument.getPermission();
             if (permission == null || sender.hasPermission(permission)) {

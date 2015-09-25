@@ -5,12 +5,12 @@ import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.base.user.NameHistory;
 import com.doctordark.base.user.ServerParticipator;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -34,7 +34,7 @@ public class NameHistoryCommand extends BaseCommand {
         }
 
         BaseUser targetUser = null;
-        List<String> messages = Lists.newArrayList();
+        List<String> messages = new ArrayList<>();
         for (ServerParticipator participator : plugin.getUserManager().getParticipators().values()) {
             if (participator instanceof BaseUser) {
                 BaseUser baseUser = (BaseUser) participator;

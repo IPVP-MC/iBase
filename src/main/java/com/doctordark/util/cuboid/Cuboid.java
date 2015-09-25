@@ -12,12 +12,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Represents a {@link Cuboid} used for regions.
@@ -229,7 +229,14 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return set of {@link Player}s in {@link Cuboid}
      */
     public Set<Player> getPlayers() {
-        return Bukkit.getOnlinePlayers().stream().filter(this::contains).collect(Collectors.toSet());
+        Set<Player> players = new HashSet<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (contains(player)) {
+                players.add(player);
+            }
+        }
+
+        return players;
     }
 
     /**

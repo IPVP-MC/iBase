@@ -8,9 +8,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * An {@link CommandArgument} used to set the minimum playtime to use a {@link Kit}.
@@ -45,9 +46,9 @@ public class KitSetminplaytimeArgument extends CommandArgument {
             return true;
         }
 
-        Long duration = JavaUtils.parse(args[2]);
+        long duration = JavaUtils.parse(args[2]);
 
-        if (duration == null) {
+        if (duration == -1L) {
             sender.sendMessage(ChatColor.RED + "Invalid duration, use the correct format: 10m 1s");
             return true;
         }
@@ -63,6 +64,12 @@ public class KitSetminplaytimeArgument extends CommandArgument {
             return Collections.emptyList();
         }
 
-        return plugin.getKitManager().getKits().stream().map(Kit::getName).collect(Collectors.toList());
+        Collection<Kit> kits = plugin.getKitManager().getKits();
+        List<String> results = new ArrayList<>(kits.size());
+        for (Kit kit : kits) {
+            results.add(kit.getName());
+        }
+
+        return results;
     }
 }

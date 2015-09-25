@@ -5,7 +5,6 @@ import com.doctordark.base.kit.event.KitRenameEvent;
 import com.doctordark.util.Config;
 import com.doctordark.util.GenericUtils;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.ChatPaginator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,7 +97,7 @@ public class FlatFileKitManager implements KitManager, Listener {
             final List<String> lore;
             String kitPermission = kit.getPermissionNode();
             if (kitPermission == null || player.hasPermission(kitPermission)) {
-                lore = Lists.newArrayList();
+                lore = new ArrayList<>()
                 if (kit.isEnabled()) {
                     if (kit.getDelayMillis() > 0L) {
                         lore.add(ChatColor.YELLOW + kit.getDelayWords() + " cooldown");
@@ -136,11 +136,12 @@ public class FlatFileKitManager implements KitManager, Listener {
         Object object = config.get("kits");
         if (object instanceof List) {
             this.kits = GenericUtils.createList(object, Kit.class);
-        } else this.kits = Lists.newArrayList();
-
-        for (Kit kit : this.kits) {
-            this.kitNameMap.put(kit.getName(), kit);
-            this.kitUUIDMap.put(kit.getUniqueID(), kit);
+            for (Kit kit : this.kits) {
+                this.kitNameMap.put(kit.getName(), kit);
+                this.kitUUIDMap.put(kit.getUniqueID(), kit);
+            }
+        } else {
+            this.kits = new ArrayList<>();
         }
     }
 

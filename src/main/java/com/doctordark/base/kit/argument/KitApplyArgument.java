@@ -9,9 +9,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * An {@link CommandArgument} used for applying {@link Kit}s to {@link Player}s.
@@ -66,7 +67,13 @@ public class KitApplyArgument extends CommandArgument {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 2) {
-            return plugin.getKitManager().getKits().stream().map(Kit::getName).collect(Collectors.toList());
+            Collection<Kit> kits = plugin.getKitManager().getKits();
+            List<String> results = new ArrayList<>(kits.size());
+            for (Kit kit : kits) {
+                results.add(kit.getName());
+            }
+
+            return results;
         } else if (args.length == 3) {
             return null;
         } else {

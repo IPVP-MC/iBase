@@ -4,12 +4,12 @@ import com.doctordark.base.BasePlugin;
 import com.doctordark.base.warp.Warp;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.command.CommandArgument;
-import com.google.common.collect.Lists;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +42,7 @@ public class WarpRemoveArgument extends CommandArgument {
             return true;
         }
 
-        Warp warp = plugin.getWarpManager().getWarp(args[1]);
+        Warp warp = plugin.getWarpManager().removeWarp(args[1]);
 
         if (warp == null) {
             sender.sendMessage(ChatColor.RED + "There is not a warp named " + args[1] + '.');
@@ -63,7 +63,7 @@ public class WarpRemoveArgument extends CommandArgument {
         }
 
         Collection<Warp> warps = plugin.getWarpManager().getWarps();
-        List<String> warpNames = Lists.newArrayListWithCapacity(warps.size());
+        List<String> warpNames = new ArrayList<>(warps.size());
         for (Warp warp : warps) {
             warpNames.add(warp.getName());
         }

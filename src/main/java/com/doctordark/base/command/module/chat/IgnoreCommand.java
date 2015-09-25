@@ -7,13 +7,13 @@ import com.doctordark.base.user.BaseUser;
 import com.doctordark.util.BukkitUtils;
 import com.doctordark.util.command.CommandArgument;
 import com.doctordark.util.command.CommandWrapper;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +27,7 @@ public class IgnoreCommand extends BaseCommand {
         super("ignore", "Ignores a player from messages.");
         setUsage("/(command) <list|add|del|clear> [playerName]");
 
-        List<CommandArgument> arguments = Lists.newArrayListWithCapacity(4);
+        List<CommandArgument> arguments = new ArrayList<>(4);
         arguments.add(new IgnoreClearArgument(plugin));
         arguments.add(new IgnoreListArgument(plugin));
         arguments.add(new IgnoreAddArgument(plugin));

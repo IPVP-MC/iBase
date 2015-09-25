@@ -2,17 +2,25 @@ package com.doctordark.base.warp;
 
 import com.doctordark.util.Config;
 import com.doctordark.util.GenericUtils;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class FlatFileWarpManager implements WarpManager {
 
-    private int warpDelaySeconds;
+    private String warpDelayWords;
+    private long warpDelayMillis;
+    private long warpDelayTicks;
+
     private int nearbyPlayerRadiusCancel;
 
+    private Map<String, Warp> warps = new CaseInsensitiveMap<>();
+
     private final JavaPlugin plugin;
-    private List<Warp> warps;
     private Config config;
 
     public FlatFileWarpManager(JavaPlugin plugin) {
@@ -21,39 +29,48 @@ public class FlatFileWarpManager implements WarpManager {
     }
 
     @Override
-    public Warp getWarp(String id) {
-        for (Warp warp : warps) {
-            if (warp.getName().equalsIgnoreCase(id)) {
-                return warp;
-            }
-        }
-
-        return null;
+    public Collection<String> getWarpNames() {
+        return warps.keySet();
     }
 
     @Override
-    public List<Warp> getWarps() {
-        return warps;
+    public Collection<Warp> getWarps() {
+        return warps.values();
+    }
+
+    @Override
+    public Warp getWarp(String warpName) {
+        return warps.get(warpName);
     }
 
     @Override
     public boolean containsWarp(Warp warp) {
-        return warps.contains(warp);
+        return warps.containsValue(warp);
     }
 
     @Override
     public void createWarp(Warp warp) {
-        warps.add(warp);
+        warps.put(warp.getName(), warp);
     }
 
     @Override
-    public void removeWarp(Warp warp) {
-        warps.remove(warp);
+    public Warp removeWarp(String warpName) {
+        return warps.remove(warpName);
     }
 
     @Override
-    public int getWarpDelaySeconds() {
-        return warpDelaySeconds;
+    public String getWarpDelayWords() {
+        return warpDelayWords;
+    }
+
+    @Override
+    public long getWarpDelayMillis() {
+        return warpDelayMillis;
+    }
+
+    @Override
+    public long getWarpDelayTicks() {
+        return warpDelayTicks;
     }
 
     @Override
@@ -63,16 +80,24 @@ public class FlatFileWarpManager implements WarpManager {
 
     @Override
     public void reloadWarpData() {
-        config = new Config(plugin, "warps");
-        warps = GenericUtils.createList(config.get("warps"), Warp.class);
+        this.config = new Config(plugin, "warps");
 
-        warpDelaySeconds = plugin.getConfig().getInt("warp-delay-seconds", 0);
+        List<Warp> warps = GenericUtils.createList(config.get("warps"), Warp.class);
+        this.warps = new CaseInsensitiveMap<>(warps.size());
+        for (Warp warp : warps) {
+            this.warps.put(warp.getName(), warp);
+        }
+
+        warpDelayMillis = plugin.getConfig().getLong("warp-delay-millis", 0L);
+        warpDelayTicks = warpDelayMillis / 50L;
+        warpDelayWords = DurationFormatUtils.formatDurationWords(warpDelayMillis, true, true);
+
         nearbyPlayerRadiusCancel = plugin.getConfig().getInt("nearby-player-radius-cancel", 0);
     }
 
     @Override
     public void saveWarpData() {
-        plugin.getConfig().set("warp-delay-seconds", warpDelaySeconds);
+        plugin.getConfig().set("warp-delay-millis", warpDelayMillis);
         plugin.getConfig().set("nearby-player-radius-cancel", nearbyPlayerRadiusCancel);
         plugin.saveConfig();
 

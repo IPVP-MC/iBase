@@ -6,13 +6,13 @@ import com.doctordark.util.JavaUtils;
 import com.doctordark.util.command.CommandArgument;
 import com.doctordark.util.command.CommandWrapper;
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class AutoRestartCommand extends BaseCommand {
         setAliases(new String[]{"autorestart"});
         setUsage("/(command) <cancel|time|schedule>");
 
-        List<CommandArgument> arguments = Lists.newArrayListWithCapacity(3);
+        List<CommandArgument> arguments = new ArrayList<>(3);
         arguments.add(new AutoRestartCancelArgument(plugin));
         arguments.add(new AutoRestartScheduleArgument(plugin));
         arguments.add(new AutoRestartTimeArgument(plugin));

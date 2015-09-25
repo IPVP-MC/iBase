@@ -19,9 +19,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RemoveEntityCommand extends BaseCommand {
 
@@ -97,21 +97,28 @@ public class RemoveEntityCommand extends BaseCommand {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        List<String> results;
         switch (args.length) {
             case 1:
-                return Bukkit.getWorlds().stream().map(World::getName).collect(Collectors.toList());
+                Collection<World> worlds = Bukkit.getWorlds();
+                results = new ArrayList<>(worlds.size());
+                for (World world : worlds) {
+                    results.add(world.getName());
+                }
+                break;
             case 2:
                 EntityType[] entityTypes = EntityType.values();
-                List<String> results = new ArrayList<>(entityTypes.length);
+                results = new ArrayList<>(entityTypes.length);
                 for (EntityType entityType : entityTypes) {
                     if (entityType != EntityType.UNKNOWN && entityType != EntityType.PLAYER) {
                         results.add(entityType.name());
                     }
                 }
-
-                return BukkitUtils.getCompletions(args, results);
+                break;
             default:
                 return Collections.emptyList();
         }
+
+        return BukkitUtils.getCompletions(args, results);
     }
 }

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -12,14 +13,14 @@ import java.util.UUID;
 public class PlayerList implements Iterable<Player> {
 
     private final List<UUID> playerUniqueIds;
-    private final List<Player> playerList = Lists.newArrayList();
+    private final List<Player> playerList = new ArrayList<>();
 
     public PlayerList() {
-        this.playerUniqueIds = Lists.newArrayList();
+        this.playerUniqueIds = new ArrayList<>();
     }
 
-    public PlayerList(Collection<UUID> col) {
-        this.playerUniqueIds = Lists.newArrayList(col);
+    public PlayerList(Iterable<UUID> iterable) {
+        this.playerUniqueIds = Lists.newArrayList(iterable);
     }
 
     @Override

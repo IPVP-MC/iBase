@@ -2,7 +2,6 @@ package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.util.BukkitUtils;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -59,15 +59,13 @@ public class SudoCommand extends BaseCommand {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length > 2) {
-            return Collections.emptyList();
-        }
-
-        List<String> results = Lists.newArrayList();
+        final List<String> results;
         if (args.length == 1) {
+            results = new ArrayList<>(2);
             results.add("true");
             results.add("false");
         } else if (args.length == 2) {
+            results = new ArrayList<>();
             results.add("ALL");
             Player senderPlayer = sender instanceof Player ? ((Player) sender) : null;
             for (Player target : Bukkit.getOnlinePlayers()) {
@@ -75,6 +73,8 @@ public class SudoCommand extends BaseCommand {
                     results.add(target.getName());
                 }
             }
+        } else {
+            return Collections.emptyList();
         }
 
         return BukkitUtils.getCompletions(args, results);

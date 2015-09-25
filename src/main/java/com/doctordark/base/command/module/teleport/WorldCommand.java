@@ -2,7 +2,6 @@ package com.doctordark.base.command.module.teleport;
 
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.util.BukkitUtils;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -71,7 +71,7 @@ public class WorldCommand extends BaseCommand {
         }
 
         Collection<World> worlds = Bukkit.getWorlds();
-        List<String> results = Lists.newArrayListWithCapacity(worlds.size());
+        List<String> results = new ArrayList<>(worlds.size());
         for (World world : Bukkit.getWorlds()) {
             results.add(world.getName());
         }

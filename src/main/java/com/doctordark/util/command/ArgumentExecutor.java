@@ -2,7 +2,6 @@ package com.doctordark.util.command;
 
 import com.doctordark.util.BukkitUtils;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -11,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -64,7 +64,7 @@ public abstract class ArgumentExecutor implements CommandExecutor, TabCompleter 
     public CommandArgument getArgument(String id) {
         for (CommandArgument argument : arguments) {
             String name = argument.getName();
-            if (name.equalsIgnoreCase(id) || Lists.newArrayList(argument.getAliases()).contains(id.toLowerCase())) {
+            if (name.equalsIgnoreCase(id) || Arrays.asList(argument.getAliases()).contains(id.toLowerCase())) {
                 return argument;
             }
         }
@@ -118,7 +118,7 @@ public abstract class ArgumentExecutor implements CommandExecutor, TabCompleter 
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        List<String> results = Lists.newArrayList();
+        List<String> results = new ArrayList<>();
         if (args.length < 2) {
             for (CommandArgument argument : arguments) {
                 String permission = argument.getPermission();

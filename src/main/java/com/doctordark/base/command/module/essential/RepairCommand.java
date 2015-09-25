@@ -22,6 +22,8 @@ import java.util.Set;
  */
 public class RepairCommand extends BaseCommand {
 
+    private static final short FULLY_REPAIRED_DURABILITY = (short) 0;
+
     public RepairCommand() {
         super("repair", "Allows repairing of damaged tools for a player.");
         this.setUsage("/(command) <playerName> [all]");
@@ -53,9 +55,11 @@ public class RepairCommand extends BaseCommand {
             toRepair.add(target.getItemInHand());
         }
 
-        toRepair.stream().filter(stack -> stack != null && stack.getType() != Material.AIR).forEach(stack -> {
-            stack.setDurability((short) 0);
-        });
+        for (ItemStack stack : toRepair) {
+            if (stack != null && stack.getType() != Material.AIR) {
+                stack.setDurability(FULLY_REPAIRED_DURABILITY);
+            }
+        }
 
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Repaired " + (toRepair.size() > 1 ? "inventory" : "held item") + " of " + target.getName() + '.');
         return true;

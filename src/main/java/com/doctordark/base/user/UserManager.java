@@ -3,7 +3,6 @@ package com.doctordark.base.user;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.util.Config;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.MemorySection;
@@ -110,7 +109,7 @@ public class UserManager {
         if (object instanceof MemorySection) {
             MemorySection section = (MemorySection) object;
             Set<String> keys = section.getKeys(false);
-            this.participators = Maps.newHashMapWithExpectedSize(keys.size());
+            this.participators = new HashMap<>(keys.size());
             for (String id : keys) {
                 this.participators.put(UUID.fromString(id), (ServerParticipator) userConfig.get("participators." + id));
             }

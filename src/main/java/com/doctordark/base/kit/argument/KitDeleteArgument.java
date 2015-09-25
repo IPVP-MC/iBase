@@ -9,9 +9,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * An {@link CommandArgument} used to delete a {@link Kit}.
@@ -64,6 +65,12 @@ public class KitDeleteArgument extends CommandArgument {
             return Collections.emptyList();
         }
 
-        return plugin.getKitManager().getKits().stream().map(Kit::getName).collect(Collectors.toList());
+        Collection<Kit> kits = plugin.getKitManager().getKits();
+        List<String> results = new ArrayList<>(kits.size());
+        for (Kit kit : kits) {
+            results.add(kit.getName());
+        }
+
+        return results;
     }
 }

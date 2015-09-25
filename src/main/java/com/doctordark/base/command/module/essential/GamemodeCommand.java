@@ -2,13 +2,13 @@ package com.doctordark.base.command.module.essential;
 
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.util.BukkitUtils;
-import com.google.common.collect.Lists;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -71,7 +71,7 @@ public class GamemodeCommand extends BaseCommand {
         }
 
         GameMode[] gameModes = GameMode.values();
-        List<String> results = Lists.newArrayListWithCapacity(gameModes.length);
+        List<String> results = new ArrayList<>(gameModes.length);
         for (GameMode mode : gameModes) {
             results.add(mode.name());
         }

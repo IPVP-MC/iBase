@@ -3,7 +3,6 @@ package com.doctordark.base.kit;
 import com.doctordark.base.kit.event.KitApplyEvent;
 import com.doctordark.util.GenericUtils;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,6 +20,7 @@ import org.bukkit.potion.PotionEffect;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -114,7 +114,7 @@ public class Kit implements ConfigurationSerializable {
 
     @Override
     public Map<String, Object> serialize() {
-        Map<String, Object> map = Maps.newLinkedHashMap();
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put("uniqueID", uniqueID.toString());
         map.put("name", name);
         map.put("description", description);

@@ -4,15 +4,16 @@ import com.doctordark.base.BasePlugin;
 import com.doctordark.base.kit.FlatFileKitManager;
 import com.doctordark.base.kit.Kit;
 import com.doctordark.util.command.CommandArgument;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.google.common.primitives.Ints;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * An {@link CommandArgument} used to set the maximum uses of a {@link Kit}.
@@ -69,11 +70,19 @@ public class KitSetMaxUsesArgument extends CommandArgument {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 2) {
-            return plugin.getKitManager().getKits().stream().map(Kit::getName).collect(Collectors.toList());
+            Collection<Kit> kits = plugin.getKitManager().getKits();
+            List<String> results = new ArrayList<>(kits.size());
+            for (Kit kit : kits) {
+                results.add(kit.getName());
+            }
+
+            return results;
         } else if (args.length == 3) {
-            return Lists.newArrayList("UNLIMITED");
+            return COMPLETIONS_THIRD;
         } else {
             return Collections.emptyList();
         }
     }
+
+    private static final List<String> COMPLETIONS_THIRD = ImmutableList.of("UNLIMITED");
 }

@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.minecraft.server.v1_7_R4.MinecraftServer;
 import org.bukkit.Bukkit;
@@ -30,6 +29,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.ChatPaginator;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -99,7 +99,7 @@ public final class BukkitUtils {
 
     public static int countColoursUsed(String id, boolean ignoreDuplicates) {
         ChatColor[] values = ChatColor.values();
-        List<Character> charList = Lists.newArrayListWithCapacity(values.length);
+        List<Character> charList = new ArrayList<>(values.length);
         for (ChatColor colour : values) {
             charList.add(colour.getChar());
         }
@@ -127,9 +127,15 @@ public final class BukkitUtils {
         Preconditions.checkArgument(args.length != 0);
 
         String argument = args[(args.length - 1)];
-        return input.stream().filter(string ->
-                string.regionMatches(true, 0, argument, 0, argument.length())).
-                limit(limit).collect(Collectors.toList());
+
+        /** Non Java 8 version
+        return FluentIterable.from(Arrays.asList(args)).filter(new Predicate<String>() {
+            @Override
+            public boolean apply(String string) {
+                return string.regionMatches(true, 0, argument, 0, argument.length());
+            }
+        }).limit(limit).toList();*/
+        return input.stream().filter(string -> string.regionMatches(true, 0, argument, 0, argument.length())).limit(limit).collect(Collectors.toList());
     }
 
     /**

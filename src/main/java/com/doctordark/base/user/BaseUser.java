@@ -8,7 +8,6 @@ import com.doctordark.util.GenericUtils;
 import com.doctordark.util.PersistableLocation;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.common.net.InetAddresses;
 import net.minecraft.server.v1_7_R4.DataWatcher;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
@@ -32,6 +31,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +39,8 @@ import java.util.UUID;
 
 public class BaseUser extends ServerParticipator {
 
-    private final List<String> addressHistories = Lists.newArrayList();
-    private final List<NameHistory> nameHistories = Lists.newArrayList();
+    private final List<String> addressHistories = new ArrayList<>();
+    private final List<NameHistory> nameHistories = new ArrayList<>();
 
     private Location backLocation;
     private boolean messagingSounds;

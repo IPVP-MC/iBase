@@ -1,12 +1,12 @@
 package com.doctordark.util;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -85,7 +85,7 @@ public class ItemBuilder {
         }
 
         boolean hasLore = meta.hasLore();
-        List<String> lore = hasLore ? meta.getLore() : Lists.newArrayList();
+        List<String> lore = hasLore ? meta.getLore() : new ArrayList<>();
         lore.add(hasLore ? lore.size() : 0, line);
 
         this.lore(line);
