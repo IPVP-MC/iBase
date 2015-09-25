@@ -3,19 +3,17 @@ package com.doctordark.base.command.module.essential;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.command.BaseCommand;
 import com.google.common.primitives.Ints;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 public class SetMaxPlayersCommand extends BaseCommand {
 
-    private final BasePlugin plugin;
-
-    public SetMaxPlayersCommand(BasePlugin plugin) {
+    public SetMaxPlayersCommand() {
         super("setmaxplayers", "Sets the max player cap.");
         setAliases(new String[]{"setplayercap"});
         setUsage("/(command) <amount>");
-        this.plugin = plugin;
     }
 
     @Override
@@ -32,7 +30,7 @@ public class SetMaxPlayersCommand extends BaseCommand {
             return true;
         }
 
-        plugin.getServerHandler().setMaxPlayers(amount);
+        Bukkit.setMaxPlayers(amount);
 
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Set the maximum players to " + amount + '.');
         return true;

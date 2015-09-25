@@ -18,7 +18,6 @@ public class ServerHandler {
     private long chatSlowedMillis;
     private long chatDisabledMillis;
     private int chatSlowedDelay;
-    private int maxPlayers;
     private String broadcastFormat;
     private String fullServerKickMessage;
     private FileConfiguration config;
@@ -86,22 +85,6 @@ public class ServerHandler {
         this.chatSlowedDelay = delay;
     }
 
-    public int getMaxPlayers() {
-        return this.maxPlayers;
-    }
-
-    public boolean setMaxPlayers(int maxPlayers) {
-        return setMaxPlayers(maxPlayers, true);
-    }
-
-    public boolean setMaxPlayers(int maxPlayers, boolean inject) {
-        Preconditions.checkArgument(maxPlayers >= 0, "Max players cannot be negative");
-
-        this.maxPlayers = maxPlayers;
-        Bukkit.setMaxPlayers(maxPlayers);
-        return true;
-    }
-
     public String getBroadcastFormat() {
         return this.broadcastFormat;
     }
@@ -153,11 +136,6 @@ public class ServerHandler {
             chatSlowedDelay = config.getInt("chat.slowed.delay", 15);
         }
 
-        this.maxPlayers = config.getInt("max-players", 150);
-        if (maxPlayers > 0) {
-            Bukkit.setMaxPlayers(maxPlayers);
-        }
-
         useProtocolLib = config.getBoolean("use-protocol-lib", true);
         decreasedLagMode = config.getBoolean("decreased-lag-mode");
         broadcastFormat = ChatColor.translateAlternateColorCodes('&',
@@ -172,7 +150,6 @@ public class ServerHandler {
         config.set("chat.slowed.millis", Long.valueOf(this.chatSlowedMillis));
         config.set("chat.slowed-delay", this.chatSlowedDelay);
         config.set("announcements.delay", this.announcementDelay);
-        config.set("max-players", this.maxPlayers);
         config.set("decreased-lag-mode", decreasedLagMode);
         plugin.saveConfig();
     }
