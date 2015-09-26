@@ -9,7 +9,6 @@ import com.doctordark.util.PersistableLocation;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.net.InetAddresses;
-import net.minecraft.server.v1_7_R4.DataWatcher;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_7_R4.PlayerConnection;
@@ -220,14 +219,14 @@ public class BaseUser extends ServerParticipator {
         setVanished(Bukkit.getPlayer(getUniqueId()), vanished, update);
     }
 
-    public boolean setVanished(@Nullable Player player, boolean vanished, boolean update) {
+    public boolean setVanished(@Nullable Player player, boolean vanished, boolean notifyPlayerList) {
         if (this.vanished != vanished) {
             if (player != null) {
                 PlayerVanishEvent event = new PlayerVanishEvent(player, vanished);
                 Bukkit.getPluginManager().callEvent(event);
                 if (event.isCancelled()) return false;
 
-                if (update) {
+                if (notifyPlayerList) {
                     updateVanishedState(player, vanished);
                 }
             }
@@ -278,10 +277,10 @@ public class BaseUser extends ServerParticipator {
      * Sets if glint for {@link org.bukkit.enchantments.Enchantment}s on
      * {@link org.bukkit.inventory.ItemStack}s is enabled for this {@link BaseUser}.
      *
-     * @param glintEnabled the value to set
-     * @param update       if it should update for nearby entities
+     * @param glintEnabled      the value to set
+     * @param sendUpdatePackets if packets should be sent to match appropriate glint state
      */
-    public void setGlintEnabled(boolean glintEnabled, boolean update) {
+    public void setGlintEnabled(boolean glintEnabled, boolean sendUpdatePackets) {
         Player player = toPlayer();
         if (player == null || !player.isOnline()) {
             return;
@@ -295,9 +294,7 @@ public class BaseUser extends ServerParticipator {
                 if (entity instanceof org.bukkit.entity.Item) {
                     org.bukkit.entity.Item item = (org.bukkit.entity.Item) entity;
                     if (item instanceof CraftItem) {
-                        CraftItem craftItem = (CraftItem) item;
-                        DataWatcher watcher = craftItem.getHandle().getDataWatcher();
-                        connection.sendPacket(new PacketPlayOutEntityMetadata(entity.getEntityId(), watcher, true));
+                        connection.sendPacket(new PacketPlayOutEntityMetadata(entity.getEntityId(), ((CraftItem) item).getHandle().getDataWatcher(), true));
                     }
                 } else if (entity instanceof Player && !entity.equals(player)) {
                     Player target = (Player) entity;
@@ -314,7 +311,7 @@ public class BaseUser extends ServerParticipator {
 
                     ItemStack stack = inventory.getItemInHand();
                     if (stack != null && stack.getType() != Material.AIR) {
-                        connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, /*CraftEntityEquipment.WEAPON_SLOT(*/0, CraftItemStack.asNMSCopy(stack)));
+                        connection.sendPacket(new PacketPlayOutEntityEquipment(entityID, /*TODO: publicise in Spigot: CraftEntityEquipment.WEAPON_SLOT(*/0, CraftItemStack.asNMSCopy(stack)));
                     }
                 }
             }

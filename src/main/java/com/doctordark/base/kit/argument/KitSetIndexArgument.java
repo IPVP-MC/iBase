@@ -54,20 +54,20 @@ public class KitSetIndexArgument extends CommandArgument {
             return true;
         }
 
-        if (newIndex < 0) {
-            sender.sendMessage(ChatColor.RED + "The kit index must be a minimum of " + 0 + '.');
+        if (newIndex < 1) {
+            sender.sendMessage(ChatColor.RED + "The kit index cannot be less than " + 1 + '.');
             return true;
         }
 
         List<Kit> kits = plugin.getKitManager().getKits();
-        int totalKitAmount = kits.size();
+        int totalKitAmount = kits.size() + 1;
 
         if (newIndex > totalKitAmount) {
             sender.sendMessage(ChatColor.RED + "The kit index must be a maximum of " + totalKitAmount + '.');
             return true;
         }
 
-        int previousIndex = kits.indexOf(kit);
+        int previousIndex = kits.indexOf(kit) + 1;
 
         if (newIndex == previousIndex) {
             sender.sendMessage(ChatColor.RED + "Index of kit " + kit.getDisplayName() + " is already " + newIndex + '.');
@@ -75,7 +75,7 @@ public class KitSetIndexArgument extends CommandArgument {
         }
 
         kits.remove(kit);
-        kits.add(newIndex, kit);
+        kits.add(--newIndex, kit);
 
         sender.sendMessage(ChatColor.AQUA + "Set the index of kit " + kit.getDisplayName() + " from " + previousIndex + " to " + newIndex + '.');
         return true;

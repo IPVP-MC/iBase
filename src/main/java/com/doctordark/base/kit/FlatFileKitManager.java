@@ -97,7 +97,7 @@ public class FlatFileKitManager implements KitManager, Listener {
             final List<String> lore;
             String kitPermission = kit.getPermissionNode();
             if (kitPermission == null || player.hasPermission(kitPermission)) {
-                lore = new ArrayList<>()
+                lore = new ArrayList<>();
                 if (kit.isEnabled()) {
                     if (kit.getDelayMillis() > 0L) {
                         lore.add(ChatColor.YELLOW + kit.getDelayWords() + " cooldown");

@@ -46,7 +46,7 @@ public class HatCommand extends BaseCommand {
 
         int amount = stack.getAmount();
         if (amount > 1) {
-            stack.setAmount(amount - 1);
+            stack.setAmount(--amount); // decrease held item amount
         } else {
             player.setItemInHand(new ItemStack(Material.AIR, 1));
         }

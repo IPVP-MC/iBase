@@ -73,7 +73,7 @@ public class EssentialModule extends BaseCommandModule {
         commands.add(new RulesCommand(plugin));
         commands.add(new SayCommand());
         commands.add(new SeenCommand(plugin));
-        commands.add(new SetMaxPlayersCommand(plugin));
+        commands.add(new SetMaxPlayersCommand());
         commands.add(new ToggleSoundsCommand(plugin));
         commands.add(new SpeedCommand());
         commands.add(new StopLagCommand(plugin));

@@ -1,7 +1,6 @@
 package com.doctordark.util.chat;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.Maps;
 import net.minecraft.server.v1_7_R4.Item;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_7_R4.potion.CraftPotionEffectType;
