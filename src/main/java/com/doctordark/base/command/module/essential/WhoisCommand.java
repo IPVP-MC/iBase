@@ -6,6 +6,10 @@ import com.doctordark.base.command.BaseCommand;
 import com.doctordark.base.listener.VanishPriority;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.util.BukkitUtils;
+import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import org.apache.commons.lang3.text.WordUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.ChatColor;
@@ -13,12 +17,20 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class WhoisCommand extends BaseCommand {
+
+    private static final Map<Integer, String> CLIENT_PROTOCOL_IDS = ImmutableMap.of(
+            4, "1.7.2 -> 1.7.5",
+            5, "1.7.6 -> 1.7.10",
+            47, "1.8 -> 1.8.8"
+    );
 
     private final BasePlugin plugin;
 
@@ -60,6 +72,11 @@ public class WhoisCommand extends BaseCommand {
         sender.sendMessage(ChatColor.YELLOW + "  Game Mode: " + ChatColor.GOLD + WordUtils.capitalizeFully(target.getGameMode().name().replace('_', ' ')));
         sender.sendMessage(ChatColor.YELLOW + "  Idle Time: " + ChatColor.GOLD + DurationFormatUtils.formatDurationWords(BukkitUtils.getIdleTime(target), true, true));
         sender.sendMessage(ChatColor.YELLOW + "  IP Address: " + ChatColor.GOLD + target.getAddress().getHostString());
+
+        int version = ((CraftPlayer) target).getHandle().playerConnection.networkManager.getVersion();
+        sender.sendMessage(ChatColor.YELLOW + "  Client Version: " + ChatColor.GOLD + version +
+                ChatColor.GRAY + " [" + MoreObjects.firstNonNull(CLIENT_PROTOCOL_IDS.get(version), "Unknown (check at http://wiki.vg/Protocol_version_numbers)") + "]");
+
         sender.sendMessage(ChatColor.GRAY + BukkitUtils.STRAIGHT_LINE_DEFAULT);
         return true;
     }
