@@ -192,10 +192,10 @@ public class BaseUser extends ServerParticipator {
     }
 
     public Location getBackLocation() {
-        return this.backLocation;
+        return this.backLocation == null ? null : this.backLocation.clone();
     }
 
-    public void setBackLocation(Location backLocation) {
+    public void setBackLocation(@Nullable Location backLocation) {
         this.backLocation = backLocation;
     }
 

@@ -70,18 +70,13 @@ public class BackCommand extends BaseCommand implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
-        plugin.getUserManager().getUser(player.getUniqueId()).setBackLocation(player.getLocation());
+        plugin.getUserManager().getUser(player.getUniqueId()).setBackLocation(player.getLocation().clone());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerTeleport(PlayerTeleportEvent event) {
-        switch (event.getCause()) {
-            case NETHER_PORTAL:
-            case END_PORTAL:
-            case ENDER_PEARL:
-                return;
+        if (event.getCause() != PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
+            plugin.getUserManager().getUser(event.getPlayer().getUniqueId()).setBackLocation(event.getFrom().clone());
         }
-
-        plugin.getUserManager().getUser(event.getPlayer().getUniqueId()).setBackLocation(event.getFrom().clone());
     }
 }
