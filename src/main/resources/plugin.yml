@@ -121,8 +121,6 @@ commands:
     description: Reply to a player message.
   rules:
     description: Shows the server rules.
-  say:
-    description: Tell a story to the server.
   screenshare:
   seen:
     description: Checks when a player was last seen.
