@@ -225,7 +225,7 @@ public class BaseUser extends ServerParticipator {
     public boolean setVanished(@Nullable Player player, boolean vanished, boolean notifyPlayerList) {
         if (this.vanished != vanished) {
             if (player != null) {
-                PlayerVanishEvent event = new PlayerVanishEvent(player, notifyPlayerList ? Collections.emptySet() : new HashSet<>(Bukkit.getOnlinePlayers()), vanished);
+                PlayerVanishEvent event = new PlayerVanishEvent(player, notifyPlayerList ? new HashSet<>(Bukkit.getOnlinePlayers()) : Collections.emptySet(), vanished);
                 Bukkit.getPluginManager().callEvent(event);
                 if (event.isCancelled()) return false;
 
