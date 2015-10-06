@@ -70,7 +70,7 @@ public class RenameCommand extends BaseCommand {
             return true;
         }
 
-        sender.sendMessage(ChatColor.YELLOW + "Renamed held item from " + (oldName == null ? "no name" : oldName) + " to " + newName + '.');
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Renamed held item from " + (oldName == null ? "no name" : oldName) + " to " + newName + ChatColor.YELLOW + '.');
         return true;
     }
 
