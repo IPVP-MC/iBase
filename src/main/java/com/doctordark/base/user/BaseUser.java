@@ -31,7 +31,10 @@ import org.bukkit.inventory.PlayerInventory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -222,12 +225,12 @@ public class BaseUser extends ServerParticipator {
     public boolean setVanished(@Nullable Player player, boolean vanished, boolean notifyPlayerList) {
         if (this.vanished != vanished) {
             if (player != null) {
-                PlayerVanishEvent event = new PlayerVanishEvent(player, vanished);
+                PlayerVanishEvent event = new PlayerVanishEvent(player, notifyPlayerList ? Collections.emptySet() : new HashSet<>(Bukkit.getOnlinePlayers()), vanished);
                 Bukkit.getPluginManager().callEvent(event);
                 if (event.isCancelled()) return false;
 
                 if (notifyPlayerList) {
-                    updateVanishedState(player, vanished);
+                    updateVanishedState(player, event.getViewers(), vanished);
                 }
             }
 
@@ -239,11 +242,15 @@ public class BaseUser extends ServerParticipator {
     }
 
     public void updateVanishedState(Player player, boolean vanished) {
+        this.updateVanishedState(player, new HashSet<>(Bukkit.getOnlinePlayers()), vanished);
+    }
+
+    public void updateVanishedState(Player player, Collection<Player> viewers, boolean vanished) {
         player.spigot().setCollidesWithEntities(!vanished);
         player.showInvisibles(vanished); // allow vanished players to see those invisible.
 
         VanishPriority playerPriority = VanishPriority.of(player);
-        for (Player target : Bukkit.getOnlinePlayers()) {
+        for (Player target : viewers) {
             if (player.equals(target)) continue;
             if (vanished && playerPriority.isMoreThan(VanishPriority.of(target))) {
                 target.hidePlayer(player);

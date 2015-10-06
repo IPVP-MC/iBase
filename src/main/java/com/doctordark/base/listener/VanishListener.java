@@ -66,13 +66,6 @@ public class VanishListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        BaseUser baseUser = plugin.getUserManager().getUser(player.getUniqueId());
-        if (baseUser.isVanished()) {
-            onlineVanishedPlayers.add(player);
-            player.sendMessage(ChatColor.GOLD + "You have joined vanished.");
-            baseUser.updateVanishedState(player, true);
-        }
-
         // Hide any current vanished players to this player.
         if (!onlineVanishedPlayers.isEmpty()) {
             VanishPriority selfPriority = VanishPriority.of(player);
@@ -83,6 +76,13 @@ public class VanishListener implements Listener {
                     }
                 }
             }
+        }
+
+        BaseUser baseUser = plugin.getUserManager().getUser(player.getUniqueId());
+        if (baseUser.isVanished()) {
+            onlineVanishedPlayers.add(player);
+            player.sendMessage(ChatColor.GOLD + "You have joined vanished.");
+            baseUser.updateVanishedState(player, true);
         }
     }
 
