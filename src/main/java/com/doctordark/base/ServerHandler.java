@@ -17,7 +17,6 @@ public class ServerHandler {
     private long chatDisabledMillis;
     private int chatSlowedDelay;
     private String broadcastFormat;
-    private String fullServerKickMessage;
     private FileConfiguration config;
     private boolean decreasedLagMode;
 
@@ -50,8 +49,7 @@ public class ServerHandler {
     }
 
     public void setChatSlowedMillis(long ticks) {
-        long millis = System.currentTimeMillis();
-        this.chatSlowedMillis = (millis + ticks);
+        this.chatSlowedMillis = System.currentTimeMillis() + ticks;
     }
 
     public long getRemainingChatSlowedMillis() {
@@ -91,14 +89,6 @@ public class ServerHandler {
         this.broadcastFormat = broadcastFormat;
     }
 
-    public String getFullServerKickMessage() {
-        return this.fullServerKickMessage;
-    }
-
-    public void setFullServerKickMessage(String fullServerKickMessage) {
-        this.fullServerKickMessage = fullServerKickMessage;
-    }
-
     public List<String> getServerRules() {
         return this.serverRules;
     }
@@ -112,43 +102,38 @@ public class ServerHandler {
     }
 
     public void reloadServerData() {
-        plugin.reloadConfig();
-        config = plugin.getConfig();
+        this.plugin.reloadConfig();
+        this.config = plugin.getConfig();
 
-        serverRules.clear();
+        this.serverRules.clear();
         for (String each : config.getStringList("server-rules")) {
-            serverRules.add(ChatColor.translateAlternateColorCodes('&', each));
+            this.serverRules.add(ChatColor.translateAlternateColorCodes('&', each));
         }
 
-        if (config.getConfigurationSection("announcements") != null) {
-            announcementDelay = config.getInt("announcements.delay", 300);
-            announcements.clear();
-            for (String each : config.getStringList("announcements.list")) {
-                announcements.add(ChatColor.translateAlternateColorCodes('&', each));
-            }
+        this.announcementDelay = config.getInt("announcements.delay", 300);
+        this.announcements.clear();
+        for (String each : config.getStringList("announcements.list")) {
+            this.announcements.add(ChatColor.translateAlternateColorCodes('&', each));
         }
 
-        if (config.getConfigurationSection("chat") != null) {
-            chatDisabledMillis = config.getLong("chat.disabled.millis", 0L);
-            chatSlowedMillis = config.getLong("chat.slowed.millis", 0L);
-            chatSlowedDelay = config.getInt("chat.slowed.delay", 15);
-        }
+        this.chatDisabledMillis = config.getLong("chat.disabled.millis", 0L);
+        this.chatSlowedMillis = config.getLong("chat.slowed.millis", 0L);
+        this.chatSlowedDelay = config.getInt("chat.slowed.delay", 15);
 
-        useProtocolLib = config.getBoolean("use-protocol-lib", true);
-        decreasedLagMode = config.getBoolean("decreased-lag-mode");
-        broadcastFormat = ChatColor.translateAlternateColorCodes('&',
-                config.getString("broadcast.format", "&e[Base] &7%1$s"));
-        fullServerKickMessage = ChatColor.translateAlternateColorCodes('&',
-                config.getString("full-server-kick-message", "&cThe server is full. \n\n&cDonate for &aVIP&c or above to bypass this restriction."));
+        this.useProtocolLib = config.getBoolean("use-protocol-lib", true);
+        this.decreasedLagMode = config.getBoolean("decreased-lag-mode");
+        this.broadcastFormat = ChatColor.translateAlternateColorCodes('&', config.getString("broadcast.format", "[Base] &7%1$s"));
     }
 
     public void saveServerData() {
-        config.set("use-protocol-lib", useProtocolLib);
-        config.set("chat.disabled.millis", Long.valueOf(this.chatDisabledMillis));
-        config.set("chat.slowed.millis", Long.valueOf(this.chatSlowedMillis));
+        config.set("server-rules", this.serverRules);
+        config.set("use-protocol-lib", this.useProtocolLib);
+        config.set("chat.disabled.millis", this.chatDisabledMillis);
+        config.set("chat.slowed.millis", this.chatSlowedMillis);
         config.set("chat.slowed-delay", this.chatSlowedDelay);
         config.set("announcements.delay", this.announcementDelay);
-        config.set("decreased-lag-mode", decreasedLagMode);
+        config.set("announcements.list", this.announcements);
+        config.set("decreased-lag-mode", this.decreasedLagMode);
         plugin.saveConfig();
     }
 }
