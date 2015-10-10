@@ -2,6 +2,7 @@ package com.doctordark.base.command.module.inventory;
 
 import com.doctordark.base.BaseConstants;
 import com.doctordark.base.BasePlugin;
+import com.doctordark.base.StaffPriority;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.util.BukkitUtils;
 import org.bukkit.Bukkit;
@@ -74,6 +75,12 @@ public class InvSeeCommand extends BaseCommand implements Listener {
 
             if (target == null || !canSee(sender, target)) {
                 sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
+                return true;
+            }
+
+            StaffPriority selfPriority = StaffPriority.of(player);
+            if (selfPriority != StaffPriority.HIGHEST && StaffPriority.of(target).isMoreThan(selfPriority)) {
+                sender.sendMessage(ChatColor.RED + "You do not have access to check the inventory of that player.");
                 return true;
             }
 
