@@ -870,6 +870,10 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
         return new CuboidBlockIterator(getWorld(), x1, y1, z1, x2, y2, z2);
     }
 
+    public Iterator<Location> locationIterator() {
+        return new CuboidLocationIterator(getWorld(), x1, y1, z1, x2, y2, z2);
+    }
+
     @Override
     public Cuboid clone() {
         try {
