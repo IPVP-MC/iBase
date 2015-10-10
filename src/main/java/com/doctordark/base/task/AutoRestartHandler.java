@@ -109,7 +109,7 @@ public class AutoRestartHandler {
                 long remainingTicks = getRemainingTicks();
                 if (remainingTicks <= 0) {
                     cancel();
-                    Bukkit.shutdown(ChatColor.RED + "Server restarting.. Back up momentarily!" + (reason == null ? "" : ChatColor.GOLD + "\n\n" + reason));
+                    Bukkit.shutdown(ChatColor.RED + "Server restarting.. Back up momentarily!" + (reason == null ? "" : ChatColor.GOLD + "\n\n " + reason));
                     return;
                 }
 
