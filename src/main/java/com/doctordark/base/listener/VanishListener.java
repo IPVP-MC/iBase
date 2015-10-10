@@ -1,6 +1,7 @@
 package com.doctordark.base.listener;
 
 import com.doctordark.base.BasePlugin;
+import com.doctordark.base.StaffPriority;
 import com.doctordark.base.event.PlayerVanishEvent;
 import com.doctordark.base.user.BaseUser;
 import com.doctordark.util.BukkitUtils;
@@ -68,10 +69,10 @@ public class VanishListener implements Listener {
 
         // Hide any current vanished players to this player.
         if (!onlineVanishedPlayers.isEmpty()) {
-            VanishPriority selfPriority = VanishPriority.of(player);
-            if (selfPriority != VanishPriority.HIGHEST) {
+            StaffPriority selfPriority = StaffPriority.of(player);
+            if (selfPriority != StaffPriority.HIGHEST) {
                 for (Player target : onlineVanishedPlayers) {
-                    if (plugin.getUserManager().getUser(target.getUniqueId()).isVanished() && VanishPriority.of(target).isMoreThan(selfPriority)) {
+                    if (plugin.getUserManager().getUser(target.getUniqueId()).isVanished() && StaffPriority.of(target).isMoreThan(selfPriority)) {
                         player.hidePlayer(target);
                     }
                 }
@@ -156,7 +157,7 @@ public class VanishListener implements Listener {
 
             Player attacker = BukkitUtils.getFinalAttacker(event, true);
             if (attackedUser.isVanished()) {
-                if (attacker != null && VanishPriority.of(attacked) != VanishPriority.NONE) {
+                if (attacker != null && StaffPriority.of(attacked) != StaffPriority.NONE) {
                     attacker.sendMessage(ChatColor.RED + "That player is vanished.");
                 }
 

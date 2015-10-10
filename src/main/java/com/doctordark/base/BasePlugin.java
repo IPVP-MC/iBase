@@ -158,7 +158,7 @@ public class BasePlugin extends JavaPlugin {
         manager.registerEvents(new NameVerifyListener(this), this);
         manager.registerEvents(new PingListener(), this);
         manager.registerEvents(playTimeManager = new PlayTimeManager(this), this);
-        manager.registerEvents(new PlayerLimitListener(this), this);
+        manager.registerEvents(new PlayerLimitListener(), this);
         manager.registerEvents(new VanishListener(this), this);
     }
 

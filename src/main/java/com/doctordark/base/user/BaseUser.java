@@ -3,7 +3,7 @@ package com.doctordark.base.user;
 import com.doctordark.base.BasePlugin;
 import com.doctordark.base.event.PlayerVanishEvent;
 import com.doctordark.base.kit.Kit;
-import com.doctordark.base.listener.VanishPriority;
+import com.doctordark.base.StaffPriority;
 import com.doctordark.util.GenericUtils;
 import com.doctordark.util.PersistableLocation;
 import com.google.common.base.Preconditions;
@@ -249,10 +249,10 @@ public class BaseUser extends ServerParticipator {
         player.spigot().setCollidesWithEntities(!vanished);
         player.showInvisibles(vanished); // allow vanished players to see those invisible.
 
-        VanishPriority playerPriority = VanishPriority.of(player);
+        StaffPriority playerPriority = StaffPriority.of(player);
         for (Player target : viewers) {
             if (player.equals(target)) continue;
-            if (vanished && playerPriority.isMoreThan(VanishPriority.of(target))) {
+            if (vanished && playerPriority.isMoreThan(StaffPriority.of(target))) {
                 target.hidePlayer(player);
             } else {
                 target.showPlayer(player);

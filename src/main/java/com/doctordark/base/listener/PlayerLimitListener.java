@@ -12,9 +12,7 @@ public class PlayerLimitListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
-        Player player = event.getPlayer();
-        PlayerLoginEvent.Result result = event.getResult();
-        if (result == PlayerLoginEvent.Result.KICK_FULL && player.hasPermission(BYPASS_FULL_JOIN)) {
+        if (event.getResult() == PlayerLoginEvent.Result.KICK_FULL && event.getPlayer().hasPermission(BYPASS_FULL_JOIN)) {
             event.allow();
         }
     }
