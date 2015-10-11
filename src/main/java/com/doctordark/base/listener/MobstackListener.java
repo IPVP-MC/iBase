@@ -56,9 +56,8 @@ public class MobstackListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onPlayerTemptEntity(PlayerTemptEntityEvent event) {
-        LivingEntity livingEntity = event.getEntity();
-        Integer stackedQuantity = getStackedQuantity(livingEntity);
-        if (stackedQuantity != null && stackedQuantity >= MAX_STACKED_QUANTITY) {
+        int stackedQuantity = getStackedQuantity(event.getEntity());
+        if (stackedQuantity >= MAX_STACKED_QUANTITY) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.RED + "This entity is already max stacked.");
         }
@@ -71,8 +70,8 @@ public class MobstackListener implements Listener {
         }
 
         LivingEntity chosen = plugin.getRandom().nextBoolean() ? event.getFirstParent() : event.getSecondParent();
-        Integer stackedQuantity = getStackedQuantity(chosen);
-        if (stackedQuantity == null) stackedQuantity = 1;
+        int stackedQuantity = getStackedQuantity(chosen);
+        if (stackedQuantity == -1) stackedQuantity = 1;
 
         setStackedQuantity(chosen, ++stackedQuantity);
         event.getPlayer().sendMessage(ChatColor.GREEN + "One of the adults bred has been increased a stack.");
@@ -103,8 +102,8 @@ public class MobstackListener implements Listener {
             Entity target = nmsTarget != null ? nmsTarget.getBukkitEntity() : null;
             if (target != null && target instanceof LivingEntity) {
                 LivingEntity targetLiving = (LivingEntity) target;
-                Integer stackedQuantity = getStackedQuantity(targetLiving);
-                if (stackedQuantity == null) stackedQuantity = 1;
+                int stackedQuantity = getStackedQuantity(targetLiving);
+                if (stackedQuantity == -1) stackedQuantity = 1;
 
                 if (stackedQuantity < MAX_STACKED_QUANTITY) {
                     setStackedQuantity(targetLiving, ++stackedQuantity);
@@ -154,8 +153,8 @@ public class MobstackListener implements Listener {
                         }
 
                         if (canSpawn) {
-                            Integer stackedQuantity = getStackedQuantity(targetLiving);
-                            if (stackedQuantity == null) stackedQuantity = 1;
+                            int stackedQuantity = getStackedQuantity(targetLiving);
+                            if (stackedQuantity == -1) stackedQuantity = 1;
 
                             if (stackedQuantity < MAX_STACKED_QUANTITY) {
                                 setStackedQuantity(targetLiving, ++stackedQuantity);
@@ -177,8 +176,8 @@ public class MobstackListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity livingEntity = event.getEntity();
-        Integer stackedQuantity = getStackedQuantity(livingEntity);
-        if (stackedQuantity != null && stackedQuantity > 1) {
+        int stackedQuantity = getStackedQuantity(livingEntity);
+        if (stackedQuantity > 1) {
             // Spawn another entity in the killed entity's place.
             LivingEntity respawned = (LivingEntity) livingEntity.getWorld().spawnEntity(livingEntity.getLocation(), event.getEntityType());
             setStackedQuantity(respawned, Math.min(MAX_STACKED_QUANTITY, --stackedQuantity));
@@ -204,14 +203,16 @@ public class MobstackListener implements Listener {
      * Gets the stacked quantity of a {@link LivingEntity}.
      *
      * @param livingEntity the {@link LivingEntity} to get for
-     * @return the stacked quantity or 0 if is not stacked
+     * @return the stacked quantity or -1 if is not stacked
      */
-    private Integer getStackedQuantity(LivingEntity livingEntity) {
+    private int getStackedQuantity(LivingEntity livingEntity) {
         String customName = livingEntity.getCustomName();
-        if (customName == null) return null;
-        customName = customName.replace(STACKED_PREFIX, "");
+        if (customName != null) {
+            customName = customName.replace(STACKED_PREFIX, "");
+            return Ints.tryParse(customName);
+        }
 
-        return Ints.tryParse(customName);
+        return -1;
     }
 
     /**
