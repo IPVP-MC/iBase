@@ -1,6 +1,7 @@
 package com.doctordark.base;
 
 import com.doctordark.util.Config;
+import gnu.trove.impl.Constants;
 import gnu.trove.map.TObjectLongMap;
 import gnu.trove.map.hash.TObjectLongHashMap;
 import gnu.trove.procedure.TObjectLongProcedure;
@@ -21,8 +22,11 @@ import java.util.UUID;
  */
 public class PlayTimeManager implements Listener {
 
-    private final TObjectLongMap<UUID> totalPlaytimeMap = new TObjectLongHashMap<>();  // map used to store total play-times in milliseconds
-    private final TObjectLongMap<UUID> sessionTimestamps = new TObjectLongHashMap<>(); // map used to store milliseconds at session joins
+    // The total playtime in milliseconds of a users' current session.
+    private final TObjectLongMap<UUID> sessionTimestamps = new TObjectLongHashMap<>();
+
+    // The total playtime in milliseconds excluding the time of a users' current session.
+    private final TObjectLongMap<UUID> totalPlaytimeMap = new TObjectLongHashMap<>(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, 0L);
 
     private final Config config;
 
@@ -39,8 +43,8 @@ public class PlayTimeManager implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        long sessionTime = this.sessionTimestamps.remove(uuid);
-        this.totalPlaytimeMap.adjustValue(uuid, sessionTime);
+        long sessionTime = System.currentTimeMillis() - this.sessionTimestamps.remove(uuid);
+        this.totalPlaytimeMap.adjustOrPutValue(uuid, sessionTime, sessionTime);
     }
 
     /**
@@ -84,8 +88,8 @@ public class PlayTimeManager implements Listener {
     /**
      * Gets the session play time of a player.
      *
-     * @param uuid the uuid of player
-     * @return the session playing time in millis
+     * @param uuid the uuid of user to get for
+     * @return the session playtime in milliseconds
      */
     public long getSessionPlayTime(UUID uuid) {
         long session = this.sessionTimestamps.get(uuid);
@@ -95,19 +99,18 @@ public class PlayTimeManager implements Listener {
     /**
      * Gets the previous playing time before the current session.
      *
-     * @param uuid the uuid of player to get for
-     * @return the previous sessions play time in milliseconds
+     * @param uuid the uuid of user to get for
+     * @return the previous sessions playtime in milliseconds
      */
     public long getPreviousPlayTime(UUID uuid) {
-        long stamp = this.totalPlaytimeMap.get(uuid);
-        return stamp == this.totalPlaytimeMap.getNoEntryValue() ? 0L : stamp;
+        return this.totalPlaytimeMap.get(uuid);
     }
 
     /**
-     * Gets the total play time of a user.
+     * Gets the total playtime of a user.
      *
      * @param uuid the uuid of user to get for
-     * @return the playing time in milliseconds
+     * @return the total playtime in milliseconds
      */
     public long getTotalPlayTime(UUID uuid) {
         return this.getSessionPlayTime(uuid) + this.getPreviousPlayTime(uuid);

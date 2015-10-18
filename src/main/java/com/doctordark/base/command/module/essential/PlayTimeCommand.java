@@ -40,14 +40,25 @@ public class PlayTimeCommand extends BaseCommand {
             return true;
         }
 
-        if (!target.hasPlayedBefore() && !target.isOnline()) {
+        if (!target.hasPlayedBefore()) {
             sender.sendMessage(String.format(BaseConstants.PLAYER_WITH_NAME_OR_UUID_NOT_FOUND, args[0]));
             return true;
         }
 
-        sender.sendMessage(ChatColor.YELLOW + target.getName() + " has been playing for " + ChatColor.GREEN +
-                DurationFormatUtils.formatDurationWords(plugin.getPlayTimeManager().getTotalPlayTime(target.getUniqueId()), true, true) + ChatColor.YELLOW + " this map.");
+        String formatted;
+        Player targetPlayer = target.getPlayer();
+        boolean online = targetPlayer != null;
+        boolean canSee = online && (sender.equals(target) || (!(sender instanceof Player)) || ((Player) sender).canSee(targetPlayer));
+        long sessionTime = -1L;
 
+        if (canSee) {
+            formatted = DurationFormatUtils.formatDurationWords(sessionTime = plugin.getPlayTimeManager().getSessionPlayTime(target.getUniqueId()), true, true);
+            sender.sendMessage(ChatColor.GREEN + target.getName() + "'s " + ChatColor.GOLD + "current session time is " + formatted + ".");
+        }
+
+        long totalPlaytime = (online && !canSee) ? sessionTime : plugin.getPlayTimeManager().getTotalPlayTime(target.getUniqueId());
+        formatted = DurationFormatUtils.formatDurationWords(totalPlaytime, true, true);
+        sender.sendMessage(ChatColor.YELLOW + target.getName() + " has been playing for " + ChatColor.GREEN + formatted + ChatColor.YELLOW + " this map.");
         return true;
     }
 
