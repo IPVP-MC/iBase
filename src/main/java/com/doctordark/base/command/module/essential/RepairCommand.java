@@ -3,6 +3,8 @@ package com.doctordark.base.command.module.essential;
 import com.doctordark.base.BaseConstants;
 import com.doctordark.base.command.BaseCommand;
 import com.doctordark.util.BukkitUtils;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -15,7 +17,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Command used for repairing items of players.
@@ -46,13 +47,12 @@ public class RepairCommand extends BaseCommand {
             return true;
         }
 
-        Set<ItemStack> toRepair = new HashSet<>();
-        if (args.length >= 2 && args[1].equalsIgnoreCase("all")) {
+        final Iterable<ItemStack> toRepair;
+        if (args.length > 1 && args[1].equalsIgnoreCase("all")) {
             PlayerInventory targetInventory = target.getInventory();
-            toRepair.addAll(Arrays.asList(targetInventory.getContents()));
-            toRepair.addAll(Arrays.asList(targetInventory.getArmorContents()));
+            toRepair = Iterables.concat(Arrays.asList(targetInventory.getContents()), Arrays.asList(targetInventory.getArmorContents()));
         } else {
-            toRepair.add(target.getItemInHand());
+            toRepair = ImmutableSet.of(target.getItemInHand());
         }
 
         for (ItemStack stack : toRepair) {

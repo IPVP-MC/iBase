@@ -62,7 +62,7 @@ public class StaffChatCommand extends BaseCommand {
             target = plugin.getUserManager().getUser(targetPlayer.getUniqueId());
         }
 
-        boolean newStaffChat = !target.isInStaffChat() || (args.length >= 2 && Boolean.parseBoolean(args[1]));
+        boolean newStaffChat = !target.isInStaffChat() || (args.length > 1 && Boolean.parseBoolean(args[1]));
         target.setInStaffChat(newStaffChat);
 
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Staff chat mode of " + target.getName() + " set to " + newStaffChat + '.');

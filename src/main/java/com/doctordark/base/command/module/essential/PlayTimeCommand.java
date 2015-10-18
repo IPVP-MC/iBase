@@ -31,7 +31,7 @@ public class PlayTimeCommand extends BaseCommand {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         final OfflinePlayer target;
-        if (args.length >= 1) {
+        if (args.length > 0) {
             target = BukkitUtils.offlinePlayerWithNameOrUUID(args[0]);
         } else if (sender instanceof Player) {
             target = (Player) sender;

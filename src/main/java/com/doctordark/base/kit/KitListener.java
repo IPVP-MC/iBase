@@ -94,8 +94,8 @@ public class KitListener implements Listener {
             String[] lines = sign.getLines();
 
             // Verify that this a valid Kit sign first.
-            if (lines.length >= 2 && lines[1].contains("Kit")) {
-                Kit kit = plugin.getKitManager().getKit(lines.length >= 3 ? lines[2] : null);
+            if (lines.length > 1 && lines[1].contains("Kit")) {
+                Kit kit = plugin.getKitManager().getKit(lines.length > 2 ? lines[2] : null);
                 if (kit == null) {
                     return;
                 }

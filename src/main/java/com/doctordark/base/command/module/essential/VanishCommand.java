@@ -42,7 +42,7 @@ public class VanishCommand extends BaseCommand {
         }
 
         BaseUser baseUser = plugin.getUserManager().getUser(target.getUniqueId());
-        boolean newVanished = !baseUser.isVanished() || (args.length >= 2 && Boolean.parseBoolean(args[1]));
+        boolean newVanished = !baseUser.isVanished() || (args.length > 1 && Boolean.parseBoolean(args[1]));
         baseUser.setVanished(target, newVanished, true);
 
         Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Vanish mode of " + target.getName() + " set to " + newVanished + '.');

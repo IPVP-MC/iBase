@@ -34,7 +34,7 @@ public class ToggleSoundsCommand extends BaseCommand implements Listener {
         Player player = (Player) sender;
 
         BaseUser baseUser = plugin.getUserManager().getUser(player.getUniqueId());
-        boolean newMessagingSounds = !baseUser.isMessagingSounds() || (args.length >= 2 && Boolean.parseBoolean(args[1]));
+        boolean newMessagingSounds = !baseUser.isMessagingSounds() || (args.length > 1 && Boolean.parseBoolean(args[1]));
         baseUser.setMessagingSounds(newMessagingSounds);
 
         sender.sendMessage(ChatColor.YELLOW + "Messaging sounds are now " + (newMessagingSounds ? ChatColor.GREEN + "on" : ChatColor.RED + "off") + ChatColor.YELLOW + '.');

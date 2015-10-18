@@ -433,7 +433,7 @@ public class Kit implements ConfigurationSerializable {
         }
 
         // Fill the armour
-        for (int i = Math.min(3, armour.length); i >= 0; i--) {
+        for (int i = Math.min(3, armour.length); i > 0; --i) {
             ItemStack stack = armour[i];
             if (stack == null || stack.getType() == Material.AIR) {
                 continue;

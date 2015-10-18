@@ -55,7 +55,7 @@ public class KitCreateArgument extends CommandArgument {
         }
 
         Player player = (Player) sender;
-        kit = new Kit(args[1], (args.length >= 3 ? args[2] : null), player.getInventory(), player.getActivePotionEffects());
+        kit = new Kit(args[1], (args.length > 2 ? args[2] : null), player.getInventory(), player.getActivePotionEffects());
 
         KitCreateEvent event = new KitCreateEvent(kit);
         Bukkit.getPluginManager().callEvent(event);

@@ -58,7 +58,7 @@ public class FreezeCommand extends BaseCommand implements Listener {
         if (args.length < 2) {
             freezeTicks = defaultFreezeDuration;
         } else {
-            if (args.length >= 3) {
+            if (args.length > 2) {
                 reason = StringUtils.join(args, " ", 2, args.length);
             }
 
