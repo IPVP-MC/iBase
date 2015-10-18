@@ -70,7 +70,7 @@ public final class ImageMessage {
         Preconditions.checkArgument(height >= 0, "Height must be positive");
 
         try {
-            return new ImageMessage(toImageMessage(toColourArray(ImageIO.read(new URL(url)), height), imageCharacter));
+            return newInstance(ImageIO.read(new URL(url)), height, imageCharacter);
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
@@ -81,7 +81,7 @@ public final class ImageMessage {
         Preconditions.checkNotNull(folder, "Folder cannot be null");
 
         try {
-            return new ImageMessage(toImageMessage(toColourArray(ImageIO.read(new File(folder, fileName)), height), imageCharacter));
+            return newInstance(ImageIO.read(new File(folder, fileName)), height, imageCharacter);
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
