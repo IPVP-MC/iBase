@@ -1,9 +1,9 @@
 package com.doctordark.base;
 
 import com.doctordark.util.Config;
-import net.minecraft.util.gnu.trove.map.TObjectLongMap;
-import net.minecraft.util.gnu.trove.map.hash.TObjectLongHashMap;
-import net.minecraft.util.gnu.trove.procedure.TObjectLongProcedure;
+import gnu.trove.map.TObjectLongMap;
+import gnu.trove.map.hash.TObjectLongHashMap;
+import gnu.trove.procedure.TObjectLongProcedure;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
