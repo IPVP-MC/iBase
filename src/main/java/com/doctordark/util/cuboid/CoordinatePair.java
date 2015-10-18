@@ -1,5 +1,6 @@
 package com.doctordark.util.cuboid;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -9,8 +10,13 @@ import org.bukkit.block.Block;
  */
 public class CoordinatePair {
 
+    @Getter
     private final String worldName;
+
+    @Getter
     private final int x;
+
+    @Getter
     private final int z;
 
     /**
@@ -36,39 +42,12 @@ public class CoordinatePair {
     }
 
     /**
-     * Gets the name of this {@link World} for this {@link CoordinatePair}.
-     *
-     * @return the {@link World} name
-     */
-    public String getWorldName() {
-        return worldName;
-    }
-
-    /**
      * Gets {@link World} of this {@link CoordinatePair}.
      *
      * @return the {@link World} instance
      */
     public World getWorld() {
-        return Bukkit.getWorld(worldName);
-    }
-
-    /**
-     * Gets the x co-ordinate of this {@link CoordinatePair}.
-     *
-     * @return the x co-ordinate
-     */
-    public int getX() {
-        return x;
-    }
-
-    /**
-     * Gets the z co-ordinate of this {@link CoordinatePair}.
-     *
-     * @return the z co-ordinate
-     */
-    public int getZ() {
-        return z;
+        return Bukkit.getWorld(this.worldName);
     }
 
     @Override

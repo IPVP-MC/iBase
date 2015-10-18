@@ -1,5 +1,6 @@
 package com.doctordark.util.imagemessage;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.libs.joptsimple.internal.Strings;
 import org.bukkit.entity.Player;
@@ -20,12 +21,12 @@ import java.util.Arrays;
  *
  * @author bobacadodl
  */
-public class ImageMessage {
+public final class ImageMessage {
 
     private final static char TRANSPARENT_CHAR = ' ';
-
     private final String[] lines;
-    private final Color[] colors = {
+
+    private static final Color[] colors = {
             new Color(0, 0, 0),
             new Color(0, 0, 170),
             new Color(0, 170, 0),
@@ -44,135 +45,132 @@ public class ImageMessage {
             new Color(255, 255, 255),
     };
 
-    public ImageMessage(String... imgLines) {
-        this.lines = imgLines;
+    private ImageMessage(String... lines) throws IllegalArgumentException {
+        Preconditions.checkNotNull(lines, "Lines cannot be null");
+        this.lines = lines;
     }
 
-    public ImageMessage(ChatColor[][] chatColors, char imgChar) {
-        this.lines = toImgMessage(chatColors, imgChar);
+    private ImageMessage(BufferedImage image, int height, char imageCharacter) throws IllegalArgumentException {
+        this(ImageMessage.toImageMessage(toColourArray(image, height), imageCharacter));
     }
 
-    public ImageMessage(BufferedImage image, int height, char imgChar) {
-        this.lines = toImgMessage(toColourArray(image, height), imgChar);
+    public static ImageMessage newInstance(BufferedImage image, int height, char imageCharacter) throws IllegalArgumentException {
+        Preconditions.checkNotNull(image, "Image cannot be null");
+        Preconditions.checkArgument(height >= 0, "Height must be positive");
+
+        return new ImageMessage(image, height, imageCharacter);
     }
 
-    public ImageMessage(String url, int height, char imgChar) {
-        String[] result;
+    public static ImageMessage newInstance(ChatColor[][] chatColors, char imageCharacter) {
+        return new ImageMessage(toImageMessage(chatColors, imageCharacter));
+    }
+
+    public static ImageMessage newInstance(String url, int height, char imageCharacter) throws IllegalArgumentException {
+        Preconditions.checkNotNull(url, "Image URL cannot be null");
+        Preconditions.checkArgument(height >= 0, "Height must be positive");
+
         try {
-            BufferedImage image = ImageIO.read(new URL(url));
-            ChatColor[][] colours = toColourArray(image, height);
-            result = toImgMessage(colours, imgChar);
+            return new ImageMessage(toImageMessage(toColourArray(ImageIO.read(new URL(url)), height), imageCharacter));
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
-
-        this.lines = result;
     }
 
-    public ImageMessage(String fileName, File folder, int height, char imgChar) {
-        String[] result;
+    public static ImageMessage newInstance(String fileName, File folder, int height, char imageCharacter) throws IllegalArgumentException {
+        Preconditions.checkNotNull(fileName, "File name cannot be null");
+        Preconditions.checkNotNull(folder, "Folder cannot be null");
+
         try {
-            BufferedImage bufferedImage = ImageIO.read(new File(folder, fileName));
-            ChatColor[][] colours = toColourArray(bufferedImage, height);
-            result = toImgMessage(colours, imgChar);
+            return new ImageMessage(toImageMessage(toColourArray(ImageIO.read(new File(folder, fileName)), height), imageCharacter));
         } catch (IOException ex) {
             throw new IllegalArgumentException(ex);
         }
-
-        this.lines = result;
     }
 
     public ImageMessage appendText(String... text) {
-        for (int y = 0; y < lines.length; y++) {
-            if (text.length > y) {
-                lines[y] += ' ' + text[y];
-            }
+        for (int i = 0; i < Math.min(text.length, this.lines.length); i++) {
+            this.lines[i] += ' ' + text[i];
         }
+
         return this;
     }
 
     public ImageMessage appendCenteredText(String... text) {
-        for (int y = 0; y < lines.length; y++) {
-            if (text.length <= y) {
-                return this;
-            }
-
-            int len = ChatPaginator.AVERAGE_CHAT_PAGE_WIDTH - lines[y].length();
-            lines[y] = lines[y] + center(text[y], len);
+        for (int i = 0; i < Math.min(text.length, this.lines.length); i++) {
+            String line = this.lines[i];
+            this.lines[i] = line + center(text[i], ChatPaginator.AVERAGE_CHAT_PAGE_WIDTH - line.length());
         }
 
         return this;
     }
 
-    private ChatColor[][] toColourArray(BufferedImage image, int height) {
+    private static ChatColor[][] toColourArray(BufferedImage image, int height) {
         double ratio = (double) image.getHeight() / image.getWidth();
-
-        //int width = (int) (height / ratio);
-        //if (width > 10) width = 10;
-
-        BufferedImage reSized = resizeImage(image, (int) (height / ratio), height);
-        ChatColor[][] chatImg = new ChatColor[reSized.getWidth()][reSized.getHeight()];
-        for (int x = 0; x < reSized.getWidth(); x++) {
-            for (int y = 0; y < reSized.getHeight(); y++) {
-                int rgb = reSized.getRGB(x, y);
-                ChatColor closest = getClosestChatColor(new Color(rgb, true));
-                chatImg[x][y] = closest;
+        BufferedImage resizedImage = resizeImage(image, (int) (height / ratio), height);
+        ChatColor[][] chatImage = new ChatColor[resizedImage.getWidth()][resizedImage.getHeight()];
+        for (int x = 0; x < resizedImage.getWidth(); x++) {
+            for (int y = 0; y < resizedImage.getHeight(); y++) {
+                ChatColor closest = getClosestChatColor(new Color(resizedImage.getRGB(x, y), true));
+                chatImage[x][y] = closest;
             }
         }
 
-        return chatImg;
+        return chatImage;
     }
 
-    private String[] toImgMessage(ChatColor[][] colors, char imgChar) {
-        String[] lines = new String[colors[0].length];
-        for (int y = 0; y < colors[0].length; y++) {
+    private static String[] toImageMessage(ChatColor[][] colors, char imageCharacter) {
+        String[] results = new String[colors[0].length];
+        for (int i = 0; i < colors[0].length; i++) {
             StringBuilder line = new StringBuilder();
-            for (ChatColor[] color1 : colors) {
-                ChatColor color = color1[y];
-                line.append((color != null) ? color1[y].toString() + imgChar : TRANSPARENT_CHAR);
+            for (ChatColor[] color : colors) {
+                ChatColor current = color[i];
+                line.append(current != null ? current.toString() + imageCharacter : TRANSPARENT_CHAR);
             }
 
-            lines[y] = line.toString() + ChatColor.RESET;
+            results[i] = line.toString() + ChatColor.RESET;
         }
 
-        return lines;
+        return results;
     }
 
-    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
-        AffineTransform af = new AffineTransform();
-        af.scale(width / (double) originalImage.getWidth(), height / (double) originalImage.getHeight());
-        AffineTransformOp operation = new AffineTransformOp(af, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-        return operation.filter(originalImage, null);
+    private static BufferedImage resizeImage(BufferedImage image, int width, int height) {
+        AffineTransform transform = new AffineTransform();
+        transform.scale(width / (double) image.getWidth(), height / (double) image.getHeight());
+        return new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR).filter(image, null);
     }
 
-    private double getDistance(Color c1, Color c2) {
+    private static double getDistance(Color c1, Color c2) {
+        int red = c1.getRed() - c2.getRed();
+        int green = c1.getGreen() - c2.getGreen();
+        int blue = c1.getBlue() - c2.getBlue();
+
         double redMean = (c1.getRed() + c2.getRed()) / 2.0;
-        double r = c1.getRed() - c2.getRed();
-        double g = c1.getGreen() - c2.getGreen();
-        int b = c1.getBlue() - c2.getBlue();
-        double weightR = 2 + redMean / 256.0;
-        double weightG = 4.0;
-        double weightB = 2 + (255 - redMean) / 256.0;
-        return weightR * r * r + weightG * g * g + weightB * b * b;
+        double weightRed = 2.0 + redMean / 256.0;
+        double weightGreen = 4.0;
+        double weightBlue = 2.0 + (255.0 - redMean) / 256.0;
+
+        return weightRed * red * red + weightGreen * green * green + weightBlue * blue * blue;
     }
 
-    private boolean areIdentical(Color c1, Color c2) {
+    private static boolean areIdentical(Color c1, Color c2) {
         return Math.abs(c1.getRed() - c2.getRed()) <= 5 &&
                 Math.abs(c1.getGreen() - c2.getGreen()) <= 5 &&
                 Math.abs(c1.getBlue() - c2.getBlue()) <= 5;
     }
 
-    private ChatColor getClosestChatColor(Color color) {
-        if (color.getAlpha() < 128) return null;
-
-        int index = 0;
-        double best = -1;
+    private static ChatColor getClosestChatColor(Color color) {
+        if (color.getAlpha() < 128) {
+            return null;
+        }
 
         for (int i = 0; i < colors.length; i++) {
             if (areIdentical(colors[i], color)) {
                 return ChatColor.values()[i];
             }
         }
+
+        int index = 0;
+        double best = -1;
 
         for (int i = 0; i < colors.length; i++) {
             double distance = getDistance(color, colors[i]);
@@ -182,8 +180,7 @@ public class ImageMessage {
             }
         }
 
-        // Minecraft has 15 colors
-        return ChatColor.values()[index];
+        return ChatColor.values()[index]; // Minecraft has 15 colors
     }
 
     private String center(String string, int length) {
@@ -197,12 +194,10 @@ public class ImageMessage {
     }
 
     public String[] getLines() {
-        return Arrays.copyOf(lines, lines.length);
+        return Arrays.copyOf(this.lines, this.lines.length);
     }
 
     public void sendToPlayer(Player player) {
-        for (String line : lines) {
-            player.sendMessage(line);
-        }
+        player.sendMessage(this.lines);
     }
 }

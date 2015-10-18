@@ -56,16 +56,13 @@ public enum CuboidDirection {
                 return BlockFace.SOUTH;
             case WEST:
                 return BlockFace.WEST;
-            case HORIZONTAL:
-                return null;
-            case VERTICAL:
-                return null;
             case UP:
                 return BlockFace.UP;
             case DOWN:
                 return BlockFace.DOWN;
+            case HORIZONTAL:
+            case VERTICAL:
             case BOTH:
-                return null;
             default:
                 return null;
         }

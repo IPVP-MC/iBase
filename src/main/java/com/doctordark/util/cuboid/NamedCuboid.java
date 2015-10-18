@@ -38,7 +38,7 @@ public class NamedCuboid extends Cuboid {
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = super.serialize();
-        map.put("name", name);
+        map.put("name", this.name);
         return map;
     }
 
@@ -48,7 +48,7 @@ public class NamedCuboid extends Cuboid {
      * @return the name
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
@@ -67,6 +67,6 @@ public class NamedCuboid extends Cuboid {
 
     @Override
     public String toString() {
-        return "NamedCuboid: " + worldName + ',' + x1 + ',' + y1 + ',' + z1 + "=>" + x2 + ',' + y2 + ',' + z2 + ':' + name;
+        return "NamedCuboid: " + this.worldName + ',' + this.x1 + ',' + this.y1 + ',' + this.z1 + "=>" + this.x2 + ',' + this.y2 + ',' + this.z2 + ':' + this.name;
     }
 }

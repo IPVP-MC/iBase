@@ -15,7 +15,6 @@ public class CuboidLocationIterator implements Iterator<Location> {
     private final World world;
     private final int baseX, baseY, baseZ;
     private final int sizeX, sizeY, sizeZ;
-
     private int x, y, z;
 
     public CuboidLocationIterator(World world, int x1, int y1, int z1, int x2, int y2, int z2) {
@@ -29,44 +28,31 @@ public class CuboidLocationIterator implements Iterator<Location> {
         this.sizeY = Math.abs(y2 - y1) + 1;
         this.sizeZ = Math.abs(z2 - z1) + 1;
 
-        x = y = z = 0;
+        this.x = this.y = this.z = 0;
     }
 
-    /**
-     * Checks if this {@link CuboidLocationIterator} has a new {@link Location}.
-     *
-     * @return true if {@link CuboidLocationIterator} has next {@link Location}
-     */
     @Override
     public boolean hasNext() {
-        return x < sizeX && y < sizeY && z < sizeZ;
+        return this.x < this.sizeX && this.y < this.sizeY && this.z < this.sizeZ;
     }
 
-    /**
-     * Gets the next {@link Location} in {@link CuboidLocationIterator}.
-     *
-     * @return the next {@link Location} in {@link CuboidLocationIterator}
-     */
     @Override
     public Location next() {
-        Location location = new Location(world, baseX + x, baseY + y, baseZ + z);
+        Location location = new Location(this.world, this.baseX + this.x, this.baseY + this.y, this.baseZ + this.z);
 
-        if (++x >= sizeX) {
-            x = 0;
-            if (++y >= sizeY) {
-                y = 0;
-                ++z;
+        if (++this.x >= this.sizeX) {
+            this.x = 0;
+            if (++this.y >= this.sizeY) {
+                this.y = 0;
+                ++this.z;
             }
         }
 
         return location;
     }
 
-    /**
-     * Removes this {@link Location} from this {@link CuboidLocationIterator}.
-     */
     @Override
-    public void remove() {
-
+    public void remove() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
     }
 }

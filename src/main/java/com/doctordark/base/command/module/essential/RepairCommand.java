@@ -15,7 +15,6 @@ import org.bukkit.inventory.PlayerInventory;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -47,11 +46,14 @@ public class RepairCommand extends BaseCommand {
             return true;
         }
 
+        final boolean completeRepair;
         final Iterable<ItemStack> toRepair;
         if (args.length > 1 && args[1].equalsIgnoreCase("all")) {
+            completeRepair = true;
             PlayerInventory targetInventory = target.getInventory();
             toRepair = Iterables.concat(Arrays.asList(targetInventory.getContents()), Arrays.asList(targetInventory.getArmorContents()));
         } else {
+            completeRepair = false;
             toRepair = ImmutableSet.of(target.getItemInHand());
         }
 
@@ -61,7 +63,7 @@ public class RepairCommand extends BaseCommand {
             }
         }
 
-        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Repaired " + (toRepair.size() > 1 ? "inventory" : "held item") + " of " + target.getName() + '.');
+        Command.broadcastCommandMessage(sender, ChatColor.YELLOW + "Repaired " + (completeRepair ? "inventory" : "held item") + " of " + target.getName() + '.');
         return true;
     }
 
