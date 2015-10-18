@@ -32,12 +32,13 @@ import com.doctordark.base.warp.Warp;
 import com.doctordark.base.warp.WarpManager;
 import com.doctordark.util.PersistableLocation;
 import com.doctordark.util.SignHandler;
-import com.doctordark.util.bossbar.BossBarManager;
+import com.doctordark.util.bossbar.BossBarHandler;
 import com.doctordark.util.chat.Lang;
 import com.doctordark.util.cuboid.Cuboid;
 import com.doctordark.util.cuboid.NamedCuboid;
 import com.doctordark.util.itemdb.ItemDb;
 import com.doctordark.util.itemdb.SimpleItemDb;
+import lombok.Getter;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -49,22 +50,64 @@ import java.util.Random;
 
 public class BasePlugin extends JavaPlugin {
 
+    @Getter
     private static BasePlugin plugin;
 
-    private ItemDb itemDb;
+    @Getter
     private Random random = new Random();
 
+    @Getter
     private AutoRestartHandler autoRestartHandler;
+
+    @Getter
+    private BossBarHandler bossBarHandler;
+
+    @Getter
     private BukkitRunnable announcementTask;
+
+    @Getter
     private CommandManager commandManager;
+
+    @Getter
+    private ItemDb itemDb;
+
+    @Getter
+    private KitExecutor kitExecutor;
+
+    @Getter
     private KitManager kitManager;
+
+    @Getter
     private PlayTimeManager playTimeManager;
+
+    @Getter
     private ServerHandler serverHandler;
+
+    @Getter
     private SignHandler signHandler;
+
+    @Getter
     private UserManager userManager;
+
+    @Getter
     private WarpManager warpManager;
 
-    private KitExecutor kitExecutor;
+    private void registerManagers() {
+        this.autoRestartHandler = new AutoRestartHandler(this);
+        this.bossBarHandler = new BossBarHandler(this);
+        this.itemDb = new SimpleItemDb(this);
+        this.kitManager = new FlatFileKitManager(this);
+        this.serverHandler = new ServerHandler(this);
+        this.signHandler = new SignHandler(this);
+        this.userManager = new UserManager(this);
+        this.warpManager = new FlatFileWarpManager(this);
+
+        try {
+            Lang.initialize("en_US");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     @Override
     public void onEnable() {
@@ -80,17 +123,17 @@ public class BasePlugin extends JavaPlugin {
         ConfigurationSerialization.registerClass(NamedCuboid.class);
         ConfigurationSerialization.registerClass(Kit.class);
 
-        registerManagers();
-        registerCommands();
-        registerListeners();
-        reloadSchedulers();
+        this.registerManagers();
+        this.registerCommands();
+        this.registerListeners();
+        this.reloadSchedulers();
 
-        Plugin plugin = getServer().getPluginManager().getPlugin("ProtocolLib");
+        Plugin plugin = this.getServer().getPluginManager().getPlugin("ProtocolLib");
         if (plugin != null && plugin.isEnabled()) {
             try {
                 ProtocolHook.hook(this);
-            } catch (Exception ex) {
-                getLogger().severe("Error hooking into ProtocolLib from Base.");
+            } catch (NoSuchMethodError ex) {
+                this.getLogger().severe("Error hooking into ProtocolLib from Base.");
                 ex.printStackTrace();
             }
         }
@@ -98,57 +141,27 @@ public class BasePlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        super.onDisable();
-
-        BossBarManager.unhook();
-
-        kitManager.saveKitData();
-        playTimeManager.savePlaytimeData();
-        serverHandler.saveServerData();
-        signHandler.cancelTasks(null);
-        userManager.saveParticipatorData();
-        warpManager.saveWarpData();
+        this.kitManager.saveKitData();
+        this.playTimeManager.savePlaytimeData();
+        this.serverHandler.saveServerData();
+        this.signHandler.cancelTasks(null);
+        this.userManager.saveParticipatorData();
+        this.warpManager.saveWarpData();
 
         BasePlugin.plugin = null;
     }
 
-    public static BasePlugin getPlugin() {
-        return plugin;
-    }
-
-    private void registerManagers() {
-        BossBarManager.hook();
-        autoRestartHandler = new AutoRestartHandler(this);
-        kitManager = new FlatFileKitManager(this);
-        serverHandler = new ServerHandler(this);
-        signHandler = new SignHandler(this);
-        userManager = new UserManager(this);
-        warpManager = new FlatFileWarpManager(this);
-
-        this.itemDb = new SimpleItemDb(this);
-        try {
-            Lang.initialize("en_US");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
     private void registerCommands() {
-        commandManager = new SimpleCommandManager(this); //TODO: Configurable
-        commandManager.registerAll(new ChatModule(this));
-        commandManager.registerAll(new EssentialModule(this));
-        commandManager.registerAll(new InventoryModule(this));
-        commandManager.registerAll(new TeleportModule(this));
-
-        getCommand("kit").setExecutor(kitExecutor = new KitExecutor(this));
-    }
-
-    public KitExecutor getKitExecutor() {
-        return kitExecutor;
+        this.commandManager = new SimpleCommandManager(this); //TODO: Each module to be configurable
+        this.commandManager.registerAll(new ChatModule(this));
+        this.commandManager.registerAll(new EssentialModule(this));
+        this.commandManager.registerAll(new InventoryModule(this));
+        this.commandManager.registerAll(new TeleportModule(this));
+        this.getCommand("kit").setExecutor(this.kitExecutor = new KitExecutor(this));
     }
 
     private void registerListeners() {
-        PluginManager manager = getServer().getPluginManager();
+        PluginManager manager = this.getServer().getPluginManager();
         manager.registerEvents(new ChatListener(this), this);
         manager.registerEvents(new ColouredSignListener(), this);
         manager.registerEvents(new DecreasedLagListener(this), this);
@@ -157,58 +170,18 @@ public class BasePlugin extends JavaPlugin {
         manager.registerEvents(new MobstackListener(this), this);
         manager.registerEvents(new NameVerifyListener(this), this);
         manager.registerEvents(new PingListener(), this);
-        manager.registerEvents(playTimeManager = new PlayTimeManager(this), this);
+        manager.registerEvents(this.playTimeManager = new PlayTimeManager(this), this);
         manager.registerEvents(new PlayerLimitListener(), this);
         manager.registerEvents(new VanishListener(this), this);
     }
 
     public void reloadSchedulers() {
-        if (announcementTask != null) {
-            announcementTask.cancel();
+        if (this.announcementTask != null) {
+            this.announcementTask.cancel();
         }
 
-        long announcementDelay = serverHandler.getAnnouncementDelay() * 20L;
-        BukkitRunnable announcementRunnable = announcementTask = new AnnouncementHandler(this);
+        long announcementDelay = this.serverHandler.getAnnouncementDelay() * 20L;
+        BukkitRunnable announcementRunnable = this.announcementTask = new AnnouncementHandler(this);
         announcementRunnable.runTaskTimer(this, announcementDelay, announcementDelay);
-    }
-
-    public Random getRandom() {
-        return random;
-    }
-
-    public AutoRestartHandler getAutoRestartHandler() {
-        return autoRestartHandler;
-    }
-
-    public CommandManager getCommandManager() {
-        return commandManager;
-    }
-
-    public ItemDb getItemDb() {
-        return itemDb;
-    }
-
-    public KitManager getKitManager() {
-        return kitManager;
-    }
-
-    public PlayTimeManager getPlayTimeManager() {
-        return playTimeManager;
-    }
-
-    public ServerHandler getServerHandler() {
-        return serverHandler;
-    }
-
-    public SignHandler getSignHandler() {
-        return signHandler;
-    }
-
-    public UserManager getUserManager() {
-        return userManager;
-    }
-
-    public WarpManager getWarpManager() {
-        return warpManager;
     }
 }

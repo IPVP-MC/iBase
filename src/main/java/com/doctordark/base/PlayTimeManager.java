@@ -33,32 +33,31 @@ public class PlayTimeManager implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        sessionTimestamps.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
+        this.sessionTimestamps.put(event.getPlayer().getUniqueId(), System.currentTimeMillis());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        totalPlaytimeMap.put(uuid, getTotalPlayTime(uuid));
-        sessionTimestamps.remove(uuid);
+        long sessionTime = this.sessionTimestamps.remove(uuid);
+        this.totalPlaytimeMap.adjustValue(uuid, sessionTime);
     }
 
     /**
      * Loads the play time data from storage.
      */
     public void reloadPlaytimeData() {
-        // Load the kit use count.
-        Object object = config.get("playing-times");
+        Object object = this.config.get("playing-times");
         if (object instanceof MemorySection) {
             MemorySection section = (MemorySection) object;
             for (String id : section.getKeys(false)) {
-                totalPlaytimeMap.put(UUID.fromString(id), config.getLong("playing-times." + id, 0L));
+                this.totalPlaytimeMap.put(UUID.fromString(id), config.getLong("playing-times." + id, 0L));
             }
         }
 
         long millis = System.currentTimeMillis();
-        for (Player target : Bukkit.getOnlinePlayers()) {
-            sessionTimestamps.put(target.getUniqueId(), millis);
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            this.sessionTimestamps.put(player.getUniqueId(), millis);
         }
     }
 
@@ -67,18 +66,19 @@ public class PlayTimeManager implements Listener {
      */
     public void savePlaytimeData() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            totalPlaytimeMap.put(player.getUniqueId(), getTotalPlayTime(player.getUniqueId()));
+            UUID uuid = player.getUniqueId();
+            this.totalPlaytimeMap.adjustValue(uuid, this.sessionTimestamps.get(uuid));
         }
 
-        totalPlaytimeMap.forEachEntry(new TObjectLongProcedure<UUID>() {
+        this.totalPlaytimeMap.forEachEntry(new TObjectLongProcedure<UUID>() {
             @Override
-            public boolean execute(UUID uuid, long l) {
-                config.set("playing-times." + uuid.toString(), l);
+            public boolean execute(UUID uuid, long value) {
+                config.set("playing-times." + uuid.toString(), value);
                 return true;
             }
         });
 
-        config.save();
+        this.config.save();
     }
 
     /**
@@ -88,8 +88,8 @@ public class PlayTimeManager implements Listener {
      * @return the session playing time in millis
      */
     public long getSessionPlayTime(UUID uuid) {
-        long session = sessionTimestamps.get(uuid);
-        return session != sessionTimestamps.getNoEntryValue() ? System.currentTimeMillis() - session : 0L;
+        long session = this.sessionTimestamps.get(uuid);
+        return session != this.sessionTimestamps.getNoEntryValue() ? System.currentTimeMillis() - session : 0L;
     }
 
     /**
@@ -99,17 +99,17 @@ public class PlayTimeManager implements Listener {
      * @return the previous sessions play time in milliseconds
      */
     public long getPreviousPlayTime(UUID uuid) {
-        long stamp = totalPlaytimeMap.get(uuid);
-        return stamp == totalPlaytimeMap.getNoEntryValue() ? 0L : stamp;
+        long stamp = this.totalPlaytimeMap.get(uuid);
+        return stamp == this.totalPlaytimeMap.getNoEntryValue() ? 0L : stamp;
     }
 
     /**
-     * Gets the total play time of a player.
+     * Gets the total play time of a user.
      *
-     * @param uuid the uuid of player
-     * @return the playing time in millis
+     * @param uuid the uuid of user to get for
+     * @return the playing time in milliseconds
      */
     public long getTotalPlayTime(UUID uuid) {
-        return getSessionPlayTime(uuid) + getPreviousPlayTime(uuid);
+        return this.getSessionPlayTime(uuid) + this.getPreviousPlayTime(uuid);
     }
 }

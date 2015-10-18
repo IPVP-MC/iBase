@@ -1,5 +1,6 @@
 package com.doctordark.base.user;
 
+import lombok.Getter;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.LinkedHashMap;
@@ -11,7 +12,10 @@ import java.util.Map;
  */
 public class NameHistory implements ConfigurationSerializable {
 
+    @Getter
     private final String name;
+
+    @Getter
     private final long millis;
 
     /**
@@ -41,23 +45,5 @@ public class NameHistory implements ConfigurationSerializable {
         map.put("name", name);
         map.put("millis", Long.toString(millis));
         return map;
-    }
-
-    /**
-     * Gets the name of this {@link NameHistory}.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Gets the milliseconds this {@link NameHistory} was found at.
-     *
-     * @return the milliseconds
-     */
-    public long getMillis() {
-        return millis;
     }
 }

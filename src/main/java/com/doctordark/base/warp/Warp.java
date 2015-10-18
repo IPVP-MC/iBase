@@ -21,6 +21,7 @@ public class Warp extends PersistableLocation implements ConfigurationSerializab
 
     public Warp(Map<String, Object> map) {
         super(map);
+
         this.name = (String) map.get("name");
     }
 

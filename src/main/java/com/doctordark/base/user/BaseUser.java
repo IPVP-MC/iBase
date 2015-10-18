@@ -1,14 +1,15 @@
 package com.doctordark.base.user;
 
 import com.doctordark.base.BasePlugin;
+import com.doctordark.base.StaffPriority;
 import com.doctordark.base.event.PlayerVanishEvent;
 import com.doctordark.base.kit.Kit;
-import com.doctordark.base.StaffPriority;
 import com.doctordark.util.GenericUtils;
 import com.doctordark.util.PersistableLocation;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.common.net.InetAddresses;
+import lombok.Getter;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityEquipment;
 import net.minecraft.server.v1_7_R4.PacketPlayOutEntityMetadata;
 import net.minecraft.server.v1_7_R4.PlayerConnection;
@@ -45,9 +46,17 @@ public class BaseUser extends ServerParticipator {
     private final List<NameHistory> nameHistories = new ArrayList<>();
 
     private Location backLocation;
+
+    @Getter
     private boolean messagingSounds;
+
+    @Getter
     private boolean vanished;
+
+    @Getter
     private boolean glintEnabled = true;
+
+    @Getter
     private long lastGlintUse;
 
     private final TObjectIntMap<UUID> kitUseMap = new TObjectIntHashMap<>();
@@ -110,17 +119,17 @@ public class BaseUser extends ServerParticipator {
         Map<String, Object> map = super.serialize();
         map.put("addressHistories", this.addressHistories);
         map.put("nameHistories", this.nameHistories);
-        if (backLocation != null && backLocation.getWorld() != null) { // the world may be null
-            map.put("backLocation", new PersistableLocation(backLocation));
+        if (this.backLocation != null && this.backLocation.getWorld() != null) { // the world may be null
+            map.put("backLocation", new PersistableLocation(this.backLocation));
         }
 
-        map.put("messagingSounds", messagingSounds);
-        map.put("vanished", vanished);
-        map.put("glintEnabled", glintEnabled);
-        map.put("lastGlintUse", Long.toString(lastGlintUse));
+        map.put("messagingSounds", this.messagingSounds);
+        map.put("vanished", this.vanished);
+        map.put("glintEnabled", this.glintEnabled);
+        map.put("lastGlintUse", Long.toString(this.lastGlintUse));
 
-        Map<String, Integer> kitUseSaveMap = new HashMap<>(kitUseMap.size());
-        kitUseMap.forEachEntry(new TObjectIntProcedure<UUID>() {
+        Map<String, Integer> kitUseSaveMap = new HashMap<>(this.kitUseMap.size());
+        this.kitUseMap.forEachEntry(new TObjectIntProcedure<UUID>() {
             @Override
             public boolean execute(UUID uuid, int value) {
                 kitUseSaveMap.put(uuid.toString(), value);
@@ -128,8 +137,8 @@ public class BaseUser extends ServerParticipator {
             }
         });
 
-        Map<String, String> kitCooldownSaveMap = new HashMap<>(kitCooldownMap.size());
-        kitCooldownMap.forEachEntry(new TObjectLongProcedure<UUID>() {
+        Map<String, String> kitCooldownSaveMap = new HashMap<>(this.kitCooldownMap.size());
+        this.kitCooldownMap.forEachEntry(new TObjectLongProcedure<UUID>() {
             @Override
             public boolean execute(UUID uuid, long value) {
                 kitCooldownSaveMap.put(uuid.toString(), Long.toString(value));
@@ -143,13 +152,13 @@ public class BaseUser extends ServerParticipator {
     }
 
     public long getRemainingKitCooldown(Kit kit) {
-        long remaining = kitCooldownMap.get(kit.getUniqueID());
-        if (remaining == kitCooldownMap.getNoEntryValue()) return 0L;
+        long remaining = this.kitCooldownMap.get(kit.getUniqueID());
+        if (remaining == this.kitCooldownMap.getNoEntryValue()) return 0L;
         return remaining - System.currentTimeMillis();
     }
 
     public void updateKitCooldown(Kit kit) {
-        kitCooldownMap.put(kit.getUniqueID(), System.currentTimeMillis() + kit.getDelayMillis());
+        this.kitCooldownMap.put(kit.getUniqueID(), System.currentTimeMillis() + kit.getDelayMillis());
     }
 
     public int getKitUses(Kit kit) {
@@ -163,7 +172,7 @@ public class BaseUser extends ServerParticipator {
 
     @Override
     public String getName() {
-        return getLastKnownName();
+        return this.getLastKnownName();
     }
 
     public List<NameHistory> getNameHistories() {
@@ -173,13 +182,13 @@ public class BaseUser extends ServerParticipator {
     public void tryLoggingName(Player player) {
         Preconditions.checkNotNull(player, "Cannot log null player");
         String playerName = player.getName();
-        for (NameHistory nameHistory : nameHistories) {
+        for (NameHistory nameHistory : this.nameHistories) {
             if (nameHistory.getName().contains(playerName)) {
                 return;
             }
         }
 
-        nameHistories.add(new NameHistory(playerName, System.currentTimeMillis()));
+        this.nameHistories.add(new NameHistory(playerName, System.currentTimeMillis()));
     }
 
     public List<String> getAddressHistories() {
@@ -188,9 +197,9 @@ public class BaseUser extends ServerParticipator {
 
     public void tryLoggingAddress(String address) {
         Preconditions.checkNotNull(address, "Cannot log null address");
-        if (!addressHistories.contains(address)) {
+        if (!this.addressHistories.contains(address)) {
             Preconditions.checkArgument(InetAddresses.isInetAddress(address), "Not an Inet address");
-            addressHistories.add(address);
+            this.addressHistories.add(address);
         }
     }
 
@@ -202,24 +211,16 @@ public class BaseUser extends ServerParticipator {
         this.backLocation = backLocation;
     }
 
-    public boolean isMessagingSounds() {
-        return messagingSounds;
-    }
-
     public void setMessagingSounds(boolean messagingSounds) {
         this.messagingSounds = messagingSounds;
     }
 
-    public boolean isVanished() {
-        return vanished;
-    }
-
     public void setVanished(boolean vanished) {
-        setVanished(vanished, true);
+        this.setVanished(vanished, true);
     }
 
     public void setVanished(boolean vanished, boolean update) {
-        setVanished(Bukkit.getPlayer(getUniqueId()), vanished, update);
+        this.setVanished(Bukkit.getPlayer(getUniqueId()), vanished, update);
     }
 
     public boolean setVanished(@Nullable Player player, boolean vanished, boolean notifyPlayerList) {
@@ -251,23 +252,14 @@ public class BaseUser extends ServerParticipator {
 
         StaffPriority playerPriority = StaffPriority.of(player);
         for (Player target : viewers) {
-            if (player.equals(target)) continue;
-            if (vanished && playerPriority.isMoreThan(StaffPriority.of(target))) {
-                target.hidePlayer(player);
-            } else {
-                target.showPlayer(player);
+            if (!player.equals(target)) {
+                if (vanished && playerPriority.isMoreThan(StaffPriority.of(target))) {
+                    target.hidePlayer(player);
+                } else {
+                    target.showPlayer(player);
+                }
             }
         }
-    }
-
-    /**
-     * Checks if glint for {@link org.bukkit.enchantments.Enchantment}s on
-     * {@link org.bukkit.inventory.ItemStack}s is enabled for this {@link BaseUser}.
-     *
-     * @return true if glint is enabled
-     */
-    public boolean isGlintEnabled() {
-        return glintEnabled;
     }
 
     /**
@@ -288,13 +280,13 @@ public class BaseUser extends ServerParticipator {
      * @param sendUpdatePackets if packets should be sent to match appropriate glint state
      */
     public void setGlintEnabled(boolean glintEnabled, boolean sendUpdatePackets) {
-        Player player = toPlayer();
+        Player player = this.toPlayer();
         if (player == null || !player.isOnline()) {
             return;
         }
 
         this.glintEnabled = glintEnabled;
-        if (BasePlugin.getPlugin().getServerHandler().useProtocolLib) {
+        if (BasePlugin.getPlugin().getServerHandler().useProtocolLib && sendUpdatePackets) {
             int viewDistance = Bukkit.getViewDistance();
             PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
             for (Entity entity : player.getNearbyEntities(viewDistance, viewDistance, viewDistance)) {
@@ -325,10 +317,6 @@ public class BaseUser extends ServerParticipator {
         }
     }
 
-    public long getLastGlintUse() {
-        return lastGlintUse;
-    }
-
     public void setLastGlintUse(long lastGlintUse) {
         this.lastGlintUse = lastGlintUse;
     }
@@ -339,7 +327,7 @@ public class BaseUser extends ServerParticipator {
      * @return the last known name
      */
     public String getLastKnownName() {
-        return Iterables.getLast(nameHistories).getName();
+        return Iterables.getLast(this.nameHistories).getName();
     }
 
     /**
@@ -348,6 +336,6 @@ public class BaseUser extends ServerParticipator {
      * @return the converted {@link Player}
      */
     public Player toPlayer() {
-        return Bukkit.getPlayer(getUniqueId());
+        return Bukkit.getPlayer(this.uniqueId);
     }
 }

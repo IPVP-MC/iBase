@@ -157,9 +157,7 @@ public class KitListener implements Listener {
         long remaining = baseUser.getRemainingKitCooldown(kit);
 
         if (remaining > 0L) {
-            player.sendMessage(ChatColor.RED + "You cannot use the " + kit.getDisplayName() + " kit for " +
-                    DurationFormatUtils.formatDurationWords(remaining, true, true) + '.');
-
+            player.sendMessage(ChatColor.RED + "You cannot use the " + kit.getDisplayName() + " kit for " + DurationFormatUtils.formatDurationWords(remaining, true, true) + '.');
             event.setCancelled(true);
             return;
         }

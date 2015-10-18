@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class ServerHandler {
 
     private final List<String> announcements = new ArrayList<>();

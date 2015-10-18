@@ -28,7 +28,7 @@ public class UserManager {
         this.reloadParticipatorData();
 
         // Load the ConsoleUser data here.
-        ServerParticipator participator = participators.get(ConsoleUser.CONSOLE_UUID);
+        ServerParticipator participator = this.participators.get(ConsoleUser.CONSOLE_UUID);
         if (participator != null) {
             this.console = (ConsoleUser) participator;
         } else {
@@ -42,7 +42,7 @@ public class UserManager {
      * @return the {@link ConsoleUser}
      */
     public ConsoleUser getConsole() {
-        return console;
+        return this.console;
     }
 
     /**
@@ -63,9 +63,9 @@ public class UserManager {
     public ServerParticipator getParticipator(CommandSender sender) {
         Preconditions.checkNotNull(sender, "CommandSender cannot be null");
         if (sender instanceof ConsoleCommandSender) {
-            return console;
+            return this.console;
         } else if (sender instanceof Player) {
-            return participators.get(((Player) sender).getUniqueId());
+            return this.participators.get(((Player) sender).getUniqueId());
         } else {
             return null;
         }
@@ -79,7 +79,7 @@ public class UserManager {
      */
     public ServerParticipator getParticipator(UUID uuid) {
         Preconditions.checkNotNull(uuid, "Unique ID cannot be null");
-        return participators.get(uuid);
+        return this.participators.get(uuid);
     }
 
     /**
@@ -90,11 +90,11 @@ public class UserManager {
      */
     public BaseUser getUser(UUID uuid) {
         final BaseUser baseUser;
-        ServerParticipator participator = getParticipator(uuid);
-        if (participator != null && participator instanceof BaseUser) {
+        ServerParticipator participator = this.getParticipator(uuid);
+        if (participator instanceof BaseUser) {
             baseUser = (BaseUser) participator;
         } else {
-            participators.put(uuid, baseUser = new BaseUser(uuid));
+            this.participators.put(uuid, baseUser = new BaseUser(uuid));
         }
 
         return baseUser;
@@ -104,8 +104,8 @@ public class UserManager {
      * Reloads the {@link ServerParticipator} data from storage.
      */
     public void reloadParticipatorData() {
-        userConfig = new Config(plugin, "participators");
-        Object object = userConfig.get("participators");
+        this.userConfig = new Config(plugin, "participators");
+        Object object = this.userConfig.get("participators");
         if (object instanceof MemorySection) {
             MemorySection section = (MemorySection) object;
             Set<String> keys = section.getKeys(false);
@@ -122,12 +122,12 @@ public class UserManager {
      * Saves the {@link ServerParticipator} data to storage.
      */
     public void saveParticipatorData() {
-        Map<String, ServerParticipator> saveMap = new LinkedHashMap<>(participators.size());
-        for (Map.Entry<UUID, ServerParticipator> entry : participators.entrySet()) {
+        Map<String, ServerParticipator> saveMap = new LinkedHashMap<>(this.participators.size());
+        for (Map.Entry<UUID, ServerParticipator> entry : this.participators.entrySet()) {
             saveMap.put(entry.getKey().toString(), entry.getValue());
         }
 
-        userConfig.set("participators", saveMap);
-        userConfig.save();
+        this.userConfig.set("participators", saveMap);
+        this.userConfig.save();
     }
 }

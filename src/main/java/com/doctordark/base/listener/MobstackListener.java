@@ -209,7 +209,10 @@ public class MobstackListener implements Listener {
         String customName = livingEntity.getCustomName();
         if (customName != null) {
             customName = customName.replace(STACKED_PREFIX, "");
-            return Ints.tryParse(customName);
+            Integer count = Ints.tryParse(customName);
+            if (count != null) {
+                return count;
+            }
         }
 
         return -1;

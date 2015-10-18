@@ -1,6 +1,8 @@
 package com.doctordark.base.task;
 
 import com.doctordark.base.BasePlugin;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.server.v1_7_R4.MinecraftServer;
 import net.minecraft.util.com.google.common.primitives.Ints;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -18,7 +20,11 @@ public class AutoRestartHandler {
 
     private final BasePlugin plugin;
     private long current = Long.MIN_VALUE;
+
+    @Getter
+    @Setter
     private String reason;
+
     private BukkitTask task;
 
     public AutoRestartHandler(BasePlugin plugin) {
@@ -27,30 +33,12 @@ public class AutoRestartHandler {
     }
 
     /**
-     * Gets the reason for the current restart schedule.
-     *
-     * @return the reason
-     */
-    public String getReason() {
-        return this.reason;
-    }
-
-    /**
-     * Sets the reason for the current restart schedule.
-     *
-     * @param reason the reason to set
-     */
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    /**
      * Checks if there is a pending restart.
      *
      * @return true if there is a pending restart
      */
     public boolean isPendingRestart() {
-        return task != null && current != Long.MIN_VALUE;
+        return this.task != null && this.current != Long.MIN_VALUE;
     }
 
     /**
@@ -70,7 +58,7 @@ public class AutoRestartHandler {
      * @return time in milliseconds
      */
     public long getRemainingMilliseconds() {
-        return getRemainingTicks() * 50L;
+        return this.getRemainingTicks() * 50L;
     }
 
     /**
@@ -79,7 +67,7 @@ public class AutoRestartHandler {
      * @return time in ticks
      */
     public long getRemainingTicks() {
-        return current - MinecraftServer.currentTick;
+        return this.current - MinecraftServer.currentTick;
     }
 
     /**

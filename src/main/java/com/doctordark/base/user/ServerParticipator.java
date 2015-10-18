@@ -18,19 +18,19 @@ import java.util.UUID;
  */
 public abstract class ServerParticipator implements ConfigurationSerializable {
 
-    private final UUID uniqueId;
+    protected final UUID uniqueId;
 
-    private final Set<String> ignoring = Sets.newTreeSet(String.CASE_INSENSITIVE_ORDER);
-    private final Set<String> messageSpying = Sets.newHashSet();
+    protected final Set<String> ignoring = Sets.newTreeSet(String.CASE_INSENSITIVE_ORDER);
+    protected final Set<String> messageSpying = Sets.newHashSet();
 
-    private UUID lastRepliedTo;
-    private boolean inStaffChat;
-    private boolean globalChatVisible = true;
-    private boolean staffChatVisible = true;
-    private boolean messagesVisible = true;
-    private long lastSpeakTimeMillis;
-    private long lastReceivedMessageMillis;
-    private long lastSentMessageMillis;
+    protected UUID lastRepliedTo;
+    protected boolean inStaffChat;
+    protected boolean globalChatVisible = true;
+    protected boolean staffChatVisible = true;
+    protected boolean messagesVisible = true;
+    protected long lastSpeakTimeMillis;
+    protected long lastReceivedMessageMillis;
+    protected long lastSentMessageMillis;
 
     /**
      * Constructs a {@link ServerParticipator} from a given {@link UUID}.
