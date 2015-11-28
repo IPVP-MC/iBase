@@ -1,0 +1,13 @@
+author: poisonex
+main: me.poisonex.plugins.ibasic.IBasic
+name: iBasic
+version: 1
+commands:
+  donorjoin:
+  slowchat:
+  freeze:
+  freezeall:
+  halt:
+  help:
+  tutorial:
+  filter:
