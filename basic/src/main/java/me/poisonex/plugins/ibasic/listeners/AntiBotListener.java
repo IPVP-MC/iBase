@@ -16,13 +16,14 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AntiBotListener implements Listener {
 
-    private final Set<UUID> playerSet = new HashSet<>();
+    private final Set<UUID> playerSet = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     @EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
