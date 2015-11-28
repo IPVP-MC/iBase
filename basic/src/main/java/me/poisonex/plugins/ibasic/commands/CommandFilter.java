@@ -28,7 +28,6 @@ public class CommandFilter implements CommandExecutor, Listener {
 
     public CommandFilter(IBasic plugin) {
         this.plugin = plugin;
-        this.enabled = true;
 
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
