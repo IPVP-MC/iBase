@@ -1,7 +1,7 @@
 package me.poisonex.plugins.ibasic.listeners;
 
-import me.poisonex.plugins.ibasic.Main;
-import me.poisonex.plugins.ibasic.commands.special.CmdText;
+import me.poisonex.plugins.ibasic.IBasic;
+import me.poisonex.plugins.ibasic.commands.CmdText;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,11 +11,9 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import java.util.ArrayList;
 
 public class SpecialListener implements Listener {
-    private ArrayList<CmdText> cmdTexts;
+    private ArrayList<CmdText> cmdTexts = new ArrayList<>();
 
-    public SpecialListener(Main plugin) {
-        cmdTexts = new ArrayList<CmdText>();
-
+    public SpecialListener(IBasic plugin) {
         cmdTexts.add(new CmdText(plugin, "help"));
         cmdTexts.add(new CmdText(plugin, "tutorial"));
     }

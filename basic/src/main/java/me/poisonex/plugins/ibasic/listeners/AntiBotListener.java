@@ -5,7 +5,9 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -20,53 +22,55 @@ import java.util.UUID;
 
 public class AntiBotListener implements Listener {
 
-    private Set<UUID> playerSet = new HashSet<>();
+    private final Set<UUID> playerSet = new HashSet<>();
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        if (e.getPlayer().getWorld().getName().equalsIgnoreCase("world")) {
-            RegionManager regionManager = WGBukkit.getRegionManager(e.getPlayer().getWorld());
-            ApplicableRegionSet regionSet = regionManager.getApplicableRegions(e.getPlayer().getLocation());
+    @EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
+    public void onJoin(PlayerJoinEvent event) {
+        if (event.getPlayer().getWorld().getName().equalsIgnoreCase("world")) {
+            RegionManager regionManager = WGBukkit.getRegionManager(event.getPlayer().getWorld());
+            ApplicableRegionSet regionSet = regionManager.getApplicableRegions(event.getPlayer().getLocation());
 
             for (ProtectedRegion region : regionSet) {
                 if (region.getId().equalsIgnoreCase("spawn")) {
-                    this.playerSet.add(e.getPlayer().getUniqueId());
+                    this.playerSet.add(event.getPlayer().getUniqueId());
                     break;
                 }
             }
         }
     }
 
-    @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        this.playerSet.remove(e.getPlayer().getUniqueId());
+    @EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        this.playerSet.remove(event.getPlayer().getUniqueId());
     }
 
-    @EventHandler
-    public void onKick(PlayerKickEvent e) {
-        this.playerSet.remove(e.getPlayer().getUniqueId());
+    @EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
+    public void onPlayerKick(PlayerKickEvent event) {
+        this.playerSet.remove(event.getPlayer().getUniqueId());
     }
 
-    @EventHandler
-    public void onChat(AsyncPlayerChatEvent e) {
-        if (this.playerSet.contains(e.getPlayer().getUniqueId())) {
-            e.setCancelled(true);
-            e.getPlayer().sendMessage(ChatColor.RED + "You cannot speak or type commands until you move.");
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
+        if (this.playerSet.contains(event.getPlayer().getUniqueId())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.RED + "You cannot speak or type commands until you move.");
         }
     }
 
-    @EventHandler
-    public void onCommandPreprocess(PlayerCommandPreprocessEvent e) {
-        if (this.playerSet.contains(e.getPlayer().getUniqueId())) {
-            e.setCancelled(true);
-            e.getPlayer().sendMessage(ChatColor.RED + "You cannot speak or type commands until you move.");
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
+    public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
+        if (this.playerSet.contains(event.getPlayer().getUniqueId())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.RED + "You cannot speak or type commands until you move.");
         }
     }
 
-    @EventHandler
-    public void onMove(PlayerMoveEvent e) {
-        if (e.getFrom().getX() != e.getTo().getX() || e.getFrom().getZ() != e.getTo().getZ()) {
-            this.playerSet.remove(e.getPlayer().getUniqueId());
+    @EventHandler(ignoreCancelled = false, priority = EventPriority.MONITOR)
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Location from = event.getFrom();
+        Location to = event.getTo();
+        if (from.getX() != to.getX() || from.getZ() != to.getZ()) {
+            this.playerSet.remove(event.getPlayer().getUniqueId());
         }
     }
 }

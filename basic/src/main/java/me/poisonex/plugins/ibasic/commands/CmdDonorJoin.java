@@ -1,6 +1,7 @@
 package me.poisonex.plugins.ibasic.commands;
 
-import me.poisonex.plugins.ibasic.Main;
+import com.google.common.base.Joiner;
+import me.poisonex.plugins.ibasic.IBasic;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -17,16 +18,16 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class CmdDonorJoin implements CommandExecutor, Listener {
-    private Main plugin;
+    private IBasic plugin;
     private File file;
     private FileConfiguration config;
-    public List<String> donorList;
 
-    public CmdDonorJoin(Main plugin) {
+    public CmdDonorJoin(IBasic plugin) {
         this.plugin = plugin;
 
         this.file = new File(this.plugin.getDataFolder(), "donorjoin.yml");
@@ -40,110 +41,98 @@ public class CmdDonorJoin implements CommandExecutor, Listener {
         }
 
         this.config = YamlConfiguration.loadConfiguration(this.file);
-        this.donorList = this.config.getStringList("donorList");
-
         this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onPlayerLogin(PlayerLoginEvent e) {
-        if (e.getResult() == Result.KICK_FULL) {
-            if (this.donorList.contains(e.getPlayer().getUniqueId().toString())) {
-                e.allow();
-            }
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onPlayerLogin(PlayerLoginEvent event) {
+        if (event.getResult() == Result.KICK_FULL && plugin.getDonatorList().contains(event.getPlayer().getUniqueId().toString())) {
+            event.allow();
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!sender.hasPermission("donorjoin.true")) {
-            sender.sendMessage(ChatColor.RED + "You do not have permission.");
-            return true;
-        }
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length > 0) {
+            if (args[0].equalsIgnoreCase("add")) {
+                if (args.length < 2) {
+                    sender.sendMessage(ChatColor.RED + "Please specify a player.");
+                    return true;
+                }
 
-        if (args.length == 0 || args.length > 2) {
-            sender.sendMessage(ChatColor.RED + "Correct Usage: /" + cmd.getName() + " <add|list|remove> [player]");
-            return true;
-        }
+                UUID targetUUID = this.plugin.getUuidManager().getUUIDFromName(args[1]);
 
-        if (args[0].equalsIgnoreCase("add")) {
-            if (args.length != 2) {
-                sender.sendMessage(ChatColor.RED + "Please specify a player.");
+                if (targetUUID == null) {
+                    targetUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
+                }
+
+                if (targetUUID == null) {
+                    sender.sendMessage(ChatColor.RED + "Player not found.");
+                    return true;
+                }
+
+                if (!plugin.getDonatorList().contains(targetUUID.toString())) {
+                    plugin.getDonatorList().add(targetUUID.toString());
+                    this.saveConfig();
+
+                    sender.sendMessage(ChatColor.GREEN + "Successfully allowed player to join the server when full.");
+                } else {
+                    sender.sendMessage(ChatColor.RED + "That player is already allowed to join when the server is full.");
+                }
+
                 return true;
             }
 
-            UUID targetUUID = this.plugin.uuidManager.getUUIDFromName(args[1]);
-
-            if (targetUUID == null) {
-                targetUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
-            }
-
-            if (targetUUID == null) {
-                sender.sendMessage(ChatColor.RED + "Player not found.");
-                return true;
-            }
-
-            if (!this.donorList.contains(targetUUID.toString())) {
-                this.donorList.add(targetUUID.toString());
-                this.saveConfig();
-
-                sender.sendMessage(ChatColor.GREEN + "Successfully allowed player to join the server when full.");
-            } else {
-                sender.sendMessage(ChatColor.RED + "That player is already allowed to join when the server is full.");
-            }
-        } else if (args[0].equalsIgnoreCase("list")) {
-            StringBuilder sb = new StringBuilder();
-
-            if (this.donorList.isEmpty()) {
-                sb.append(ChatColor.GRAY + "None");
-            } else {
-                for (String uuidString : this.donorList) {
-                    UUID uuid = UUID.fromString(uuidString);
-                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(uuid);
-
-                    if (offlinePlayer != null) {
-                        if (sb.length() > 0) {
-                            sb.append(", ");
+            if (args[0].equalsIgnoreCase("list")) {
+                Set<String> builder = new LinkedHashSet<>();
+                if (!plugin.getDonatorList().isEmpty()) {
+                    for (String uuidString : plugin.getDonatorList()) {
+                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(uuidString));
+                        if (offlinePlayer != null) {
+                            builder.add(offlinePlayer.getName());
                         }
-
-                        sb.append(offlinePlayer.getName());
                     }
                 }
-            }
 
-            sender.sendMessage(ChatColor.GREEN + "Donor List: " + sb.toString());
-        } else if (args[0].equalsIgnoreCase("remove")) {
-            if (args.length != 2) {
-                sender.sendMessage(ChatColor.RED + "Please specify a player.");
+                sender.sendMessage(builder.isEmpty() ? ChatColor.GRAY + "None" : ChatColor.GREEN + "Donor List: " + Joiner.on(", ").join(builder));
                 return true;
             }
 
-            UUID targetUUID = this.plugin.uuidManager.getUUIDFromName(args[1]);
+            if (args[0].equalsIgnoreCase("remove")) {
+                if (args.length < 2) {
+                    sender.sendMessage(ChatColor.RED + "Please specify a player.");
+                    return true;
+                }
 
-            if (targetUUID == null) {
-                targetUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
-            }
+                UUID targetUUID = this.plugin.getUuidManager().getUUIDFromName(args[1]);
 
-            if (targetUUID == null) {
-                sender.sendMessage(ChatColor.RED + "Player not found.");
+                if (targetUUID == null) {
+                    targetUUID = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
+                }
+
+                if (targetUUID == null) {
+                    sender.sendMessage(ChatColor.RED + "Player not found.");
+                    return true;
+                }
+
+                if (plugin.getDonatorList().remove(targetUUID.toString())) {
+                    this.saveConfig();
+                    sender.sendMessage(ChatColor.GREEN + "Successfully removed player from being allowed to join the server when full.");
+                } else {
+                    sender.sendMessage(ChatColor.RED + "That player was never on the donor list.");
+                }
+
                 return true;
-            }
-
-            if (this.donorList.remove(targetUUID.toString())) {
-                this.saveConfig();
-                sender.sendMessage(ChatColor.GREEN + "Successfully removed player from being allowed to join the server when full.");
-            } else {
-                sender.sendMessage(ChatColor.RED + "That player was never on the donor list.");
             }
         }
 
+        sender.sendMessage(ChatColor.RED + "Correct Usage: /" + command.getName() + " <add|list|remove> [player]");
         return true;
     }
 
     public void saveConfig() {
         try {
-            this.config.set("donorList", this.donorList);
+            this.config.set("donorList", plugin.getDonatorList());
             this.config.save(this.file);
         } catch (IOException e) {
             e.printStackTrace();

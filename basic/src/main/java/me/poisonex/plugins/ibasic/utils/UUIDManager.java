@@ -2,7 +2,7 @@ package me.poisonex.plugins.ibasic.utils;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import me.poisonex.plugins.ibasic.Main;
+import me.poisonex.plugins.ibasic.IBasic;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.EventHandler;
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class UUIDManager implements Listener {
 
-    private Main mainPlugin;
+    private IBasic IBasicPlugin;
 
     private File file;
 
@@ -24,22 +24,22 @@ public class UUIDManager implements Listener {
 
     private final BiMap<UUID, String> storedUUIDs;
 
-    public UUIDManager(Main mainPlugin) {
-        this.mainPlugin = mainPlugin;
-        this.file = new File(this.mainPlugin.getDataFolder(), "uuids.yml");
+    public UUIDManager(IBasic IBasicPlugin) {
+        this.IBasicPlugin = IBasicPlugin;
+        this.file = new File(this.IBasicPlugin.getDataFolder(), "uuids.yml");
 
         if (!file.exists()) {
             try {
                 file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
 
         this.config = YamlConfiguration.loadConfiguration(this.file);
         this.storedUUIDs = HashBiMap.create();
 
-        this.mainPlugin.getServer().getPluginManager().registerEvents(this, this.mainPlugin);
+        this.IBasicPlugin.getServer().getPluginManager().registerEvents(this, this.IBasicPlugin);
     }
 
     public void set(final String path, final Object value) {
@@ -55,7 +55,7 @@ public class UUIDManager implements Listener {
                 }
             }
 
-        }.runTaskAsynchronously(this.mainPlugin);
+        }.runTaskAsynchronously(this.IBasicPlugin);
     }
 
     public String getNameFromUUID(final UUID uuid) {
@@ -63,8 +63,8 @@ public class UUIDManager implements Listener {
 
         String foundName = this.config.getString(uuid.toString(), null);
 
-        if (!foundName.equals(null)) {
-            this.storedUUIDs.forcePut(uuid, foundName);
+        if (foundName == null) {
+            this.storedUUIDs.forcePut(uuid, null);
         }
 
         return foundName;

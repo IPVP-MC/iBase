@@ -1,7 +1,6 @@
 package me.poisonex.plugins.ibasic.commands;
 
-import me.poisonex.plugins.ibasic.Main;
-import org.bukkit.Bukkit;
+import me.poisonex.plugins.ibasic.IBasic;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,20 +11,26 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
+import org.bukkit.permissions.Permissible;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.TimeUnit;
 
 public class CmdFilter implements CommandExecutor, Listener {
-    private boolean enabled;
-    private Long currentTime, divider;
-    private int numHolder = 0;
-    private Main plugin;
 
-    public CmdFilter(Main plugin) {
+    private static final long DIVIDER = TimeUnit.MILLISECONDS.convert(10, TimeUnit.SECONDS);
+
+    private boolean enabled;
+    private long currentTime = -1L;
+    private int numHolder = 0;
+
+    private final IBasic plugin;
+
+    public CmdFilter(IBasic plugin) {
         this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
         this.enabled = true;
+
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
         new BukkitRunnable() {
             @Override
@@ -33,69 +38,58 @@ public class CmdFilter implements CommandExecutor, Listener {
                 if (enabled) {
                     enabled = false;
 
-                    for (Player p : Bukkit.getOnlinePlayers()) {
-                        if (p.hasPermission("filternotify.true")) {
-                            p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&lAuto filtering has been disabled."));
+                    String message = ChatColor.RED.toString() + ChatColor.BOLD + "Auto filtering has been disabled.";
+                    for (Permissible permissible : plugin.getServer().getPluginManager().getPermissionSubscriptions("filternotify.true")) {
+                        if (permissible instanceof Player) {
+                            ((Player) permissible).sendMessage(message);
                         }
                     }
                 }
             }
-        }.runTaskLater(plugin, 20 * 60 * 7);
-
-        this.divider = TimeUnit.MILLISECONDS.convert(10, TimeUnit.SECONDS);
+        }.runTaskLater(plugin, 240L);
     }
 
     public boolean canLogin() {
-        if (currentTime == null) {
-            return true;
-        }
-
-        return System.currentTimeMillis() - this.currentTime >= divider;
+        return this.currentTime != -1L || System.currentTimeMillis() - this.currentTime >= DIVIDER;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onLogin(PlayerLoginEvent e) {
+    @EventHandler(ignoreCancelled = false, priority = EventPriority.LOWEST)
+    public void onLogin(PlayerLoginEvent event) {
         if (this.enabled) {
-            if (e.getPlayer().hasPermission("filterbypass.true") || e.getPlayer().isOp()) {
-                return;
-            }
-            if (this.plugin.cmdDonorJoin.donorList.contains(e.getPlayer().getUniqueId().toString())) {
+            Player player = event.getPlayer();
+            if (player.hasPermission("filterbypass.true") || this.plugin.getDonatorList().contains(event.getPlayer().getUniqueId().toString())) {
                 return;
             }
 
-            if (this.canLogin()) {
-                if (numHolder >= 9) {
-                    this.currentTime = System.currentTimeMillis();
-                    numHolder = 0;
-                } else {
-                    numHolder++;
-                }
+            if (!this.canLogin()) {
+                event.disallow(Result.KICK_OTHER, ChatColor.GREEN + "Please reconnect.");
+                return;
+            }
+
+            if (numHolder >= 9) {
+                this.currentTime = System.currentTimeMillis();
+                this.numHolder = 0;
             } else {
-                e.disallow(Result.KICK_OTHER, ChatColor.translateAlternateColorCodes('&', "&aPlease reconnect."));
+                this.numHolder++;
             }
         }
     }
 
     @Override
-    public boolean onCommand(CommandSender s, Command c, String alias, String[] args) {
-        if (!s.hasPermission("filter.true")) {
-            s.sendMessage(ChatColor.RED + "You do not have permission.");
-            return true;
-        }
-
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length != 1) {
-            s.sendMessage(ChatColor.RED + "Correct Usage: /" + c.getName() + " <start | stop>");
+            sender.sendMessage(ChatColor.RED + "Correct Usage: /" + command.getName() + " <start | stop>");
             return true;
         }
 
         if (args[0].equalsIgnoreCase("start")) {
             this.enabled = true;
-            s.sendMessage(ChatColor.GREEN + "Filtering is now active.");
+            sender.sendMessage(ChatColor.GREEN + "Filtering is now active.");
         } else if (args[0].equalsIgnoreCase("stop")) {
             this.enabled = false;
-            s.sendMessage(ChatColor.RED + "Filtering is now disabled.");
+            sender.sendMessage(ChatColor.RED + "Filtering is now disabled.");
         } else {
-            s.sendMessage(ChatColor.RED + "Correct Usage: /" + c.getName() + " <start | stop>");
+            sender.sendMessage(ChatColor.RED + "Correct Usage: /" + command.getName() + " <start | stop>");
         }
 
         return true;
