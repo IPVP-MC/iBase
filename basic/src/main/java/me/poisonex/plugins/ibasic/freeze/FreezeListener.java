@@ -85,7 +85,7 @@ public class FreezeListener implements Listener {
         Location from = event.getFrom();
         Location to = event.getTo();
 
-        if (to.getX() != from.getX() || to.getZ() != from.getZ() && plugin.getFreezeManager().isFrozen(event.getPlayer())) {
+        if ((to.getX() != from.getX() || to.getZ() != from.getZ()) && plugin.getFreezeManager().isFrozen(event.getPlayer())) {
             event.setCancelled(true);
         }
     }

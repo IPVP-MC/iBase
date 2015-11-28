@@ -50,6 +50,6 @@ public class FreezeManager {
     }
 
     public boolean isFrozen(Player player) {
-        return !player.hasPermission("freeze.bypass") && (this.serverFrozen || this.frozenPlayers.contains(player.getUniqueId()) || !this.haltedPlayers.containsKey(player.getUniqueId()));
+        return !player.hasPermission("freeze.bypass") && (this.serverFrozen || this.frozenPlayers.contains(player.getUniqueId()) || this.haltedPlayers.containsKey(player.getUniqueId()));
     }
 }
