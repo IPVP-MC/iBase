@@ -3,22 +3,26 @@ package me.poisonex.plugins.ibasic;
 import lombok.Getter;
 import me.poisonex.plugins.ibasic.commands.CmdDonorJoin;
 import me.poisonex.plugins.ibasic.commands.CmdFilter;
-import me.poisonex.plugins.ibasic.freeze.CmdFreeze;
-import me.poisonex.plugins.ibasic.freeze.CmdFreezeall;
 import me.poisonex.plugins.ibasic.commands.CmdHalt;
 import me.poisonex.plugins.ibasic.commands.CmdSlowChat;
+import me.poisonex.plugins.ibasic.freeze.CmdFreeze;
+import me.poisonex.plugins.ibasic.freeze.CmdFreezeall;
 import me.poisonex.plugins.ibasic.freeze.FreezeListener;
 import me.poisonex.plugins.ibasic.freeze.FreezeManager;
 import me.poisonex.plugins.ibasic.listeners.ServerKickListener;
 import me.poisonex.plugins.ibasic.listeners.SpecialListener;
 import me.poisonex.plugins.ibasic.utils.UUIDManager;
+import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.UUID;
 
 public class IBasic extends JavaPlugin {
@@ -52,7 +56,8 @@ public class IBasic extends JavaPlugin {
         PluginManager manager = this.getServer().getPluginManager();
         manager.registerEvents(new FreezeListener(this), this);
         manager.registerEvents(new ServerKickListener(this), this);
-        manager.registerEvents(new SpecialListener(this), this);
+
+        new SpecialListener(this);
 
         PluginCommand donorJoinCommand = this.getCommand("donorjoin");
         donorJoinCommand.setPermission("donorjoin.true");
@@ -87,5 +92,28 @@ public class IBasic extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("iBasic -> Disabled");
+    }
+
+    public static List<String> readLines(IBasic plugin, File file) {
+        if (!file.exists()) {
+            try {
+                if (file.createNewFile()) {
+                    plugin.getLogger().info("Created file " + file.getName() + ".");
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        List<String> ret = new ArrayList<>();
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                ret.add(ChatColor.translateAlternateColorCodes('&', scanner.nextLine()));
+            }
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+
+        return ret;
     }
 }
