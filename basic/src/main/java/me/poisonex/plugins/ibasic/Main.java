@@ -9,7 +9,11 @@ import me.poisonex.plugins.ibasic.listeners.SpecialListener;
 import me.poisonex.plugins.ibasic.utils.UUIDManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.UUID;
+
 public class Main extends JavaPlugin {
+    public static final UUID CONSOLE_UUID = UUID.fromString("4490945f-2fe4-43bd-985d-7861c729e9ee");
+
     public CmdDonorJoin cmdDonorJoin;
     public CmdFreeze cmdFreeze;
 

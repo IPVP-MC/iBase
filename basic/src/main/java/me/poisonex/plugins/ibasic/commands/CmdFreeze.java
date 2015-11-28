@@ -27,21 +27,22 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.UUID;
 import java.util.WeakHashMap;
 
 public class CmdFreeze implements CommandExecutor, Listener {
     private Main plugin;
 
-    private Set<String> frozenPlayers;
-    private WeakHashMap<Player, String> haltedPlayers;
+    private Set<UUID> frozenPlayers;
+    private WeakHashMap<Player, UUID> haltedPlayers;
     private boolean serverFrozen;
 
     public CmdFreeze(Main plugin) {
         this.plugin = plugin;
         this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
 
-        this.frozenPlayers = new HashSet<String>();
-        this.haltedPlayers = new WeakHashMap<Player, String>();
+        this.frozenPlayers = new HashSet<UUID>();
+        this.haltedPlayers = new WeakHashMap<Player, UUID>();
 
         new BukkitRunnable() {
             @Override
@@ -84,12 +85,11 @@ public class CmdFreeze implements CommandExecutor, Listener {
                 return true;
             }
 
-            if (this.frozenPlayers.contains(targetPlayer.getName())) {
-                this.frozenPlayers.remove(targetPlayer.getName());
+            if (this.frozenPlayers.remove(targetPlayer.getUniqueId())) {
                 sender.sendMessage(ChatColor.RED + targetPlayer.getName() + " is now unfrozen.");
                 targetPlayer.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "You are un-frozen.");
             } else {
-                this.frozenPlayers.add(targetPlayer.getName());
+                this.frozenPlayers.add(targetPlayer.getUniqueId());
                 sender.sendMessage(ChatColor.GREEN + targetPlayer.getName() + " is now frozen.");
                 targetPlayer.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "You are frozen.");
             }
@@ -109,7 +109,8 @@ public class CmdFreeze implements CommandExecutor, Listener {
                 return true;
             }
 
-            if (this.haltedPlayers.put(targetPlayer, sender.getName()) == null) {
+            UUID senderUUID = sender instanceof Player ? ((Player) sender).getUniqueId() : Main.CONSOLE_UUID;
+            if (this.haltedPlayers.put(targetPlayer, senderUUID) == null) {
                 targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 1), true);
                 sender.sendMessage(ChatColor.GREEN + targetPlayer.getName() + " is now halted.");
 
@@ -142,7 +143,7 @@ public class CmdFreeze implements CommandExecutor, Listener {
             return false;
         }
 
-        return this.serverFrozen || this.frozenPlayers.contains(p.getName()) || this.haltedPlayers.get(p) != null;
+        return this.serverFrozen || this.frozenPlayers.contains(p.getUniqueId()) || this.haltedPlayers.get(p) != null;
     }
 
     @EventHandler
@@ -154,7 +155,7 @@ public class CmdFreeze implements CommandExecutor, Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        this.frozenPlayers.remove(e.getPlayer().getName());
+        this.frozenPlayers.remove(e.getPlayer().getUniqueId());
 
         if (this.haltedPlayers.remove(e.getPlayer()) != null) {
             if (e.getPlayer().hasPotionEffect(PotionEffectType.BLINDNESS)) {

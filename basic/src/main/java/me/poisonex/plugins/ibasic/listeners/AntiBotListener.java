@@ -16,13 +16,11 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class AntiBotListener implements Listener {
-    private Set<String> playerSet;
 
-    public AntiBotListener() {
-        this.playerSet = new HashSet<String>();
-    }
+    private Set<UUID> playerSet = new HashSet<>();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -32,7 +30,7 @@ public class AntiBotListener implements Listener {
 
             for (ProtectedRegion region : regionSet) {
                 if (region.getId().equalsIgnoreCase("spawn")) {
-                    this.playerSet.add(e.getPlayer().getName());
+                    this.playerSet.add(e.getPlayer().getUniqueId());
                     break;
                 }
             }
@@ -41,17 +39,17 @@ public class AntiBotListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        this.playerSet.remove(e.getPlayer().getName());
+        this.playerSet.remove(e.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void onKick(PlayerKickEvent e) {
-        this.playerSet.remove(e.getPlayer().getName());
+        this.playerSet.remove(e.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        if (this.playerSet.contains(e.getPlayer().getName())) {
+        if (this.playerSet.contains(e.getPlayer().getUniqueId())) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(ChatColor.RED + "You cannot speak or type commands until you move.");
         }
@@ -59,7 +57,7 @@ public class AntiBotListener implements Listener {
 
     @EventHandler
     public void onCommandPreprocess(PlayerCommandPreprocessEvent e) {
-        if (this.playerSet.contains(e.getPlayer().getName())) {
+        if (this.playerSet.contains(e.getPlayer().getUniqueId())) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(ChatColor.RED + "You cannot speak or type commands until you move.");
         }
@@ -68,7 +66,7 @@ public class AntiBotListener implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         if (e.getFrom().getX() != e.getTo().getX() || e.getFrom().getZ() != e.getTo().getZ()) {
-            this.playerSet.remove(e.getPlayer().getName());
+            this.playerSet.remove(e.getPlayer().getUniqueId());
         }
     }
 }

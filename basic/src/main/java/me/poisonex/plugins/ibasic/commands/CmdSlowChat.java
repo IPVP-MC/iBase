@@ -16,19 +16,20 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class CmdSlowChat implements CommandExecutor, Listener {
     private Main plugin;
     private long slowChatTime;
     private BukkitTask bukkitTask;
-    private HashMap<String, Long> playerChatTimes;
+    private HashMap<UUID, Long> playerChatTimes;
 
     public CmdSlowChat(Main plugin) {
         this.plugin = plugin;
 
         this.slowChatTime = 0;
-        this.playerChatTimes = new HashMap<String, Long>();
+        this.playerChatTimes = new HashMap<UUID, Long>();
 
         this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
     }
@@ -48,10 +49,10 @@ public class CmdSlowChat implements CommandExecutor, Listener {
         }
 
         if (this.slowChatTime > 0) {
-            if (!this.playerChatTimes.containsKey(e.getPlayer().getName())) {
-                this.playerChatTimes.put(e.getPlayer().getName(), System.currentTimeMillis() + this.slowChatTime);
+            if (!this.playerChatTimes.containsKey(e.getPlayer().getUniqueId())) {
+                this.playerChatTimes.put(e.getPlayer().getUniqueId(), System.currentTimeMillis() + this.slowChatTime);
             } else {
-                long timeRemaining = this.playerChatTimes.get(e.getPlayer().getName()) - System.currentTimeMillis();
+                long timeRemaining = this.playerChatTimes.get(e.getPlayer().getUniqueId()) - System.currentTimeMillis();
 
                 if (timeRemaining / 1000 > 0) {
                     e.setCancelled(true);
@@ -59,7 +60,7 @@ public class CmdSlowChat implements CommandExecutor, Listener {
                     String timeMessage = this.getTimeMessage(timeRemaining);
                     e.getPlayer().sendMessage(ChatColor.RED + "Chat has been slowed. You can speak in " + timeMessage + ".");
                 } else {
-                    this.playerChatTimes.put(e.getPlayer().getName(), System.currentTimeMillis() + this.slowChatTime);
+                    this.playerChatTimes.put(e.getPlayer().getUniqueId(), System.currentTimeMillis() + this.slowChatTime);
                 }
             }
         }
