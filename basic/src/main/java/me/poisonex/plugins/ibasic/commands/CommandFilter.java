@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.TimeUnit;
 
-public class CmdFilter implements CommandExecutor, Listener {
+public class CommandFilter implements CommandExecutor, Listener {
 
     private static final long DIVIDER = TimeUnit.MILLISECONDS.convert(10, TimeUnit.SECONDS);
 
@@ -26,7 +26,7 @@ public class CmdFilter implements CommandExecutor, Listener {
 
     private final IBasic plugin;
 
-    public CmdFilter(IBasic plugin) {
+    public CommandFilter(IBasic plugin) {
         this.plugin = plugin;
         this.enabled = true;
 

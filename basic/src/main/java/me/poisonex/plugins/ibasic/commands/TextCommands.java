@@ -1,4 +1,4 @@
-package me.poisonex.plugins.ibasic.listeners;
+package me.poisonex.plugins.ibasic.commands;
 
 import com.google.common.collect.Iterables;
 import lombok.Getter;
@@ -11,9 +11,9 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-public class SpecialListener {
+public class TextCommands {
 
-    public SpecialListener(IBasic plugin) {
+    public TextCommands(IBasic plugin) {
         List<String> textCommands = Arrays.asList("help", "tutorial");
         for (String textCommand : textCommands) {
             plugin.getCommand(textCommand).setExecutor(new TextBasedCommand(plugin, textCommand));

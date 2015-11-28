@@ -22,12 +22,12 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class CmdDonorJoin implements CommandExecutor, Listener {
+public class CommandDonorjoin implements CommandExecutor, Listener {
     private IBasic plugin;
     private File file;
     private FileConfiguration config;
 
-    public CmdDonorJoin(IBasic plugin) {
+    public CommandDonorjoin(IBasic plugin) {
         this.plugin = plugin;
 
         this.file = new File(this.plugin.getDataFolder(), "donorjoin.yml");

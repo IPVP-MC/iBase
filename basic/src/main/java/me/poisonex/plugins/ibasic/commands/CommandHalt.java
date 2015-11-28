@@ -12,11 +12,11 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.UUID;
 
-public class CmdHalt implements CommandExecutor {
+public class CommandHalt implements CommandExecutor {
 
     private final IBasic plugin;
 
-    public CmdHalt(IBasic plugin) {
+    public CommandHalt(IBasic plugin) {
         this.plugin = plugin;
     }
 

@@ -1,16 +1,16 @@
 package me.poisonex.plugins.ibasic;
 
 import lombok.Getter;
-import me.poisonex.plugins.ibasic.commands.CmdDonorJoin;
-import me.poisonex.plugins.ibasic.commands.CmdFilter;
-import me.poisonex.plugins.ibasic.commands.CmdHalt;
-import me.poisonex.plugins.ibasic.commands.CmdSlowChat;
+import me.poisonex.plugins.ibasic.commands.CommandDonorjoin;
+import me.poisonex.plugins.ibasic.commands.CommandFilter;
+import me.poisonex.plugins.ibasic.commands.CommandHalt;
+import me.poisonex.plugins.ibasic.commands.CommandSlowchat;
+import me.poisonex.plugins.ibasic.commands.TextCommands;
 import me.poisonex.plugins.ibasic.freeze.CmdFreeze;
 import me.poisonex.plugins.ibasic.freeze.CmdFreezeall;
 import me.poisonex.plugins.ibasic.freeze.FreezeListener;
 import me.poisonex.plugins.ibasic.freeze.FreezeManager;
 import me.poisonex.plugins.ibasic.listeners.ServerKickListener;
-import me.poisonex.plugins.ibasic.listeners.SpecialListener;
 import me.poisonex.plugins.ibasic.utils.UUIDManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
@@ -57,14 +57,14 @@ public class IBasic extends JavaPlugin {
         manager.registerEvents(new FreezeListener(this), this);
         manager.registerEvents(new ServerKickListener(this), this);
 
-        new SpecialListener(this);
+        new TextCommands(this);
 
         PluginCommand donorJoinCommand = this.getCommand("donorjoin");
         donorJoinCommand.setPermission("donorjoin.true");
-        donorJoinCommand.setExecutor(new CmdDonorJoin(this));
+        donorJoinCommand.setExecutor(new CommandDonorjoin(this));
 
         PluginCommand filterCommand = this.getCommand("filter");
-        filterCommand.setExecutor(new CmdFilter(this));
+        filterCommand.setExecutor(new CommandFilter(this));
         filterCommand.setPermission("filter.true");
 
         PluginCommand freezeCommand = this.getCommand("freeze");
@@ -76,11 +76,11 @@ public class IBasic extends JavaPlugin {
         freezeAllCommand.setPermission("ibasic.freeze");
 
         PluginCommand haltCommand = this.getCommand("halt");
-        haltCommand.setExecutor(new CmdHalt(this));
+        haltCommand.setExecutor(new CommandHalt(this));
         haltCommand.setPermission("ibasic.freeze");
 
         PluginCommand slowChatCommand = this.getCommand("slowchat");
-        slowChatCommand.setExecutor(new CmdSlowChat(this));
+        slowChatCommand.setExecutor(new CommandSlowchat(this));
         slowChatCommand.setPermission("slowchat.true");
 
         // getServer().getPluginManager().registerEvents(new AntiBotListener(), this); // Not being used rn

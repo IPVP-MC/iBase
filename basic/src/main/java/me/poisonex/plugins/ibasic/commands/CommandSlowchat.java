@@ -21,14 +21,14 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class CmdSlowChat implements CommandExecutor, Listener {
+public class CommandSlowchat implements CommandExecutor, Listener {
 
     private long slowChatTime = 0L;
     private BukkitTask bukkitTask;
     private final Map<UUID, Long> playerChatTimes = new HashMap<>();
     private final IBasic plugin;
 
-    public CmdSlowChat(IBasic plugin) {
+    public CommandSlowchat(IBasic plugin) {
         this.plugin = plugin;
         this.plugin.getServer().getPluginManager().registerEvents(this, this.plugin);
     }
