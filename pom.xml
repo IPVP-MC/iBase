@@ -1,55 +1,21 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.doctordark.base</groupId>
-    <artifactId>base</artifactId>
-    <name>Base</name>
-    <version>3.2-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>iBase</name>
+    <modules>
+        <module>base</module>
+        <module>basic</module>
+    </modules>
+
+    <artifactId>IBase</artifactId>
+    <groupId>org.ipvp</groupId>
+    <version>1.0</version>
+
     <description>Base brings general commands to Spigot servers providing Essential features and an API.</description>
 
-    <repositories>
-        <repository>
-            <id>protocollib-repo</id>
-            <url>http://repo.dmulloy2.net/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>confuser-repo</id>
-            <url>http://ci.frostcast.net/plugin/repository/everything</url>
-        </repository>
-    </repositories>
-
     <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.16.6</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>4.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>pl.project13.maven</groupId>
-            <artifactId>git-commit-id-plugin</artifactId>
-            <version>2.1.15</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.comphenix.protocol</groupId>
-            <artifactId>ProtocolLib</artifactId>
-            <version>3.6.4</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.confuser</groupId>
-            <artifactId>BanManager</artifactId>
-            <version>5.6.1</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Locally for now -->
         <dependency>
             <groupId>org.github.paperspigot</groupId>
@@ -64,6 +30,19 @@
             <scope>provided</scope>
         </dependency>
         <!-- Locally for now -->
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>pl.project13.maven</groupId>
+            <artifactId>git-commit-id-plugin</artifactId>
+            <version>2.1.15</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -76,9 +55,9 @@
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources/</directory>
                 <includes>
+                    <include>config.yml</include>
                     <include>plugin.yml</include>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
+                    <include>items.csv</include>
                 </includes>
             </resource>
             <resource>
@@ -89,35 +68,6 @@
         </resources>
 
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <shadedArtifactAttached>false</shadedArtifactAttached>
-                            <createDependencyReducedPom>true</createDependencyReducedPom>
-
-                            <artifactSet>
-                                <includes>
-                                    <include>org.apache.commons:commons-collections4</include>
-                                </includes>
-                            </artifactSet>
-                            <relocations>
-                                <relocation>
-                                    <pattern>org.apache.commons.commons.collections4</pattern>
-                                    <shadedPattern>com.doctordark.base.internal.commons-collections4</shadedPattern>
-                                </relocation>
-                            </relocations>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -142,29 +92,10 @@
                 </executions>
 
                 <configuration>
-                    <!-- that's the default value -->
                     <dateFormat>dd.MM.yyyy HH:mm:ss</dateFormat>
-
-                    <!-- false is default here, it prints some more information during the
-                        build -->
                     <verbose>true</verbose>
-
-                    <!-- If you'd like to tell the plugin where your .git directory is,
-                        use this setting, otherwise we'll perform a search trying to figure out the
-                        right directory. It's better to add it explicite IMHO. -->
                     <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-
-                    <!-- ALTERNATE SETUP - GENERATE FILE -->
-                    <!-- If you want to keep git information, even in your WAR file etc,
-                        use this mode, which will generate a properties file (with filled out values)
-                        which you can then normally read using new Properties().load(/**/) -->
-
-                    <!-- this is false by default, forces the plugin to generate the git.properties
-                        file -->
                     <generateGitPropertiesFile>false</generateGitPropertiesFile>
-
-                    <!-- The path for the to be generated properties file, it's relative
-                        to ${project.basedir} -->
                     <generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
                 </configuration>
             </plugin>
