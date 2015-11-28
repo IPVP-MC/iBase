@@ -8,6 +8,5 @@ commands:
   freeze:
   freezeall:
   halt:
-  help:
   tutorial:
   filter:

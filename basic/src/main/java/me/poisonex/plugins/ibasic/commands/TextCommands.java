@@ -1,5 +1,6 @@
 package me.poisonex.plugins.ibasic.commands;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import lombok.Getter;
 import me.poisonex.plugins.ibasic.IBasic;
@@ -8,13 +9,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 
 public class TextCommands {
 
     public TextCommands(IBasic plugin) {
-        List<String> textCommands = Arrays.asList("help", "tutorial");
+        List<String> textCommands = ImmutableList.of("tutorial");
         for (String textCommand : textCommands) {
             plugin.getCommand(textCommand).setExecutor(new TextBasedCommand(plugin, textCommand));
         }
