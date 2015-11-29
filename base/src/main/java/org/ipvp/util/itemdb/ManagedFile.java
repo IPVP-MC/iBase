@@ -1,7 +1,7 @@
 package org.ipvp.util.itemdb;
 
-import org.ipvp.base.BasePlugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.ipvp.base.BasePlugin;
 
 import java.io.BufferedReader;
 import java.io.File;

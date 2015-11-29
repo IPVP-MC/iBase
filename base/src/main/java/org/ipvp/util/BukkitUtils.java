@@ -128,11 +128,10 @@ public final class BukkitUtils {
         String argument = args[(args.length - 1)];
 
         /** Non Java 8 version
-        return FluentIterable.from(Arrays.asList(args)).filter(new Predicate<String>() {
-            @Override
-            public boolean apply(String string) {
-                return string.regionMatches(true, 0, argument, 0, argument.length());
-            }
+         return FluentIterable.from(Arrays.asList(args)).filter(new Predicate<String>() {
+        @Override public boolean apply(String string) {
+        return string.regionMatches(true, 0, argument, 0, argument.length());
+        }
         }).limit(limit).toList();*/
         return input.stream().filter(string -> string.regionMatches(true, 0, argument, 0, argument.length())).limit(limit).collect(Collectors.toList());
     }

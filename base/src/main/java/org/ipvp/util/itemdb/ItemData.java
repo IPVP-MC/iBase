@@ -1,10 +1,10 @@
 package org.ipvp.util.itemdb;
 
-import org.ipvp.base.BasePlugin;
 import org.bukkit.Material;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
+import org.ipvp.base.BasePlugin;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

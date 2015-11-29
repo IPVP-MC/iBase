@@ -5,8 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <name>iBasic</name>
-    <artifactId>basic</artifactId>
+    <artifactId>ibase-basic</artifactId>
     <version>1.0</version>
+
+    <parent>
+        <artifactId>ibase</artifactId>
+        <groupId>org.ipvp</groupId>
+        <version>1.0</version>
+    </parent>
 
     <repositories>
         <repository>
@@ -23,10 +29,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <parent>
-        <artifactId>IBase</artifactId>
-        <groupId>org.ipvp</groupId>
-        <version>1.0</version>
-    </parent>
 </project>

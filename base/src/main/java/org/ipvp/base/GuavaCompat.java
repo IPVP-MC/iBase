@@ -22,6 +22,6 @@ public class GuavaCompat {
 
     // MoreObjects
     public static <T> T firstNonNull(@Nullable T first, @Nullable T second) {
-        return first != null?first: Preconditions.checkNotNull(second);
+        return first != null ? first : Preconditions.checkNotNull(second);
     }
 }

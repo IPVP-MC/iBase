@@ -4,13 +4,14 @@
     <packaging>pom</packaging>
 
     <name>iBase</name>
+
     <modules>
         <module>base</module>
         <module>basic</module>
     </modules>
 
-    <artifactId>IBase</artifactId>
     <groupId>org.ipvp</groupId>
+    <artifactId>IBase</artifactId>
     <version>1.0</version>
 
     <description>Base brings general commands to Spigot servers providing Essential features and an API.</description>

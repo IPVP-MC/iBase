@@ -1,5 +1,8 @@
 package org.ipvp.base;
 
+import lombok.Getter;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.util.PersistableLocation;
 import org.ipvp.util.SignHandler;
 import org.ipvp.util.chat.Lang;
@@ -7,9 +10,6 @@ import org.ipvp.util.cuboid.Cuboid;
 import org.ipvp.util.cuboid.NamedCuboid;
 import org.ipvp.util.itemdb.ItemDb;
 import org.ipvp.util.itemdb.SimpleItemDb;
-import lombok.Getter;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.util.Random;

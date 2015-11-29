@@ -1,6 +1,5 @@
 package org.ipvp.util.command;
 
-import org.ipvp.util.BukkitUtils;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.ChatColor;
@@ -8,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.ipvp.util.BukkitUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

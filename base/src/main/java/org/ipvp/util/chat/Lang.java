@@ -1,6 +1,5 @@
 package org.ipvp.util.chat;
 
-import org.ipvp.base.GuavaCompat;
 import com.google.common.base.MoreObjects;
 import net.minecraft.server.v1_7_R4.Item;
 import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
@@ -8,6 +7,7 @@ import org.bukkit.craftbukkit.v1_7_R4.potion.CraftPotionEffectType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
+import org.ipvp.base.GuavaCompat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
