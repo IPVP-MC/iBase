@@ -1,5 +1,5 @@
 author: poisonex
-main: me.poisonex.plugins.ibasic.IBasic
+main: org.ipvp.ibasic.IBasic
 name: iBasic
 version: 1
 commands:
@@ -8,5 +8,4 @@ commands:
   freeze:
   freezeall:
   halt:
-  tutorial:
-  filter:
+  delay:
