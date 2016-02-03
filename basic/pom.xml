@@ -9,7 +9,7 @@
     <version>1.0</version>
 
     <parent>
-        <artifactId>ibase</artifactId>
+        <artifactId>IBase</artifactId>
         <groupId>org.ipvp</groupId>
         <version>1.0</version>
     </parent>

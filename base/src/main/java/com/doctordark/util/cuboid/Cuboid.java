@@ -199,8 +199,8 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return the edges of this {@link Cuboid}
      */
     public List<Vector> edges(int fixedMinX, int fixedMaxX, int fixedMinZ, int fixedMaxZ) {
-        Vector v1 = getMinimumPoint();
-        Vector v2 = getMaximumPoint();
+        Vector v1 = getMinimumPoint().toVector();
+        Vector v2 = getMaximumPoint().toVector();
 
         final int minX = v1.getBlockX();
         final int maxX = v2.getBlockX();
