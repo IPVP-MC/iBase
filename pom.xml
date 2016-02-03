@@ -16,6 +16,19 @@
 
     <description>Base brings general commands to Spigot servers providing Essential features and an API.</description>
 
+    <distributionManagement>
+        <repository>
+            <id>maven.sainttx.com</id>
+            <name>maven.sainttx.com-releases</name>
+            <url>http://maven.sainttx.com/artifactory/origin-mc-dev</url>
+        </repository>
+        <snapshotRepository>
+            <id>maven.sainttx.com</id>
+            <name>maven.sainttx.com-snapshots</name>
+            <url>http://maven.sainttx.com/artifactory/origin-mc-dev</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <dependencies>
         <!-- Locally for now -->
         <dependency>

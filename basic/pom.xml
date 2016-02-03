@@ -14,6 +14,19 @@
         <version>1.0</version>
     </parent>
 
+    <distributionManagement>
+        <repository>
+            <id>maven.sainttx.com</id>
+            <name>maven.sainttx.com-releases</name>
+            <url>http://maven.sainttx.com/artifactory/origin-mc-dev</url>
+        </repository>
+        <snapshotRepository>
+            <id>maven.sainttx.com</id>
+            <name>maven.sainttx.com-snapshots</name>
+            <url>http://maven.sainttx.com/artifactory/origin-mc-dev</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <repositories>
         <repository>
             <id>sk89q-repo</id>
