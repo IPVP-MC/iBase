@@ -29,7 +29,7 @@
     
     <repositories>
         <repository>
-            <id>maven.sainttx.com</id>
+            <id>origin</id>
             <url>http://maven.sainttx.com/nexus/content/groups/origin/</url>
         </repository>
     </repositories>
