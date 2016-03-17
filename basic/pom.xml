@@ -6,24 +6,22 @@
 
     <name>iBasic</name>
     <artifactId>ibase-basic</artifactId>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
 
     <parent>
-        <artifactId>IBase</artifactId>
         <groupId>org.ipvp</groupId>
-        <version>1.0</version>
+        <artifactId>IBase</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <distributionManagement>
         <repository>
-            <id>maven.sainttx.com</id>
-            <name>maven.sainttx.com-releases</name>
-            <url>http://maven.sainttx.com/artifactory/origin-mc-dev</url>
+            <id>origin</id>
+            <url>http://maven.sainttx.com/nexus/content/repositories/origin-mc-releases/</url>
         </repository>
         <snapshotRepository>
-            <id>maven.sainttx.com</id>
-            <name>maven.sainttx.com-snapshots</name>
-            <url>http://maven.sainttx.com/artifactory/origin-mc-dev</url>
+            <id>origin</id>
+            <url>http://maven.sainttx.com/nexus/content/repositories/origin-mc-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 

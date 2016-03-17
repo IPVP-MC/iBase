@@ -12,25 +12,29 @@
 
     <groupId>org.ipvp</groupId>
     <artifactId>IBase</artifactId>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
 
     <description>Base brings general commands to Spigot servers providing Essential features and an API.</description>
 
     <distributionManagement>
         <repository>
-            <id>maven.sainttx.com</id>
-            <name>maven.sainttx.com-releases</name>
-            <url>http://maven.sainttx.com/artifactory/origin-mc-dev</url>
+            <id>origin</id>
+            <url>http://maven.sainttx.com/nexus/content/repositories/origin-mc-releases/</url>
         </repository>
         <snapshotRepository>
-            <id>maven.sainttx.com</id>
-            <name>maven.sainttx.com-snapshots</name>
-            <url>http://maven.sainttx.com/artifactory/origin-mc-dev</url>
+            <id>origin</id>
+            <url>http://maven.sainttx.com/nexus/content/repositories/origin-mc-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
+    
+    <repositories>
+        <repository>
+            <id>maven.sainttx.com</id>
+            <url>http://maven.sainttx.com/nexus/content/groups/origin/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
-        <!-- Locally for now -->
         <dependency>
             <groupId>org.github.paperspigot</groupId>
             <artifactId>paperspigot-api</artifactId>
@@ -43,8 +47,6 @@
             <version>1.7.10-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Locally for now -->
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -69,7 +71,6 @@
             <version>3.0.1</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <build>
