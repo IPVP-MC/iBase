@@ -420,13 +420,24 @@ public class Cuboid implements Iterable<Block>, Cloneable, ConfigurationSerializ
      * @return array of {@link Location}s representing the {@link Cuboid} corners
      */
     public Location[] getCornerLocations() {
-        Location[] result = new Location[8];
+        World world = getWorld();
+        return new Location[]{
+                new Location(world, this.x1, this.y1, this.z1),
+                new Location(world, this.x1, this.y1, this.z2),
+                new Location(world, this.x1, this.y2, this.z1),
+                new Location(world, this.x1, this.y2, this.z2),
+                new Location(world, this.x2, this.y1, this.z1),
+                new Location(world, this.x2, this.y1, this.z2),
+                new Location(world, this.x2, this.y2, this.z1),
+                new Location(world, this.x2, this.y2, this.z2)
+        };
+        /* Location[] result = new Location[8];
         Block[] cornerBlocks = this.getCornerBlocks();
         for (int i = 0; i < cornerBlocks.length; i++) {
             result[i] = cornerBlocks[i].getLocation();
         }
 
-        return result;
+        return result;*/
     }
 
     /**

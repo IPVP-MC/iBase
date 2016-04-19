@@ -9,6 +9,7 @@ import gnu.trove.list.array.TCharArrayList;
 import net.minecraft.server.v1_7_R4.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.ChunkSnapshot;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
