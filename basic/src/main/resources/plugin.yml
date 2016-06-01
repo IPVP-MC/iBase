@@ -6,7 +6,4 @@ depend: [ Libraries]
 commands:
   donorjoin:
   slowchat:
-  freeze:
-  freezeall:
-  halt:
   delay:

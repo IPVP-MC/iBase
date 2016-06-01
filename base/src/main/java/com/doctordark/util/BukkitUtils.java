@@ -9,7 +9,6 @@ import gnu.trove.list.array.TCharArrayList;
 import net.minecraft.server.v1_7_R4.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.ChunkSnapshot;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -23,9 +22,6 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.metadata.Metadatable;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
@@ -267,10 +263,10 @@ public final class BukkitUtils {
         int x = cloned.getBlockX();
         int y = world.getMaxHeight();
         int z = cloned.getBlockZ();
-        while (y > origin.getBlockY()) {
+        while (y > 0) {
             Block block = world.getBlockAt(x, --y, z);
             if (!block.isEmpty()) {
-                Location next = block.getLocation();
+                Location next = block.getLocation().add(0, 1, 0);
                 next.setPitch(origin.getPitch());
                 next.setYaw(origin.getYaw());
                 return next;
