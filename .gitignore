@@ -12,7 +12,7 @@
 # Maven
 /target
 /dependency-reduced-pom.xml
-basic/target
+*/target
 */dependency-reduced-pom.xml
 
 # Vim
