@@ -16,24 +16,6 @@
 
     <description>Base brings general commands to Spigot servers providing Essential features and an API.</description>
 
-    <distributionManagement>
-        <repository>
-            <id>origin</id>
-            <url>http://maven.sainttx.com/nexus/content/repositories/origin-mc-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>origin</id>
-            <url>http://maven.sainttx.com/nexus/content/repositories/origin-mc-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-    
-    <repositories>
-        <repository>
-            <id>origin</id>
-            <url>http://maven.sainttx.com/nexus/content/groups/origin/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>org.github.paperspigot</groupId>
