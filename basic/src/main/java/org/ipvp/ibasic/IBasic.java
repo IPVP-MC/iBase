@@ -8,10 +8,15 @@ import com.sk89q.squirrelid.resolver.ProfileService;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ipvp.ibasic.commands.CommandDonorJoin;
 import org.ipvp.ibasic.commands.CommandFilter;
 import org.ipvp.ibasic.commands.CommandSlowchat;
+import org.ipvp.ibasic.freeze.CommandFreeze;
+import org.ipvp.ibasic.freeze.CommandFreezeAll;
+import org.ipvp.ibasic.freeze.CommandHalt;
+import org.ipvp.ibasic.freeze.FreezeListener;
 
 import java.io.File;
 
@@ -19,6 +24,9 @@ public class IBasic extends JavaPlugin {
 
     @Getter
     private CommandDonorJoin commandDonorJoin;
+
+    @Getter
+    private FreezeListener freezeListener;
 
     @Getter
     private ProfileCache cache;
@@ -45,11 +53,29 @@ public class IBasic extends JavaPlugin {
         this.cache = new HashMapCache(); // Memory cache
         this.resolver = new CacheForwardingService(HttpRepositoryService.forMinecraft(), this.cache);
 
+        PluginManager manager = getServer().getPluginManager();
+        manager.registerEvents(this.freezeListener = new FreezeListener(this), this);
+
         PluginCommand command = getCommand("donorjoin");
         command.setExecutor(this.commandDonorJoin = new CommandDonorJoin(this));
         command.setPermission("donorjoin.true");
         command.setPermissionMessage(ChatColor.RED + "You do not have permission.");
-        
+
+        command = getCommand("freeze");
+        command.setExecutor(new CommandFreeze(this));
+        command.setPermission("ibasic.freeze");
+        command.setPermissionMessage(ChatColor.RED + "You do not have permission.");
+
+        command = getCommand("freezeall");
+        command.setExecutor(new CommandFreezeAll(this));
+        command.setPermission("ibasic.freeze");
+        command.setPermissionMessage(ChatColor.RED + "You do not have permission.");
+
+        command = getCommand("halt");
+        command.setExecutor(new CommandHalt(this));
+        command.setPermission("ibasic.freeze");
+        command.setPermissionMessage(ChatColor.RED + "You do not have permission.");
+
         command = getCommand("slowchat");
         command.setExecutor(new CommandSlowchat(this));
         command.setPermission("slowchat.true");
