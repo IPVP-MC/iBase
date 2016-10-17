@@ -213,7 +213,8 @@ public enum ParticleEffect {
 
         Packet packet = createPacket(location, offsetX, offsetY, offsetZ, speed, amount);
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if ((source == null || player.canSee(source)) && (predicate == null || predicate.apply(player))) {
+            if ((source == null || (source instanceof Player && player.canSee((Player) source)))
+                    && (predicate == null || predicate.apply(player))) {
                 ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
             }
         }
