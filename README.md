@@ -1,11 +1,12 @@
-Compiling
----------
-* The project is written for Java 6-8 and our build process makes use of [Maven](http://maven.apache.org).
-* Dependencies are automatically handled by Maven.
+# iBase #
+<p>iBase is a library/util plugin and core requirement to the iHCF plugin.</p>
 
-Links
----------
-* [Base](http://parapvp.com/forums): The official forums for the Base project.
-* [Issue Tracker](https://para-network.atlassian.net): The official issue tracker for the Base project.
+## Resources ##
 
-Please make sure you have read CONTRIBUTING.md if you plan to contribute to this project.
+* Java 8 can be downloaded [here](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* Maven 3 can be downloaded [here](http://maven.apache.org/download.html) and installed by following [these instructions](https://maven.apache.org/install.html)
+
+## Compilation ##
+
+1. Run `mvn clean install` inside the plugin folder
+2. Output files will be at `base/target/iBase.jar` and `basic/target/iBasic.jar`
