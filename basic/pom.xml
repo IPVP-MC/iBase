@@ -4,15 +4,41 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>iBasic</name>
-    <artifactId>ibase-basic</artifactId>
-    <version>1.0-SNAPSHOT</version>
-
     <parent>
         <groupId>org.ipvp</groupId>
         <artifactId>IBase</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+
+    <artifactId>ibase-basic</artifactId>
+    <name>iBasic</name>
+    <description></description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.sk89q.squirrelid</pattern>
+                                    <shadedPattern>org.ipvp.ibasic.shade.squirrelid</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <repositories>
         <repository>
@@ -35,33 +61,4 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <shadedArtifactAttached>false</shadedArtifactAttached>
-                            <createDependencyReducedPom>true</createDependencyReducedPom>
-
-                            <relocations>
-                                <relocation>
-                                    <pattern>com.sk89q.squirrelid</pattern>
-                                    <shadedPattern>me.poisonex.plugins.ibasic.com.sk89q.squirrelid</shadedPattern>
-                                </relocation>
-                            </relocations>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>
