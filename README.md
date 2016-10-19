@@ -8,5 +8,6 @@
 
 ## Compilation ##
 
-1. Run `mvn clean install` inside the plugin folder
-2. Output files will be at `base/target/iBase.jar` and `basic/target/iBasic.jar`
+1. Clone this repository to your computer via `git clone` or GitHub's download feature
+2. Navigate into the plugin directory and run `mvn clean install` 
+3. Output files will be at `base/target/iBase.jar` and `basic/target/iBasic.jar`
