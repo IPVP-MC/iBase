@@ -6,13 +6,13 @@
 
     <parent>
         <groupId>org.ipvp</groupId>
-        <artifactId>IBase</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <artifactId>ibase-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>ibase-basic</artifactId>
     <name>iBasic</name>
-    <description></description>
+    <description>A small addon with various features</description>
 
     <build>
         <plugins>
