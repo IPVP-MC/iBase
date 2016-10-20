@@ -2,6 +2,7 @@ author: poisonex
 main: org.ipvp.ibasic.IBasic
 name: iBasic
 version: 1
+license: MIT
 commands:
   donorjoin:
   slowchat:

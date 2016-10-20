@@ -3,3 +3,4 @@ version: ${project.version} (Build ${git.commit.id.abbrev}, ${git.commit.time})
 description: ${project.description}
 author: DoctorDark
 main: com.doctordark.base.BasePlugin
+license: MIT
